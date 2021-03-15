@@ -1,6 +1,8 @@
 package ceui.lisa.whitefox.models
 
-class PlayListResponse {
+import ceui.lisa.whitefox.test.ListShow
+
+class PlayListResponse: ListShow<PlaylistBean> {
     /**
      * version : 0
      * more : true
@@ -11,4 +13,8 @@ class PlayListResponse {
     var more: Boolean? = null
     var playlist: List<PlaylistBean>? = null
     var code: Int? = null
+
+    override fun getListData(): List<PlaylistBean>? {
+        return playlist
+    }
 }

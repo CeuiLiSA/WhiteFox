@@ -4,7 +4,6 @@ import android.app.Application
 import android.text.TextUtils
 import android.util.Log
 import ceui.lisa.whitefox.models.User
-import ceui.lisa.whitefox.test.FragmentPlayList
 import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
 import rxhttp.RxHttp

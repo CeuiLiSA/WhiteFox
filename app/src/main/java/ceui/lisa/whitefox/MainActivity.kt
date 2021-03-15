@@ -2,6 +2,7 @@ package ceui.lisa.whitefox
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import ceui.lisa.whitefox.test.FragmentList
 import ceui.lisa.whitefox.test.FragmentPlayList
 
 class MainActivity : AppCompatActivity() {
@@ -12,7 +13,7 @@ class MainActivity : AppCompatActivity() {
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, FragmentPlayList.newInstance())
+                    .replace(R.id.fragment_container, FragmentPlayList())
                     .commit()
         }
     }
