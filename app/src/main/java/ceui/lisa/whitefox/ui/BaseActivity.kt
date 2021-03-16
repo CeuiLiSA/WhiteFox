@@ -1,39 +1,27 @@
-package ceui.lisa.whitefox.ui;
+package ceui.lisa.whitefox.ui
 
-import android.content.Context;
-import android.os.Bundle;
+import android.content.Context
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ViewDataBinding;
+abstract class BaseActivity<Layout : ViewDataBinding> : AppCompatActivity() {
 
-public abstract class BaseActivity<Layout extends ViewDataBinding> extends AppCompatActivity {
+    protected lateinit var baseBind: Layout
+    protected lateinit var mContext: Context
 
-    protected Layout baseBind;
-    protected Context mContext;
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        beforeSetContentView();
-        baseBind = DataBindingUtil.setContentView(this, layout());
-        mContext = this;
-        initView();
-        initData();
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        beforeSetContentView()
+        baseBind = DataBindingUtil.setContentView(this, layout())
+        mContext = this
+        initView()
+        initData()
     }
 
-    public abstract int layout();
-
-    public void initView(){
-
-    }
-
-    public void initData(){
-
-    }
-
-    public void beforeSetContentView(){
-
-    }
+    abstract fun layout(): Int
+    open fun initView() {}
+    fun initData() {}
+    open fun beforeSetContentView() {}
 }

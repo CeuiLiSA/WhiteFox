@@ -5,33 +5,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.databinding.ViewDataBinding
 import ceui.lisa.whitefox.R
 
 import ceui.lisa.whitefox.adapters.dummy.DummyContent.DummyItem
-import ceui.lisa.whitefox.models.PlaylistBean
 
 /**
  * [RecyclerView.Adapter] that can display a [DummyItem].
  * TODO: Replace the implementation with code for your data type.
  */
-abstract class BaseAdapter<Bean>(
+abstract class BaseAdapter<Bean, Layout: ViewDataBinding>(
         val values: List<Bean>)
-    : RecyclerView.Adapter<BaseAdapter<Bean>.ViewHolder>() {
+    : RecyclerView.Adapter<VH<Layout>>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH<Layout> {
         val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.fragment_item, parent, false)
-        return ViewHolder(view)
+                .inflate(layout(), parent, false)
+        return VH<Layout>(view)
     }
 
     override fun getItemCount(): Int = values.size
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val idView: TextView = view.findViewById(R.id.item_number)
-        val contentView: TextView = view.findViewById(R.id.content)
+    abstract fun layout(): Int
 
-        override fun toString(): String {
-            return super.toString() + " '" + contentView.text + "'"
-        }
-    }
 }

@@ -2,6 +2,7 @@ package ceui.lisa.whitefox;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -23,10 +24,10 @@ public class Player {
     private MediaPlayer mPlayer = new MediaPlayer();
     private int nowPlayingIndex = -1;
 
-    public void setPlayList(List<Song> list, int index) {
+    public void setPlayList(List<Song> list, int index, FeedBack feedBack) {
         playList.clear();
         playList.addAll(list);
-        play(index, null);
+        play(index, feedBack);
     }
 
     private void playSong(Song song, FeedBack feedBack) {
@@ -39,18 +40,21 @@ public class Player {
                 .subscribe(new Consumer<SongUrl>() {
                     @Override
                     public void accept(SongUrl songUrl) throws Throwable {
-                        mPlayer.reset();
-                        mPlayer.setDataSource(songUrl.getData().get(0).getUrl());
-                        mPlayer.prepareAsync();
-                        mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                            @Override
-                            public void onPrepared(MediaPlayer mp) {
-                                mp.start();
-                                if (feedBack != null) {
-                                    feedBack.doSomething();
+                        final String url = songUrl.getData().get(0).getUrl();
+                        if (!TextUtils.isEmpty(url)) {
+                            mPlayer.reset();
+                            mPlayer.setDataSource(url);
+                            mPlayer.prepareAsync();
+                            mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                                @Override
+                                public void onPrepared(MediaPlayer mp) {
+                                    mp.start();
+                                    if (feedBack != null) {
+                                        feedBack.doSomething();
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -58,6 +62,14 @@ public class Player {
                         throwable.printStackTrace();
                     }
                 });
+    }
+
+    public boolean isPlaying() {
+        if (mPlayer == null) {
+            return false;
+        } else {
+            return mPlayer.isPlaying();
+        }
     }
 
     public void pause() {

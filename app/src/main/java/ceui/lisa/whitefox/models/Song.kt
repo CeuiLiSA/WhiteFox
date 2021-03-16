@@ -46,7 +46,7 @@ class Song {
     var pst: Int? = null
     var t: Int? = null
     var ar: List<ArBean>? = null
-    var alia: List<*>? = null
+    var alia: List<String>? = null
     var pop: Int? = null
     var st: Int? = null
     var rt: String? = null

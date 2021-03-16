@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,7 +17,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 
 abstract class FragmentList<Bean> : Fragment() {
 
-    lateinit var mAdapter: BaseAdapter<Bean>
+    lateinit var mAdapter: BaseAdapter<Bean, out ViewDataBinding>
     lateinit var mViewModel: ListViewModel<Bean>
 
     override fun onCreateView(
@@ -28,7 +29,8 @@ abstract class FragmentList<Bean> : Fragment() {
 
     abstract fun modelClass(): Class<out ListViewModel<Bean>>
     abstract fun initApi(): Observable<out ListShow<Bean>>?
-    abstract fun initAdapter(): BaseAdapter<Bean>
+
+    abstract fun initAdapter(): BaseAdapter<Bean, out ViewDataBinding>
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

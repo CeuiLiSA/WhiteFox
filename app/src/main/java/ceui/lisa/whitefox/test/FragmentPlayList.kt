@@ -3,6 +3,7 @@ package ceui.lisa.whitefox.test
 import ceui.lisa.whitefox.App
 import ceui.lisa.whitefox.adapters.BaseAdapter
 import ceui.lisa.whitefox.adapters.PlayListAdapter
+import ceui.lisa.whitefox.databinding.RecyPlaylistItemBinding
 import ceui.lisa.whitefox.models.ListPlayListResponse
 import ceui.lisa.whitefox.models.PlaylistBean
 import ceui.lisa.whitefox.viewmodels.PlayListViewModel
@@ -15,7 +16,7 @@ class FragmentPlayList: FragmentList<PlaylistBean>() {
         return PlayListViewModel::class.java
     }
 
-    override fun initAdapter(): BaseAdapter<PlaylistBean> {
+    override fun initAdapter(): BaseAdapter<PlaylistBean, RecyPlaylistItemBinding> {
         return PlayListAdapter(mViewModel.playList)
     }
 

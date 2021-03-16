@@ -121,6 +121,7 @@
             <ImageView
                 android:layout_width="64dp"
                 android:padding="16dp"
+                android:id="@+id/start_or_pause"
                 android:background="@drawable/play_button_bg"
                 android:src="@drawable/ic_baseline_play_arrow_24"
                 android:layout_height="64dp">
