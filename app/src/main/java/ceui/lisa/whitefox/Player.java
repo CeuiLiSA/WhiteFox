@@ -11,6 +11,7 @@ import java.util.List;
 import ceui.lisa.whitefox.models.Song;
 import ceui.lisa.whitefox.models.SongUrl;
 import ceui.lisa.whitefox.test.FeedBack;
+import ceui.lisa.whitefox.test.OnPlayListener;
 import ceui.lisa.whitefox.ui.PlayerActivity;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.functions.Consumer;
@@ -24,15 +25,14 @@ public class Player {
     private MediaPlayer mPlayer = new MediaPlayer();
     private int nowPlayingIndex = -1;
 
-    public void setPlayList(List<Song> list, int index, FeedBack feedBack) {
+    public void setPlayList(List<Song> list, int index, OnPlayListener listener) {
         playList.clear();
         playList.addAll(list);
-        play(index, feedBack);
+        play(index, listener);
     }
 
-    private void playSong(Song song, FeedBack feedBack) {
+    private void playSong(Song song, OnPlayListener listener) {
         Log.d("Player playSong ", "开始播放");
-        nowPlaySong = song;
         RxHttp.get("http://192.243.123.124:3000/song/url?br=128000&id=" + song.getId())
                 .asClass(SongUrl.class)
                 .subscribeOn(Schedulers.newThread())
@@ -49,8 +49,8 @@ public class Player {
                                 @Override
                                 public void onPrepared(MediaPlayer mp) {
                                     mp.start();
-                                    if (feedBack != null) {
-                                        feedBack.doSomething();
+                                    if (listener != null) {
+                                        listener.onPrepared();
                                     }
                                 }
                             });
@@ -82,23 +82,23 @@ public class Player {
         mPlayer.start();
     }
 
-    public void lastSong(FeedBack feedBack) {
+    public void lastSong(OnPlayListener listener) {
         if (nowPlayingIndex == 0) {
             return;
         }
 
-        play(nowPlayingIndex - 1, feedBack);
+        play(nowPlayingIndex - 1, listener);
     }
 
-    public void nextSong(FeedBack feedBack) {
+    public void nextSong(OnPlayListener listener) {
         if (nowPlayingIndex >= getSongCount()) {
             return;
         }
 
-        play(nowPlayingIndex + 1, feedBack);
+        play(nowPlayingIndex + 1, listener);
     }
 
-    public void play(int index, FeedBack feedBack) {
+    public void play(int index, OnPlayListener listener) {
         if (playList == null || playList.size() == 0) {
             return;
         }
@@ -106,8 +106,17 @@ public class Player {
         if (index < playList.size()) {
             Song temp = playList.get(index);
             nowPlayingIndex = index;
-            if (nowPlaySong == null || !nowPlaySong.getId().equals(temp.getId())) {
-                playSong(temp, feedBack);
+            if (nowPlaySong != null && nowPlaySong.getId().equals(temp.getId())) {
+                if (listener != null) {
+                    listener.beforePrepared();
+                    listener.onPrepared();
+                }
+            } else {
+                nowPlaySong = temp;
+                if (listener != null) {
+                    listener.beforePrepared();
+                }
+                playSong(temp, listener);
             }
         }
     }

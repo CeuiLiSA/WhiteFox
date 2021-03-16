@@ -10,6 +10,7 @@ import ceui.lisa.whitefox.Player
 import ceui.lisa.whitefox.R
 import ceui.lisa.whitefox.databinding.RecySongItemBinding
 import ceui.lisa.whitefox.models.Song
+import ceui.lisa.whitefox.test.OnPlayListener
 import ceui.lisa.whitefox.ui.PlayerActivity
 import java.lang.String
 
@@ -40,9 +41,15 @@ class SongListAdapter(values: List<Song>) : BaseAdapter<Song, RecySongItemBindin
         }
 
         holder.itemView.setOnClickListener { v ->
-            Player.get().setPlayList(values, position, {
-                val intent = Intent(v.context, PlayerActivity::class.java)
-                v.context.startActivity(intent)
+            Player.get().setPlayList(values, position, object :OnPlayListener(){
+                override fun onPrepared() {
+                    val intent = Intent(v.context, PlayerActivity::class.java)
+                    v.context.startActivity(intent)
+                }
+
+                override fun beforePrepared() {
+
+                }
             })
         }
     }
