@@ -3,7 +3,7 @@ package ceui.lisa.whitefox.test
 import ceui.lisa.whitefox.App
 import ceui.lisa.whitefox.adapters.BaseAdapter
 import ceui.lisa.whitefox.adapters.PlayListAdapter
-import ceui.lisa.whitefox.models.PlayListResponse
+import ceui.lisa.whitefox.models.ListPlayListResponse
 import ceui.lisa.whitefox.models.PlaylistBean
 import ceui.lisa.whitefox.viewmodels.PlayListViewModel
 import io.reactivex.rxjava3.core.Observable
@@ -19,9 +19,9 @@ class FragmentPlayList: FragmentList<PlaylistBean>() {
         return PlayListAdapter(mViewModel.playList)
     }
 
-    override fun initApi(): Observable<out ListShow<PlaylistBean>> {
+    override fun initApi(): Observable<out ListShow<PlaylistBean>>? {
         return RxHttp.get("http://192.243.123.124:3000/user/playlist")
                 .add("uid", App.user.account!!.id)
-                .asClass(PlayListResponse::class.java)
+                .asClass(ListPlayListResponse::class.java)
     }
 }

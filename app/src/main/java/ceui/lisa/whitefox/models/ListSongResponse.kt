@@ -2,7 +2,7 @@ package ceui.lisa.whitefox.models
 
 import ceui.lisa.whitefox.test.ListShow
 
-class SongResponse : ListShow<Song> {
+class ListSongResponse : ListShow<Song> {
     /**
      * code : 200
      * relatedVideos : null

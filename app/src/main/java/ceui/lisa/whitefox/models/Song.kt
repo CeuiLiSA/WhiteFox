@@ -78,5 +78,5 @@ class Song {
     var mst: Int? = null
     var cp: Int? = null
     var mv: Int? = null
-    var publishTime: Int? = null
+    var publishTime: Long? = null
 }

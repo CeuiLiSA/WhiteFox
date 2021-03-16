@@ -15,7 +15,7 @@ class App: Application() {
         super.onCreate()
         context = this
         RxHttp.setDebug(true)
-        RxHttp.init(Container.get().okHttpClient)
+        RxHttp.init(Container.client)
 
         val rootDir = MMKV.initialize(this)
         println("mmkv root: $rootDir")

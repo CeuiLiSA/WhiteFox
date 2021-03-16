@@ -1,7 +1,6 @@
 package ceui.lisa.whitefox.test
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,14 +27,23 @@ abstract class FragmentList<Bean> : Fragment() {
     }
 
     abstract fun modelClass(): Class<out ListViewModel<Bean>>
-    abstract fun initApi(): Observable<out ListShow<Bean>>
+    abstract fun initApi(): Observable<out ListShow<Bean>>?
     abstract fun initAdapter(): BaseAdapter<Bean>
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         mViewModel = ViewModelProvider(requireActivity()).get(modelClass())
+
+        val recylist = view?.findViewById<RecyclerView>(R.id.list)
+        recylist?.layoutManager = LinearLayoutManager(requireContext())
+        mAdapter = initAdapter()
+        recylist?.adapter = mAdapter
+
+
         if (mViewModel.playList.isEmpty()) {
-            initApi().subscribeOn(Schedulers.newThread())
+            val api = initApi()
+            if (api != null) {
+                api.subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
                         it.getListData()?.let { list ->
@@ -45,10 +53,13 @@ abstract class FragmentList<Bean> : Fragment() {
                             }
                         }
                     }
+            } else {
+                loadFromLocal()
+            }
         }
-        val recylist = view?.findViewById<RecyclerView>(R.id.list)
-        recylist?.layoutManager = LinearLayoutManager(requireContext())
-        mAdapter = initAdapter()
-        recylist?.adapter = mAdapter
+    }
+
+    open fun loadFromLocal() {
+
     }
 }

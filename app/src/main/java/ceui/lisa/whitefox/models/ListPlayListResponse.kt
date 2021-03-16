@@ -2,7 +2,7 @@ package ceui.lisa.whitefox.models
 
 import ceui.lisa.whitefox.test.ListShow
 
-class PlayListResponse: ListShow<PlaylistBean> {
+class ListPlayListResponse: ListShow<PlaylistBean> {
     /**
      * version : 0
      * more : true
