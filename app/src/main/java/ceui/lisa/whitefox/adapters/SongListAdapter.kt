@@ -2,9 +2,8 @@ package ceui.lisa.whitefox.adapters
 
 import android.content.Intent
 import ceui.lisa.whitefox.Player
-import ceui.lisa.whitefox.TemplateActivity
-import ceui.lisa.whitefox.models.PlaylistBean
 import ceui.lisa.whitefox.models.Song
+import ceui.lisa.whitefox.ui.PlayerActivity
 
 class SongListAdapter(values: List<Song>) : BaseAdapter<Song>(values) {
 
@@ -12,6 +11,8 @@ class SongListAdapter(values: List<Song>) : BaseAdapter<Song>(values) {
         holder.contentView.text = values[position].name
         holder.itemView.setOnClickListener { v ->
             Player.get().setPlayList(values, position)
+            val intent = Intent(v.context, PlayerActivity::class.java)
+            v.context.startActivity(intent)
         }
     }
 }

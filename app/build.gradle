@@ -97,6 +97,7 @@ dependencies {
 
     implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
 
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
