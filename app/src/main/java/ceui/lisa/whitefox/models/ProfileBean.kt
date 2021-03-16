@@ -59,7 +59,6 @@ class ProfileBean {
     var remarkName: Any? = null
     var expertTags: Any? = null
     var authStatus: Int? = null
-    var experts: ExpertsBean? = null
     var avatarImgIdStr: String? = null
     var backgroundImgIdStr: String? = null
     var signature: String? = null
@@ -71,6 +70,6 @@ class ProfileBean {
     var avatarDetail: Any? = null
     var playlistCount: Int? = null
     var playlistBeSubscribedCount: Int? = null
-
-    class ExpertsBean
+    val authenticationTypes: Int? = null
+    val anchor: Boolean? = null
 }

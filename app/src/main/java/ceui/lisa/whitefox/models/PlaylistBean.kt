@@ -46,7 +46,7 @@ class PlaylistBean {
     var subscribed: Boolean? = null
     var creator: CreatorBean? = null
     var artists: Any? = null
-    var tracks: Any? = null
+    var tracks: List<Song>? = null
     var updateFrequency: Any? = null
     var backgroundCoverId: Int? = null
     var backgroundCoverUrl: Any? = null
@@ -79,6 +79,12 @@ class PlaylistBean {
     var ordered: Boolean? = null
     var status: Int? = null
     var name: String? = null
-    var id: Int? = null
+    var id: Long? = null
     var coverImgId_str: String? = null
+    val videoIds: Any? = null
+    val videos: Any? = null
+    val trackIds: List<TrackIdsBean>? = null
+    val shareCount: Int? = null
+    val commentCount: Int? = null
+    val remixVideo: Any? = null
 }

@@ -1,6 +1,7 @@
 package ceui.lisa.whitefox
 
 import android.app.Application
+import android.content.Context
 import android.text.TextUtils
 import android.util.Log
 import ceui.lisa.whitefox.models.User
@@ -12,8 +13,9 @@ class App: Application() {
 
     override fun onCreate() {
         super.onCreate()
-
+        context = this
         RxHttp.setDebug(true)
+        RxHttp.init(Container.get().okHttpClient)
 
         val rootDir = MMKV.initialize(this)
         println("mmkv root: $rootDir")
@@ -33,5 +35,6 @@ class App: Application() {
     companion object {
         lateinit var user: User
         lateinit var mmkv: MMKV
+        lateinit var context: Context
     }
 }

@@ -17,7 +17,7 @@ class AccountBean {
      * viptypeVersion : 1609300443011
      * anonimousUser : false
      */
-    var id: Int? = null
+    var id: Long? = null
     var userName: String? = null
     var type: Int? = null
     var status: Int? = null

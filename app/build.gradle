@@ -95,6 +95,8 @@ dependencies {
 
     implementation 'com.tencent:mmkv-static:1.2.7'
 
+    implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
+
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
