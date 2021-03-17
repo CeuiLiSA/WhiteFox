@@ -9,4 +9,5 @@
     <dimen name="thirty_six_dp">36dp</dimen>
     <dimen name="four_dp">4dp</dimen>
     <dimen name="six_dp">6dp</dimen>
+    <dimen name="playlist_horizontal_size">120dp</dimen>
 </resources>

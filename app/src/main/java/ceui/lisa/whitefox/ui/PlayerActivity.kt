@@ -9,6 +9,7 @@ import ceui.lisa.whitefox.R
 import ceui.lisa.whitefox.databinding.ActivityPlayerBinding
 import ceui.lisa.whitefox.models.Song
 import ceui.lisa.whitefox.test.MessageEvent
+import ceui.lisa.whitefox.ui.base.BaseActivity
 import com.blankj.utilcode.util.BarUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
@@ -145,11 +146,6 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
         } else {
             baseBind.startOrPause.setImageResource(R.drawable.ic_baseline_play_arrow_24)
         }
-    }
-
-    override fun beforeSetContentView() {
-        BarUtils.setNavBarColor(this, getColor(R.color.player_bg))
-        BarUtils.setStatusBarColor(this, getColor(R.color.player_bg))
     }
 
     override fun onStart() {

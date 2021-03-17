@@ -1,10 +1,12 @@
-package ceui.lisa.whitefox.ui
+package ceui.lisa.whitefox.ui.base
 
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import ceui.lisa.whitefox.R
+import com.blankj.utilcode.util.BarUtils
 
 abstract class BaseActivity<Layout : ViewDataBinding> : AppCompatActivity() {
 
@@ -13,7 +15,10 @@ abstract class BaseActivity<Layout : ViewDataBinding> : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        beforeSetContentView()
+
+        BarUtils.setNavBarColor(this, getColor(R.color.player_bg))
+        BarUtils.setStatusBarColor(this, getColor(R.color.player_bg))
+
         baseBind = DataBindingUtil.setContentView(this, layout())
         mContext = this
         initView()
@@ -23,5 +28,4 @@ abstract class BaseActivity<Layout : ViewDataBinding> : AppCompatActivity() {
     abstract fun layout(): Int
     open fun initView() {}
     fun initData() {}
-    open fun beforeSetContentView() {}
 }

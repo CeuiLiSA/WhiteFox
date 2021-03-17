@@ -87,4 +87,9 @@ class PlaylistBean {
     val shareCount: Int? = null
     val commentCount: Int? = null
     val remixVideo: Any? = null
+    val type: Int? = null
+    val copywriter: String? = null
+    val picUrl: String? = null
+    val playcount: Int? = null
+    val alg: String? = null
 }

@@ -42,12 +42,13 @@ abstract class FragmentList<Bean> : Fragment() {
         recylist?.adapter = mAdapter
 
 
-        if (mViewModel.playList.isEmpty()) {
+        if (!mViewModel.isLoaded) {
             val api = initApi()
             if (api != null) {
                 api.subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe {
+                        mViewModel.isLoaded = true
                         it.getListData()?.let { list ->
                             if (list.isNotEmpty()) {
                                 mViewModel.playList.addAll(list)
