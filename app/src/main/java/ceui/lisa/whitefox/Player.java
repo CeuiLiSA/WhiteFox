@@ -50,11 +50,6 @@ public class Player {
                     public void accept(SongUrl songUrl) throws Throwable {
                         final String url = songUrl.getData().get(0).getUrl();
                         if (!TextUtils.isEmpty(url)) {
-                            try {
-                                mPlayer.reset();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
                             mPlayer.setDataSource(url);
                             mPlayer.prepareAsync();
                             mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -131,10 +126,6 @@ public class Player {
         play(nowPlayingIndex + 1, feedBack);
     }
 
-    public void reset() {
-        mPlayer.reset();
-    }
-
     public void play(int index, FeedBack feedBack) {
         if (playList == null || playList.size() == 0) {
             return;
@@ -153,6 +144,7 @@ public class Player {
         if (nowPlaySong != null && nowPlaySong.getId().equals(temp.getId())) {
 
         } else {
+            mPlayer.reset();
             nowPlaySong = temp;
             if (feedBack != null) {
                 feedBack.doSomething();

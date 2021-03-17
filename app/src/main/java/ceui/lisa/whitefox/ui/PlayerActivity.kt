@@ -50,14 +50,12 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
         baseBind.lastSong.setOnClickListener {
             Player.get().lastSong {
                 pauseLoop()
-                Player.get().reset()
                 setSongData(Player.get().nowPlaySong)
             }
         }
         baseBind.nextSong.setOnClickListener {
             Player.get().nextSong {
                 pauseLoop()
-                Player.get().reset()
                 setSongData(Player.get().nowPlaySong)
             }
         }
@@ -150,19 +148,6 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
         }
     }
 
-    private fun updateSongData(song: Song?) {
-        if (song == null) {
-            return
-        }
-
-        if (Player.get().isPlaying) {
-            baseBind.startOrPause.setImageResource(R.drawable.ic_baseline_pause_24)
-        } else {
-            baseBind.startOrPause.setImageResource(R.drawable.ic_baseline_play_arrow_24)
-        }
-        runLoop()
-    }
-
     override fun beforeSetContentView() {
         BarUtils.setNavBarColor(this, getColor(R.color.player_bg))
         BarUtils.setStatusBarColor(this, getColor(R.color.player_bg))
@@ -183,7 +168,12 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
     fun onMessageEvent(event: MessageEvent) {
         try {
             if (TextUtils.equals("PlayerActivity", event.receiver)) {
-                updateSongData(event.obj as Song)
+                if (Player.get().isPlaying) {
+                    baseBind.startOrPause.setImageResource(R.drawable.ic_baseline_pause_24)
+                } else {
+                    baseBind.startOrPause.setImageResource(R.drawable.ic_baseline_play_arrow_24)
+                }
+                runLoop()
             }
         } catch (ex: Exception) {
             ex.printStackTrace()
