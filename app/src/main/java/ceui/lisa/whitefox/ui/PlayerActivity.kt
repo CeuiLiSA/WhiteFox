@@ -9,7 +9,6 @@ import ceui.lisa.whitefox.R
 import ceui.lisa.whitefox.databinding.ActivityPlayerBinding
 import ceui.lisa.whitefox.models.Song
 import ceui.lisa.whitefox.test.MessageEvent
-import ceui.lisa.whitefox.test.OnPlayListener
 import com.blankj.utilcode.util.BarUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
@@ -36,9 +35,9 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
             baseBind.currentPosition.text = mTime.format(position)
 
             //设置进度条
-            baseBind.seekBar.setProgress(Player.get().nowPosition)
-            mHandler.postDelayed(this, 1000)
-            Log.d("&&&&****", "((()(()()()$position")
+            baseBind.seekBar.setProgress(position)
+            mHandler.postDelayed(this, 1000L)
+            Log.d("MyRunnable running", "((()(()()()$position")
         }
     }
 
@@ -138,7 +137,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
         baseBind.seekBar.configBuilder
                 .max(song.dt!!.toFloat())
                 .build()
-        baseBind.seekBar.setProgress(Player.get().nowPosition)
+        baseBind.seekBar.setProgress(position)
         baseBind.allDuration.text = mTime.format(song.dt)
 
         if (Player.get().isPlaying) {

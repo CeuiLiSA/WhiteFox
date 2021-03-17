@@ -1,18 +1,11 @@
 package ceui.lisa.whitefox.adapters
 
 import android.content.Intent
-import android.graphics.Color
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.TextUtils
-import android.text.style.ForegroundColorSpan
 import ceui.lisa.whitefox.Player
 import ceui.lisa.whitefox.R
 import ceui.lisa.whitefox.databinding.RecySongItemBinding
 import ceui.lisa.whitefox.models.Song
-import ceui.lisa.whitefox.test.OnPlayListener
 import ceui.lisa.whitefox.ui.PlayerActivity
-import java.lang.String
 
 class SongListAdapter(values: List<Song>) : BaseAdapter<Song, RecySongItemBinding>(values) {
 

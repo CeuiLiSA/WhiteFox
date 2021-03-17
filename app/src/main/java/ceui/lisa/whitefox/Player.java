@@ -1,6 +1,5 @@
 package ceui.lisa.whitefox;
 
-import android.content.Intent;
 import android.media.MediaPlayer;
 import android.text.TextUtils;
 import android.util.Log;
@@ -8,7 +7,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.hjq.toast.ToastUtils;
-import com.xw.repo.BubbleSeekBar;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -19,8 +17,6 @@ import ceui.lisa.whitefox.models.Song;
 import ceui.lisa.whitefox.models.SongUrl;
 import ceui.lisa.whitefox.test.FeedBack;
 import ceui.lisa.whitefox.test.MessageEvent;
-import ceui.lisa.whitefox.test.OnPlayListener;
-import ceui.lisa.whitefox.ui.PlayerActivity;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.functions.Consumer;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -86,18 +82,6 @@ public class Player {
 
     public boolean isPaused() {
         return !mPlayer.isPlaying() && mPlayer.getCurrentPosition() > 1;
-    }
-
-    public float getNowProgress() {
-        if (mPlayer != null && nowPlaySong != null) {
-            float now = mPlayer.getCurrentPosition();
-            float all = nowPlaySong.getDt();
-            float progress = (now / all) * 100.0f ;
-            Log.d("getNowProgress " + now, " " + all + "   aaa" + (now / all));
-            return progress;
-        } else {
-            return 0;
-        }
     }
 
     public float getNowPosition() {
