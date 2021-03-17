@@ -76,11 +76,7 @@ public class Player {
     }
 
     public boolean isPlaying() {
-        if (mPlayer == null) {
-            return false;
-        } else {
-            return mPlayer.isPlaying();
-        }
+        return mPlayer.isPlaying();
     }
 
     public void pause() {
@@ -102,11 +98,7 @@ public class Player {
     }
 
     public float getNowPosition() {
-        if (mPlayer != null) {
-            return (float) mPlayer.getCurrentPosition();
-        } else {
-            return 0.0f;
-        }
+        return (float) mPlayer.getCurrentPosition();
     }
 
     public void start() {
@@ -136,32 +128,29 @@ public class Player {
             return;
         }
 
-        if (index < playList.size()) {
-            Song temp = playList.get(index);
-            if (temp == null) {
-                return;
-            }
-
-            nowPlayingIndex = index;
-            if (nowPlaySong != null && nowPlaySong.getId().equals(temp.getId())) {
-
-            } else {
-                nowPlaySong = temp;
-                if (feedBack != null) {
-                    feedBack.doSomething();
-                }
-                playSong(temp);
-            }
-        }
-    }
-
-    public void seekTo(float progress) {
-        if (mPlayer == null || nowPlaySong == null) {
+        if (index >= playList.size()) {
             return;
         }
 
-        int value = (int) (nowPlaySong.getDt() * progress * 0.01);
-        mPlayer.seekTo(value);
+        Song temp = playList.get(index);
+        if (temp == null) {
+            return;
+        }
+
+        nowPlayingIndex = index;
+        if (nowPlaySong != null && nowPlaySong.getId().equals(temp.getId())) {
+
+        } else {
+            nowPlaySong = temp;
+            if (feedBack != null) {
+                feedBack.doSomething();
+            }
+            playSong(temp);
+        }
+    }
+
+    public void seekTo(int progress) {
+        mPlayer.seekTo(progress);
     }
 
     public int getSongCount() {
@@ -176,7 +165,7 @@ public class Player {
         mPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
             @Override
             public void onBufferingUpdate(MediaPlayer mp, int percent) {
-
+                Log.d("onBufferingUpdate ", percent + "");
             }
         });
     }

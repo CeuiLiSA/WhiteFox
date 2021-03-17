@@ -91,7 +91,7 @@ dependencies {
     implementation 'com.makeramen:roundedimageview:2.3.0'
     implementation 'com.hjq:toast:8.8'
     implementation 'com.blankj:utilcodex:1.30.6'
-    implementation 'com.xw.repo:bubbleseekbar:3.20-lite'
+    implementation 'com.xw.repo:bubbleseekbar:3.20'
 
     implementation 'com.tencent:mmkv-static:1.2.7'
 

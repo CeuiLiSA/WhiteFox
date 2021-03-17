@@ -6,6 +6,7 @@ import kotlin.collections.ArrayList
 open class ListViewModel<Bean> : ViewModel() {
     // TODO: Implement the ViewModel
 
+    var isLoaded = false
     var playList: MutableList<Bean> = ArrayList()
 
 }

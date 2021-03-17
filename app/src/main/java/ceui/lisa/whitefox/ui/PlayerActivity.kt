@@ -36,7 +36,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
             baseBind.currentPosition.text = mTime.format(position)
 
             //设置进度条
-            baseBind.seekBar.setProgress(Player.get().nowProgress)
+            baseBind.seekBar.setProgress(Player.get().nowPosition)
             mHandler.postDelayed(this, 1000)
             Log.d("&&&&****", "((()(()()()$position")
         }
@@ -56,9 +56,11 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
         baseBind.startOrPause.setOnClickListener {
             if (Player.get().isPlaying) {
                 baseBind.startOrPause.setImageResource(R.drawable.ic_baseline_play_arrow_24)
+                pauseLoop()
                 Player.get().pause()
             } else {
                 baseBind.startOrPause.setImageResource(R.drawable.ic_baseline_pause_24)
+                runLoop()
                 Player.get().start()
             }
         }
@@ -76,7 +78,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
                 progress: Int,
                 progressFloat: Float
             ) {
-                Player.get().seekTo(progressFloat)
+                Player.get().seekTo(progress)
             }
 
             override fun getProgressOnFinally(
@@ -144,7 +146,10 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
             baseBind.startOrPause.setImageResource(R.drawable.ic_baseline_play_arrow_24)
         }
         val dt = song.dt!!
-        baseBind.seekBar.setProgress(Player.get().nowProgress)
+        baseBind.seekBar.configBuilder
+                .max(dt.toFloat())
+                .build()
+        baseBind.seekBar.setProgress(Player.get().nowPosition)
         baseBind.allDuration.text = mTime.format(dt)
         runLoop()
     }

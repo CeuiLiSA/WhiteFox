@@ -80,7 +80,7 @@
                 android:layout_width="match_parent"
                 android:progress="50"
                 android:id="@+id/seek_bar"
-                app:bsb_max="100"
+                app:bsb_hide_bubble="true"
                 app:bsb_second_track_color="#a930ef"
                 app:bsb_track_color="#343144"
                 android:layout_marginTop="@dimen/six_teen_dp"
