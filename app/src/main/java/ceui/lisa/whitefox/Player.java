@@ -7,7 +7,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.blankj.utilcode.util.ToastUtils;
+import com.hjq.toast.ToastUtils;
+import com.xw.repo.BubbleSeekBar;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -62,6 +63,8 @@ public class Player {
                                     EventBus.getDefault().post(event);
                                 }
                             });
+                        } else {
+                            ToastUtils.show("暂无资源");
                         }
                     }
                 }, new Consumer<Throwable>() {
@@ -112,7 +115,7 @@ public class Player {
 
     public void lastSong(FeedBack feedBack) {
         if (nowPlayingIndex == 0) {
-            ToastUtils.showLong("这已经是第一首歌曲了");
+            ToastUtils.show("这已经是第一首歌曲了");
             return;
         }
 
@@ -121,7 +124,7 @@ public class Player {
 
     public void nextSong(FeedBack feedBack) {
         if (nowPlayingIndex >= getSongCount()) {
-            ToastUtils.showLong("这已经是最后一首歌曲了");
+            ToastUtils.show("这已经是最后一首歌曲了");
             return;
         }
 

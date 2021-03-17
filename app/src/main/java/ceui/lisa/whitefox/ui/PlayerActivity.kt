@@ -56,15 +56,9 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
         baseBind.startOrPause.setOnClickListener {
             if (Player.get().isPlaying) {
                 baseBind.startOrPause.setImageResource(R.drawable.ic_baseline_play_arrow_24)
-                try {
-                    mHandler.removeCallbacks(mRunnable)
-                } catch (ex: Exception) {
-                    ex.printStackTrace()
-                }
                 Player.get().pause()
             } else {
                 baseBind.startOrPause.setImageResource(R.drawable.ic_baseline_pause_24)
-                mRunnable.run()
                 Player.get().start()
             }
         }
@@ -96,6 +90,23 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
         setSongData(Player.get().nowPlaySong)
     }
 
+    fun runLoop() {
+        try {
+            mHandler.removeCallbacks(mRunnable)
+            mRunnable.run()
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+    }
+
+    fun pauseLoop() {
+        try {
+            mHandler.removeCallbacks(mRunnable)
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+        }
+    }
+
     private fun setSongData(song: Song?) {
         if (song == null) {
             return
@@ -113,16 +124,8 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
         baseBind.singerName.text = song.ar!![0].name
         baseBind.currentPosition.text = "00: 00"
         baseBind.allDuration.text = "00: 00"
+        baseBind.seekBar.setProgress(0.0f)
 
-//        if (Player.get().nowPlaySong != null) {
-//            val position = Player.get().nowPosition
-//            baseBind.currentPosition.text = mTime.format(position)
-//            baseBind.allDuration.text = mTime.format(song.dt)
-//        }
-
-
-        //设置进度条
-        baseBind.seekBar.setProgress(Player.get().nowProgress)
         if (Player.get().isPlaying) {
             baseBind.startOrPause.setImageResource(R.drawable.ic_baseline_pause_24)
         } else {
@@ -143,7 +146,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
         val dt = song.dt!!
         baseBind.seekBar.setProgress(Player.get().nowProgress)
         baseBind.allDuration.text = mTime.format(dt)
-        mRunnable.run()
+        runLoop()
     }
 
     override fun beforeSetContentView() {
@@ -158,11 +161,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
 
     override fun onStop() {
         super.onStop()
-        try {
-            mHandler.removeCallbacks(mRunnable)
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-        }
+        pauseLoop()
         EventBus.getDefault().unregister(this)
     }
 
