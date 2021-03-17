@@ -88,10 +88,10 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
 
     implementation 'org.greenrobot:eventbus:3.2.0'
-
-
+    implementation 'com.makeramen:roundedimageview:2.3.0'
+    implementation 'com.hjq:toast:8.8'
     implementation 'com.blankj:utilcodex:1.30.6'
-
+    implementation 'com.xw.repo:bubbleseekbar:3.20-lite'
 
     implementation 'com.tencent:mmkv-static:1.2.7'
 

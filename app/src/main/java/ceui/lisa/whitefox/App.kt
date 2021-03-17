@@ -6,6 +6,7 @@ import android.text.TextUtils
 import android.util.Log
 import ceui.lisa.whitefox.models.User
 import com.google.gson.Gson
+import com.hjq.toast.ToastUtils
 import com.tencent.mmkv.MMKV
 import rxhttp.RxHttp
 
@@ -16,6 +17,7 @@ class App: Application() {
         context = this
         RxHttp.setDebug(true)
         RxHttp.init(Container.client)
+        ToastUtils.init(this)
 
         val rootDir = MMKV.initialize(this)
         println("mmkv root: $rootDir")

@@ -5,12 +5,19 @@ import android.media.MediaPlayer;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import com.blankj.utilcode.util.ToastUtils;
+
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import ceui.lisa.whitefox.models.Song;
 import ceui.lisa.whitefox.models.SongUrl;
 import ceui.lisa.whitefox.test.FeedBack;
+import ceui.lisa.whitefox.test.MessageEvent;
 import ceui.lisa.whitefox.test.OnPlayListener;
 import ceui.lisa.whitefox.ui.PlayerActivity;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -25,13 +32,13 @@ public class Player {
     private MediaPlayer mPlayer = new MediaPlayer();
     private int nowPlayingIndex = -1;
 
-    public void setPlayList(List<Song> list, int index, OnPlayListener listener) {
+    public void setPlayList(List<Song> list, int index) {
         playList.clear();
         playList.addAll(list);
-        play(index, listener);
+        play(index, null);
     }
 
-    private void playSong(Song song, OnPlayListener listener) {
+    private void playSong(@NonNull Song song) {
         Log.d("Player playSong ", "开始播放");
         RxHttp.get("http://192.243.123.124:3000/song/url?br=128000&id=" + song.getId())
                 .asClass(SongUrl.class)
@@ -49,9 +56,10 @@ public class Player {
                                 @Override
                                 public void onPrepared(MediaPlayer mp) {
                                     mp.start();
-                                    if (listener != null) {
-                                        listener.onPrepared();
-                                    }
+                                    MessageEvent event = new MessageEvent();
+                                    event.setReceiver("PlayerActivity");
+                                    event.setObj(song);
+                                    EventBus.getDefault().post(event);
                                 }
                             });
                         }
@@ -78,47 +86,79 @@ public class Player {
         }
     }
 
+    public float getNowProgress() {
+        if (mPlayer != null && nowPlaySong != null) {
+            float now = mPlayer.getCurrentPosition();
+            float all = nowPlaySong.getDt();
+            float progress = (now / all) * 100.0f ;
+            Log.d("getNowProgress " + now, " " + all + "   aaa" + (now / all));
+            return progress;
+        } else {
+            return 0;
+        }
+    }
+
+    public float getNowPosition() {
+        if (mPlayer != null) {
+            return (float) mPlayer.getCurrentPosition();
+        } else {
+            return 0.0f;
+        }
+    }
+
     public void start() {
         mPlayer.start();
     }
 
-    public void lastSong(OnPlayListener listener) {
+    public void lastSong(FeedBack feedBack) {
         if (nowPlayingIndex == 0) {
+            ToastUtils.showLong("这已经是第一首歌曲了");
             return;
         }
 
-        play(nowPlayingIndex - 1, listener);
+        play(nowPlayingIndex - 1, feedBack);
     }
 
-    public void nextSong(OnPlayListener listener) {
+    public void nextSong(FeedBack feedBack) {
         if (nowPlayingIndex >= getSongCount()) {
+            ToastUtils.showLong("这已经是最后一首歌曲了");
             return;
         }
 
-        play(nowPlayingIndex + 1, listener);
+        play(nowPlayingIndex + 1, feedBack);
     }
 
-    public void play(int index, OnPlayListener listener) {
+    public void play(int index, FeedBack feedBack) {
         if (playList == null || playList.size() == 0) {
             return;
         }
 
         if (index < playList.size()) {
             Song temp = playList.get(index);
+            if (temp == null) {
+                return;
+            }
+
             nowPlayingIndex = index;
             if (nowPlaySong != null && nowPlaySong.getId().equals(temp.getId())) {
-                if (listener != null) {
-                    listener.beforePrepared();
-                    listener.onPrepared();
-                }
+
             } else {
                 nowPlaySong = temp;
-                if (listener != null) {
-                    listener.beforePrepared();
+                if (feedBack != null) {
+                    feedBack.doSomething();
                 }
-                playSong(temp, listener);
+                playSong(temp);
             }
         }
+    }
+
+    public void seekTo(float progress) {
+        if (mPlayer == null || nowPlaySong == null) {
+            return;
+        }
+
+        int value = (int) (nowPlaySong.getDt() * progress * 0.01);
+        mPlayer.seekTo(value);
     }
 
     public int getSongCount() {
@@ -130,6 +170,12 @@ public class Player {
     }
 
     private Player() {
+        mPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
+            @Override
+            public void onBufferingUpdate(MediaPlayer mp, int percent) {
+
+            }
+        });
     }
 
     private static class Holder {
