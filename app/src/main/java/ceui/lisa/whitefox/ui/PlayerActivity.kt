@@ -48,10 +48,18 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
 
     override fun initView() {
         baseBind.lastSong.setOnClickListener {
-            Player.get().lastSong { setSongData(Player.get().nowPlaySong) }
+            Player.get().lastSong {
+                pauseLoop()
+                Player.get().reset()
+                setSongData(Player.get().nowPlaySong)
+            }
         }
         baseBind.nextSong.setOnClickListener {
-            Player.get().nextSong { setSongData(Player.get().nowPlaySong) }
+            Player.get().nextSong {
+                pauseLoop()
+                Player.get().reset()
+                setSongData(Player.get().nowPlaySong)
+            }
         }
         baseBind.startOrPause.setOnClickListener {
             if (Player.get().isPlaying) {
@@ -90,9 +98,12 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
             }
         }
         setSongData(Player.get().nowPlaySong)
+        if (!Player.get().isPaused) {
+            runLoop()
+        }
     }
 
-    fun runLoop() {
+    private fun runLoop() {
         try {
             mHandler.removeCallbacks(mRunnable)
             mRunnable.run()
@@ -101,7 +112,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
         }
     }
 
-    fun pauseLoop() {
+    private fun pauseLoop() {
         try {
             mHandler.removeCallbacks(mRunnable)
         } catch (ex: Exception) {
@@ -124,9 +135,13 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
                 .into(baseBind.transBg)
         baseBind.songName.text = song.name
         baseBind.singerName.text = song.ar!![0].name
-        baseBind.currentPosition.text = "00: 00"
-        baseBind.allDuration.text = "00: 00"
-        baseBind.seekBar.setProgress(0.0f)
+        val position = Player.get().nowPosition
+        baseBind.currentPosition.text = mTime.format(position)
+        baseBind.seekBar.configBuilder
+                .max(song.dt!!.toFloat())
+                .build()
+        baseBind.seekBar.setProgress(Player.get().nowPosition)
+        baseBind.allDuration.text = mTime.format(song.dt)
 
         if (Player.get().isPlaying) {
             baseBind.startOrPause.setImageResource(R.drawable.ic_baseline_pause_24)
@@ -145,12 +160,6 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
         } else {
             baseBind.startOrPause.setImageResource(R.drawable.ic_baseline_play_arrow_24)
         }
-        val dt = song.dt!!
-        baseBind.seekBar.configBuilder
-                .max(dt.toFloat())
-                .build()
-        baseBind.seekBar.setProgress(Player.get().nowPosition)
-        baseBind.allDuration.text = mTime.format(dt)
         runLoop()
     }
 

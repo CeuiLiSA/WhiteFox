@@ -50,7 +50,11 @@ public class Player {
                     public void accept(SongUrl songUrl) throws Throwable {
                         final String url = songUrl.getData().get(0).getUrl();
                         if (!TextUtils.isEmpty(url)) {
-                            mPlayer.reset();
+                            try {
+                                mPlayer.reset();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                             mPlayer.setDataSource(url);
                             mPlayer.prepareAsync();
                             mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -85,6 +89,10 @@ public class Player {
         }
     }
 
+    public boolean isPaused() {
+        return !mPlayer.isPlaying() && mPlayer.getCurrentPosition() > 1;
+    }
+
     public float getNowProgress() {
         if (mPlayer != null && nowPlaySong != null) {
             float now = mPlayer.getCurrentPosition();
@@ -115,12 +123,16 @@ public class Player {
     }
 
     public void nextSong(FeedBack feedBack) {
-        if (nowPlayingIndex >= getSongCount()) {
+        if (nowPlayingIndex >= getSongCount() - 1) {
             ToastUtils.show("这已经是最后一首歌曲了");
             return;
         }
 
         play(nowPlayingIndex + 1, feedBack);
+    }
+
+    public void reset() {
+        mPlayer.reset();
     }
 
     public void play(int index, FeedBack feedBack) {
