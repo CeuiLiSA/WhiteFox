@@ -7,14 +7,14 @@ import ceui.lisa.whitefox.databinding.RecySongItemBinding
 import ceui.lisa.whitefox.models.Song
 import ceui.lisa.whitefox.ui.PlayerActivity
 
-class SongListAdapter(values: List<Song>) : BaseAdapter<Song, RecySongItemBinding>(values) {
+class SongListAdapter(values: MutableList<Song>) : BaseAdapter<Song, RecySongItemBinding>(values) {
 
     override fun layout(): Int {
         return R.layout.recy_song_item
     }
 
-    override fun onBindViewHolder(holder: VH<RecySongItemBinding>, position: Int) {
-        holder.baseBind.number.text = position.toString()
+    override fun onBindViewHolder(holder: BindViewHolder<RecySongItemBinding>, position: Int) {
+        holder.baseBind.number.text = (position + 1).toString()
         holder.baseBind.songName.text = values[position].name
         if (values[position].ar?.size == 1) {
             holder.baseBind.singerName.text = values[position].ar!![0].name + " - " + values[position].al?.name
