@@ -79,8 +79,7 @@ abstract class FragmentList<Bean> : Fragment() {
                 }
             }
         })
-        refreshLayout?.autoRefresh()
-        Log.d("trace ", "autoRefresh")
+        mViewModel.loadFirst(false)
     }
 
     open fun loadFromLocal() {
@@ -102,7 +101,7 @@ abstract class FragmentList<Bean> : Fragment() {
         refreshLayout?.setOnRefreshListener {
             Log.d("trace ", "OnRefreshListener")
             mAdapter.clear()
-            mViewModel.loadFirst()
+            mViewModel.loadFirst(true)
         }
     }
 

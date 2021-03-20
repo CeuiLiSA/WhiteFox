@@ -12,20 +12,26 @@ import kotlin.collections.ArrayList
 abstract class ListViewModel<Bean> : ViewModel() {
     // TODO: Implement the ViewModel
 
-    var playList: MutableList<Bean> = ArrayList()
+    val playList: MutableList<Bean> = ArrayList()
     val liveData: MutableLiveData<MutableList<Bean>> = MutableLiveData()
-    var loadResult: MutableLiveData<Int> = MutableLiveData()
+    val loadResult: MutableLiveData<Int> = MutableLiveData()
+    var isLoaded = false
 
     init {
         liveData.value = playList
         loadResult.value = -1
     }
 
-    fun loadFirst() {
+    fun loadFirst(isRefresh: Boolean) {
         Log.d("trace ", "loadFirst")
+        if (!isRefresh && isLoaded) {
+            return
+        }
+
         initApi().subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
+                isLoaded = true
                 it.getListData()?.let { list ->
                     if (list.isNotEmpty()) {
                         playList.addAll(list)
@@ -37,6 +43,7 @@ abstract class ListViewModel<Bean> : ViewModel() {
                 loadResult.value = 2
                 it.printStackTrace()
             })
+
     }
 
     fun loadNext() {
