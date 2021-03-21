@@ -17,11 +17,6 @@ abstract class ListViewModel<Bean> : ViewModel() {
     val loadResult: MutableLiveData<Int> = MutableLiveData()
     var isLoaded = false
 
-    init {
-        liveData.value = playList
-        loadResult.value = -1
-    }
-
     fun loadFirst(isRefresh: Boolean) {
         Log.d("trace ", "loadFirst")
         if (!isRefresh && isLoaded) {

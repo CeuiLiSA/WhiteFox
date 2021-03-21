@@ -1,7 +1,7 @@
 package ceui.lisa.whitefox.adapters
 
 import android.content.Intent
-import ceui.lisa.whitefox.Player
+import ceui.lisa.whitefox.MyPlayer
 import ceui.lisa.whitefox.R
 import ceui.lisa.whitefox.databinding.RecySongItemBinding
 import ceui.lisa.whitefox.models.Song
@@ -34,9 +34,9 @@ class SongListAdapter(values: MutableList<Song>) : BaseAdapter<Song, RecySongIte
         }
 
         holder.itemView.setOnClickListener { v ->
-            Player.get().setPlayList(values, position)
             val intent = Intent(v.context, PlayerActivity::class.java)
             v.context.startActivity(intent)
+            MyPlayer.get().setPlayList(values, position)
         }
     }
 

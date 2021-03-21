@@ -55,11 +55,7 @@ abstract class FragmentList<Bean> : Fragment() {
         mViewModel.liveData.observe(this, object :Observer<MutableList<Bean>>{
             override fun onChanged(t: MutableList<Bean>) {
                 Log.d("liveData list", "onChanged $t")
-                if (mAdapter.itemCount < t.size) {
-                    mAdapter.notifyItemRangeInserted(mAdapter.itemCount, t.size)
-                } else {
-                    mAdapter.notifyItemRangeRemoved(0, t.size)
-                }
+                mAdapter.notifyItemRangeInserted(mAdapter.itemCount, t.size)
             }
         })
         mViewModel.loadResult.observe(this, object :Observer<Int>{
@@ -79,7 +75,7 @@ abstract class FragmentList<Bean> : Fragment() {
                 }
             }
         })
-        mViewModel.loadFirst(false)
+        refreshLayout?.autoRefresh()
     }
 
     open fun loadFromLocal() {
