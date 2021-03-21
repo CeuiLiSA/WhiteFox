@@ -94,9 +94,6 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
             }
         }
         setSongData(MyPlayer.get().nowPlaySong)
-        if (!MyPlayer.get().isPaused) {
-            runLoop()
-        }
     }
 
     private fun runLoop() {
@@ -154,12 +151,16 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
+        if (!MyPlayer.get().isPaused) {
+            runLoop()
+        }
     }
 
     override fun onStop() {
         super.onStop()
         pauseLoop()
         EventBus.getDefault().unregister(this)
+        pauseLoop()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ceui.lisa.whitefox.cache.LocalFile;
+import ceui.lisa.whitefox.cache.Quality;
 import ceui.lisa.whitefox.models.Song;
 import ceui.lisa.whitefox.models.SongUrl;
 import ceui.lisa.whitefox.test.FeedBack;
@@ -48,9 +49,11 @@ public class MyPlayer {
 
     private void playSong(@NonNull Song song) {
         Log.d("Player playSong ", "开始播放");
-        final String urlString = "http://192.243.123.124:3000/song/url?&id=" + song.getId();
+        final String urlString = "http://192.243.123.124:3000/song/url?" + Quality.INSTANCE.getQuality() + "&id=" + song.getId();
+        //生成本地文件
+        File file = LocalFile.getFile(song);
         String fileString = App.mmkv.decodeString(urlString);
-        if (TextUtils.isEmpty(fileString)) {
+        if (TextUtils.isEmpty(fileString) || !file.exists()) {
             Log.d("playSong", "not local");
             RxHttp.get(urlString)
                     .asClass(SongUrl.class)
@@ -61,8 +64,6 @@ public class MyPlayer {
                         public void accept(SongUrl songUrl) throws Throwable {
                             final String url = songUrl.getData().get(0).getUrl();
                             if (!TextUtils.isEmpty(url)) {
-                                //生成本地文件
-                                File file = LocalFile.getFile(song);
                                 //开始下载MP3
                                 RxHttp.get(url)
                                         .asDownload(file.getPath(), new Consumer<Progress>() {

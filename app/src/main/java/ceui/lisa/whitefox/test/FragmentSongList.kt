@@ -23,8 +23,8 @@ class FragmentSongList : FragmentList<Song>() {
     }
 
     override fun onViewModelCreated() {
-        (mViewModel as SongListViewModel).id =
-            requireActivity().intent.getLongExtra("playlistID", 0L)
+        val id = requireActivity().intent.getLongExtra("playlistID", 0L)
+        (mViewModel as SongListViewModel).setID(id)
     }
 
     override fun initAdapter(): BaseAdapter<Song, RecySongItemBinding> {

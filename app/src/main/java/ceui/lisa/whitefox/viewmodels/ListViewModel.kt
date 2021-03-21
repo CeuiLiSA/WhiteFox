@@ -3,6 +3,7 @@ package ceui.lisa.whitefox.viewmodels
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import ceui.lisa.whitefox.core.Repository
 import ceui.lisa.whitefox.test.ListShow
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -16,14 +17,14 @@ abstract class ListViewModel<Bean> : ViewModel() {
     val liveData: MutableLiveData<MutableList<Bean>> = MutableLiveData()
     val loadResult: MutableLiveData<Int> = MutableLiveData()
     var isLoaded = false
+    var repository = loadRepo()
 
     fun loadFirst(isRefresh: Boolean) {
         Log.d("trace ", "loadFirst")
         if (!isRefresh && isLoaded) {
             return
         }
-
-        initApi().subscribeOn(Schedulers.newThread())
+        repository.initApi().subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 isLoaded = true
@@ -45,5 +46,5 @@ abstract class ListViewModel<Bean> : ViewModel() {
 
     }
 
-    abstract fun initApi(): Observable<out ListShow<Bean>>
+    abstract fun loadRepo(): Repository<Bean>
 }
