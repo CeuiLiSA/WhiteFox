@@ -174,6 +174,7 @@ public class MyPlayer {
         if (nowPlaySong != null && nowPlaySong.getId().equals(temp.getId())) {
 
         } else {
+            mPlayer.seekTo(0L);
             mPlayer.stop();
             nowPlaySong = temp;
             if (feedBack != null) {

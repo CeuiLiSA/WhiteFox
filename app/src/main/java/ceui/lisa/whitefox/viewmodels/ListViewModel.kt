@@ -17,7 +17,7 @@ abstract class ListViewModel<Bean> : ViewModel() {
     val liveData: MutableLiveData<MutableList<Bean>> = MutableLiveData()
     val loadResult: MutableLiveData<Int> = MutableLiveData()
     var isLoaded = false
-    var repository = loadRepo()
+    val repository = loadRepo()
 
     fun loadFirst(isRefresh: Boolean) {
         Log.d("trace ", "loadFirst")

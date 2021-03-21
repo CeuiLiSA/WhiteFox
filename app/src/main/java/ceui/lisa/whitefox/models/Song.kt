@@ -61,6 +61,7 @@ class Song {
     var l: QualityBean? = null
     var a: Any? = null
     var cd: String? = null
+    var localPath: String? = null
     var no: Int? = null
     var rtUrl: Any? = null
     var ftype: Int? = null
