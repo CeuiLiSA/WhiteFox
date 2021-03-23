@@ -25,13 +25,13 @@ class App: Application() {
 
         var userJson = mmkv.getString(Params.USER_JSON, "")
         if (TextUtils.isEmpty(userJson)) {
-            mmkv.putString(Params.USER_JSON, Params.USER_JSON_SAMPLE)
-            userJson = Params.USER_JSON_SAMPLE
+            user = User()
+            user.isLogin = false
             Log.d("Application", "没用户")
         } else {
+            user = Gson().fromJson(userJson, User::class.java)
             Log.d("Application", "有用户")
         }
-        user = Gson().fromJson(userJson, User::class.java)
     }
 
     companion object {

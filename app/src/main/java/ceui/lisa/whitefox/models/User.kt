@@ -17,4 +17,5 @@ class User {
     var profile: ProfileBean? = null
     var bindings: List<BindingsBean>? = null
     var cookie: String? = null
+    var isLogin = true
 }

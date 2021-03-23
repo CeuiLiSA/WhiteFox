@@ -18,6 +18,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        if (App.user.isLogin) {
+
+        } else {
+            val intent = Intent(this, TemplateActivity::class.java)
+            intent.putExtra(TemplateActivity.NAME, "登录注册")
+            startActivity(intent)
+            finish()
+        }
+
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, FragmentPlayList())
