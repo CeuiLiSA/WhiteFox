@@ -1,45 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_marginStart="@dimen/thirty_six_dp"
-        android:layout_marginEnd="@dimen/thirty_six_dp"
-        android:orientation="vertical"
         android:layout_height="match_parent">
 
-        <EditText
-            android:layout_width="match_parent"
-            android:id="@+id/phone"
-            android:text="19934277269"
-            android:layout_marginTop="100dp"
-            android:hint="手机号"
+        <LinearLayout
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.35"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:orientation="vertical"
+            android:layout_width="240dp"
             android:layout_height="wrap_content">
 
-        </EditText>
+            <EditText
+                android:layout_width="match_parent"
+                android:id="@+id/phone"
+                android:text="19934277269"
+                android:hint="手机号"
+                android:layout_height="wrap_content">
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/six_teen_dp"
-            android:id="@+id/pwd"
-            android:text="Mercis09v"
-            android:hint="密码"
-            android:layout_height="wrap_content">
+            </EditText>
 
-        </EditText>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/six_teen_dp"
+                android:id="@+id/pwd"
+                android:text="Mercis09v"
+                android:hint="密码"
+                android:layout_height="wrap_content">
 
-        <Button
-            android:layout_width="match_parent"
-            android:text="登录"
-            android:id="@+id/login"
-            android:layout_marginTop="@dimen/six_teen_dp"
-            android:layout_height="wrap_content">
+            </EditText>
 
-        </Button>
+            <Button
+                android:layout_width="match_parent"
+                android:text="登录"
+                android:id="@+id/login"
+                android:layout_marginTop="@dimen/six_teen_dp"
+                android:layout_height="wrap_content">
 
-    </LinearLayout>
+            </Button>
+
+        </LinearLayout>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

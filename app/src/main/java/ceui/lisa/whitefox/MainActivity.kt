@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (!App.user.isLogin) {
+        if (App.user.isLogin) {
 
         } else {
             val intent = Intent(this, TemplateActivity::class.java)
@@ -32,31 +32,5 @@ class MainActivity : AppCompatActivity() {
                     .replace(R.id.fragment_container, FragmentPlayList())
                     .commit()
         }
-
-//        RxHttp.get("http://192.243.123.124:3000/login/cellphone?phone=19934277269&password=Mercis09v")
-//                .asString()
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribeOn(Schedulers.newThread())
-//                .subscribe {
-//                    Log.d("aaa", it)
-//
-//                    RxHttp.get("http://192.243.123.124:3000/login/status")
-//                            .asString()
-//                            .observeOn(AndroidSchedulers.mainThread())
-//                            .subscribeOn(Schedulers.newThread())
-//                            .subscribe {
-//                                Log.d("bbb", it)
-//
-//                            }
-//                }
-
-//        val intent = Intent(this, TemplateActivity::class.java)
-//        startActivity(intent)
-
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        Log.d("onConfigurationChanged", newConfig.toString())
     }
 }
