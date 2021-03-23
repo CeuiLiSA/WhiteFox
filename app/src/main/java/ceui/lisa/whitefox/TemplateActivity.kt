@@ -24,6 +24,8 @@ class TemplateActivity : AppCompatActivity() {
 
         if ("登录注册" == fragmentName) {
             fragment = FragmentLogin()
+        } else if ("歌单->歌曲列表" == fragmentName) {
+            fragment = FragmentSongList()
         }
 
         if (fragment != null) {

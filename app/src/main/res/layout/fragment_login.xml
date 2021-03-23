@@ -15,6 +15,7 @@
         <EditText
             android:layout_width="match_parent"
             android:id="@+id/phone"
+            android:text="19934277269"
             android:layout_marginTop="100dp"
             android:hint="手机号"
             android:layout_height="wrap_content">
@@ -25,6 +26,7 @@
             android:layout_width="match_parent"
             android:layout_marginTop="@dimen/six_teen_dp"
             android:id="@+id/pwd"
+            android:text="Mercis09v"
             android:hint="密码"
             android:layout_height="wrap_content">
 

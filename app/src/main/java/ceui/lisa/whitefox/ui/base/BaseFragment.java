@@ -35,6 +35,7 @@ public abstract class BaseFragment<Layout extends ViewDataBinding> extends Fragm
     public BaseFragment() {
         uuid = UUID.randomUUID().toString();
         Log.d(className, "newInstance " + uuid);
+        Log.d("method trace" + className, "construct" + uuid);
     }
 
     @Override
@@ -44,6 +45,7 @@ public abstract class BaseFragment<Layout extends ViewDataBinding> extends Fragm
             mContext = requireContext();
             mActivity = requireActivity();
 
+            Log.d("method trace" + className, "onCreate");
             Bundle bundle = getArguments();
             if (bundle != null) {
                 bundle(bundle);
@@ -58,12 +60,11 @@ public abstract class BaseFragment<Layout extends ViewDataBinding> extends Fragm
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         try {
-            if (rootView == null || baseBind == null) {
-                rootView = inflater.inflate(layout(), container, false);
-                baseBind = DataBindingUtil.bind(rootView);
-                initView();
-                initData();
-            }
+            rootView = inflater.inflate(layout(), container, false);
+            baseBind = DataBindingUtil.bind(rootView);
+            Log.d("method trace" + className, "onCreateView");
+            initView();
+            initData();
         } catch (Exception e) {
             e.printStackTrace();
         }

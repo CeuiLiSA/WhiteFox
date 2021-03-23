@@ -54,13 +54,13 @@ abstract class FragmentList<Bean> : Fragment() {
         onAdapterCreated()
         mViewModel.liveData.observe(this, object :Observer<MutableList<Bean>>{
             override fun onChanged(t: MutableList<Bean>) {
-                Log.d("liveData list", "onChanged $t")
+                Log.d("liveData list", "onChanged ")
                 mAdapter.notifyItemRangeInserted(mAdapter.itemCount, t.size)
             }
         })
         mViewModel.loadResult.observe(this, object :Observer<Int>{
             override fun onChanged(t: Int?) {
-                Log.d("liveData refresh", "onChanged $t")
+                Log.d("liveData refresh", "onChanged ")
                 t?.let {
                     if (t == -1) {
 

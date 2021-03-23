@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (App.user.isLogin) {
+        if (!App.user.isLogin) {
 
         } else {
             val intent = Intent(this, TemplateActivity::class.java)
