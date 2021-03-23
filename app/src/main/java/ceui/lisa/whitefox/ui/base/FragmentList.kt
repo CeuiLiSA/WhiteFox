@@ -1,11 +1,10 @@
-package ceui.lisa.whitefox.test
+package ceui.lisa.whitefox.ui.base
 
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -19,7 +18,6 @@ import com.hjq.toast.ToastUtils
 import com.scwang.smart.refresh.header.MaterialHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import jp.wasabeef.recyclerview.animators.LandingAnimator
-import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator
 
 abstract class FragmentList<Bean> : Fragment() {
 

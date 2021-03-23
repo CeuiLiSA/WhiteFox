@@ -1,6 +1,5 @@
 package ceui.lisa.whitefox.ui.comment
 
-import ceui.lisa.whitefox.models.VipRightsBean
 
 class UserBean {
     /**

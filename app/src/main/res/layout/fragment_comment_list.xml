@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+
+        <ceui.lisa.whitefox.core.GlareLayout
+            android:id="@+id/glare_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </ceui.lisa.whitefox.core.GlareLayout>
+
+        <com.scwang.smart.refresh.layout.SmartRefreshLayout
+            android:layout_width="match_parent"
+            android:id="@+id/smart_refresh_layout"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+
+    </LinearLayout>
+</layout>

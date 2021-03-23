@@ -13,4 +13,12 @@ class CommentListViewModel: ListViewModel<CommentsBean>() {
     fun setID(id: Long) {
         (repository as CommentListRepo).id = id
     }
+
+    fun setSortType(type: Int) {
+        (repository as CommentListRepo).sortType = type
+    }
+
+    fun getSortType(): Int {
+        return (repository as CommentListRepo).sortType
+    }
 }
