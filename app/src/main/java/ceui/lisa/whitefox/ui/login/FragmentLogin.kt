@@ -13,7 +13,6 @@ import ceui.lisa.whitefox.R
 import ceui.lisa.whitefox.databinding.FragmentLoginBinding
 import ceui.lisa.whitefox.models.User
 import ceui.lisa.whitefox.ui.base.BaseFragment
-import ceui.lisa.whitefox.viewmodels.LoginViewModel
 import com.google.gson.Gson
 import com.hjq.toast.ToastUtils
 

@@ -4,7 +4,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import ceui.lisa.whitefox.test.FragmentSongList
+import ceui.lisa.whitefox.ui.comment.FragmentCommentList
+import ceui.lisa.whitefox.ui.playlist.FragmentSongList
 import ceui.lisa.whitefox.ui.login.FragmentLogin
 
 class TemplateActivity : AppCompatActivity() {
@@ -29,6 +30,8 @@ class TemplateActivity : AppCompatActivity() {
             fragment = FragmentLogin()
         } else if ("歌单->歌曲列表" == fragmentName) {
             fragment = FragmentSongList()
+        } else if ("歌曲评论" == fragmentName) {
+            fragment = FragmentCommentList()
         }
 
         Log.d("method trace", "TemplateActivity")

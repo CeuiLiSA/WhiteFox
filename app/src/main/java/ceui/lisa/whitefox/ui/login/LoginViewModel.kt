@@ -1,4 +1,4 @@
-package ceui.lisa.whitefox.viewmodels
+package ceui.lisa.whitefox.ui.login
 
 import android.content.Intent
 import android.util.Log
@@ -26,14 +26,5 @@ class LoginViewModel: ViewModel() {
                 .subscribe {
                     userJson.value = it
                 }
-
-
-//        RxHttp.get("http://192.243.123.124:3000/login/status")
-//                .asString()
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribeOn(Schedulers.newThread())
-//                .subscribe {
-//                    Log.d("bbb", it)
-//                }
     }
 }

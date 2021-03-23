@@ -1,11 +1,13 @@
 package ceui.lisa.whitefox.ui
 
+import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
 import android.util.Log
 import ceui.lisa.whitefox.MyPlayer
 import ceui.lisa.whitefox.R
+import ceui.lisa.whitefox.TemplateActivity
 import ceui.lisa.whitefox.databinding.ActivityPlayerBinding
 import ceui.lisa.whitefox.models.Song
 import ceui.lisa.whitefox.test.MessageEvent
@@ -57,6 +59,12 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
                 pauseLoop()
                 setSongData(MyPlayer.get().nowPlaySong)
             }
+        }
+        baseBind.comment.setOnClickListener {
+            val intent = Intent(mContext, TemplateActivity::class.java)
+            intent.putExtra(TemplateActivity.NAME, "歌曲评论")
+            intent.putExtra("songID", MyPlayer.get().nowPlaySong.id)
+            mContext.startActivity(intent)
         }
         baseBind.startOrPause.setOnClickListener {
             if (MyPlayer.get().isPlaying) {

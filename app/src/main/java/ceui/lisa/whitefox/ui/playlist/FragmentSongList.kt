@@ -1,22 +1,14 @@
-package ceui.lisa.whitefox.test
+package ceui.lisa.whitefox.ui.playlist
 
-import ceui.lisa.whitefox.Params
 import ceui.lisa.whitefox.adapters.BaseAdapter
 import ceui.lisa.whitefox.adapters.SongListAdapter
 import ceui.lisa.whitefox.databinding.RecySongItemBinding
 import ceui.lisa.whitefox.models.Song
-import ceui.lisa.whitefox.models.ListSongResponse
+import ceui.lisa.whitefox.test.FragmentList
 import ceui.lisa.whitefox.viewmodels.ListViewModel
 import ceui.lisa.whitefox.viewmodels.SongListViewModel
-import com.google.gson.Gson
 
 class FragmentSongList : FragmentList<Song>() {
-
-    companion object {
-        fun newInstance(): FragmentSongList {
-            return FragmentSongList()
-        }
-    }
 
     override fun modelClass(): Class<out ListViewModel<Song>> {
         return SongListViewModel::class.java

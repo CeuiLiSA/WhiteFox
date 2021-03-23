@@ -1,9 +1,10 @@
-package ceui.lisa.whitefox.test
+package ceui.lisa.whitefox.ui.playlist
 
 import ceui.lisa.whitefox.adapters.BaseAdapter
 import ceui.lisa.whitefox.adapters.PlayListAdapter
 import ceui.lisa.whitefox.databinding.RecyPlaylistItemBinding
 import ceui.lisa.whitefox.models.PlaylistBean
+import ceui.lisa.whitefox.test.FragmentList
 import ceui.lisa.whitefox.viewmodels.ListViewModel
 import ceui.lisa.whitefox.viewmodels.PlayListViewModel
 
