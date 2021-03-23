@@ -1,9 +1,8 @@
-package ceui.lisa.whitefox.core
+package ceui.lisa.whitefox.ui.songlist
 
 import ceui.lisa.whitefox.App
-import ceui.lisa.whitefox.models.ListPlayListResponse
+import ceui.lisa.whitefox.core.RemoteData
 import ceui.lisa.whitefox.models.ListSongResponse
-import ceui.lisa.whitefox.models.PlaylistBean
 import ceui.lisa.whitefox.models.Song
 import ceui.lisa.whitefox.test.ListShow
 import io.reactivex.rxjava3.core.Observable

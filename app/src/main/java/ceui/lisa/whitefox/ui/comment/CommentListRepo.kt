@@ -1,6 +1,6 @@
-package ceui.lisa.whitefox.core
+package ceui.lisa.whitefox.ui.comment
 
-import ceui.lisa.whitefox.App
+import ceui.lisa.whitefox.core.RemoteData
 import ceui.lisa.whitefox.models.*
 import ceui.lisa.whitefox.test.ListShow
 import io.reactivex.rxjava3.core.Observable

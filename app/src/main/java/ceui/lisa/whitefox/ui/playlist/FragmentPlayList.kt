@@ -6,7 +6,6 @@ import ceui.lisa.whitefox.databinding.RecyPlaylistItemBinding
 import ceui.lisa.whitefox.models.PlaylistBean
 import ceui.lisa.whitefox.test.FragmentList
 import ceui.lisa.whitefox.viewmodels.ListViewModel
-import ceui.lisa.whitefox.viewmodels.PlayListViewModel
 
 class FragmentPlayList: FragmentList<PlaylistBean>() {
 

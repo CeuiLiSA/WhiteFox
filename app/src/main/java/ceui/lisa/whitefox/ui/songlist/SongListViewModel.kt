@@ -1,13 +1,8 @@
-package ceui.lisa.whitefox.viewmodels
+package ceui.lisa.whitefox.ui.songlist
 
-import ceui.lisa.whitefox.App
 import ceui.lisa.whitefox.core.Repository
-import ceui.lisa.whitefox.core.SongListRepo
-import ceui.lisa.whitefox.models.ListSongResponse
 import ceui.lisa.whitefox.models.Song
-import ceui.lisa.whitefox.test.ListShow
-import io.reactivex.rxjava3.core.Observable
-import rxhttp.RxHttp
+import ceui.lisa.whitefox.viewmodels.ListViewModel
 
 class SongListViewModel: ListViewModel<Song>() {
 

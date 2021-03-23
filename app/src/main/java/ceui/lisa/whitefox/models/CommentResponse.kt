@@ -2,7 +2,7 @@ package ceui.lisa.whitefox.models
 
 import ceui.lisa.whitefox.test.ListShow
 
-class CommentResponse : ListShow<CommentsBean?> {
+class CommentResponse : ListShow<CommentsBean> {
     /**
      * isMusician : false
      * cnum : 0

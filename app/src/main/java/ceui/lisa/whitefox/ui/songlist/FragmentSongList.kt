@@ -1,4 +1,4 @@
-package ceui.lisa.whitefox.ui.playlist
+package ceui.lisa.whitefox.ui.songlist
 
 import ceui.lisa.whitefox.adapters.BaseAdapter
 import ceui.lisa.whitefox.adapters.SongListAdapter
@@ -6,7 +6,6 @@ import ceui.lisa.whitefox.databinding.RecySongItemBinding
 import ceui.lisa.whitefox.models.Song
 import ceui.lisa.whitefox.test.FragmentList
 import ceui.lisa.whitefox.viewmodels.ListViewModel
-import ceui.lisa.whitefox.viewmodels.SongListViewModel
 
 class FragmentSongList : FragmentList<Song>() {
 

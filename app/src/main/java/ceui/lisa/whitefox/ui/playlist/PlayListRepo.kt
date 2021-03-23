@@ -1,6 +1,7 @@
-package ceui.lisa.whitefox.core
+package ceui.lisa.whitefox.ui.playlist
 
 import ceui.lisa.whitefox.App
+import ceui.lisa.whitefox.core.RemoteData
 import ceui.lisa.whitefox.models.ListPlayListResponse
 import ceui.lisa.whitefox.models.PlaylistBean
 import ceui.lisa.whitefox.test.ListShow
