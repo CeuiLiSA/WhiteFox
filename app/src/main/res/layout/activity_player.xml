@@ -122,7 +122,7 @@
             android:id="@+id/play_ctrl_ll"
             android:layout_centerInParent="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="60dp"
+            android:layout_marginBottom="48dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 

@@ -4,7 +4,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
 import android.util.Log
-import ceui.lisa.whitefox.Player
+import ceui.lisa.whitefox.MyPlayer
 import ceui.lisa.whitefox.R
 import ceui.lisa.whitefox.databinding.ActivityPlayerBinding
 import ceui.lisa.whitefox.models.Song
@@ -19,7 +19,6 @@ import jp.wasabeef.glide.transformations.BlurTransformation
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -32,7 +31,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
     inner class MyRunnable : Runnable {
         override fun run() {
             //设置时间文字
-            val position = Player.get().nowPosition
+            val position = MyPlayer.get().nowPosition
             baseBind.currentPosition.text = mTime.format(position)
 
             //设置进度条
@@ -48,26 +47,26 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
 
     override fun initView() {
         baseBind.lastSong.setOnClickListener {
-            Player.get().lastSong {
+            MyPlayer.get().lastSong {
                 pauseLoop()
-                setSongData(Player.get().nowPlaySong)
+                setSongData(MyPlayer.get().nowPlaySong)
             }
         }
         baseBind.nextSong.setOnClickListener {
-            Player.get().nextSong {
+            MyPlayer.get().nextSong {
                 pauseLoop()
-                setSongData(Player.get().nowPlaySong)
+                setSongData(MyPlayer.get().nowPlaySong)
             }
         }
         baseBind.startOrPause.setOnClickListener {
-            if (Player.get().isPlaying) {
+            if (MyPlayer.get().isPlaying) {
                 baseBind.startOrPause.setImageResource(R.drawable.ic_baseline_play_arrow_24)
                 pauseLoop()
-                Player.get().pause()
+                MyPlayer.get().pause()
             } else {
                 baseBind.startOrPause.setImageResource(R.drawable.ic_baseline_pause_24)
                 runLoop()
-                Player.get().start()
+                MyPlayer.get().start()
             }
         }
         baseBind.seekBar.onProgressChangedListener = object : BubbleSeekBar.OnProgressChangedListener{
@@ -84,7 +83,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
                 progress: Int,
                 progressFloat: Float
             ) {
-                Player.get().seekTo(progress)
+                MyPlayer.get().seekTo(progress)
             }
 
             override fun getProgressOnFinally(
@@ -95,10 +94,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
             ) {
             }
         }
-        setSongData(Player.get().nowPlaySong)
-        if (!Player.get().isPaused) {
-            runLoop()
-        }
+        setSongData(MyPlayer.get().nowPlaySong)
     }
 
     private fun runLoop() {
@@ -133,7 +129,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
                 .into(baseBind.transBg)
         baseBind.songName.text = song.name
         baseBind.singerName.text = song.ar!![0].name
-        val position = Player.get().nowPosition
+        val position = MyPlayer.get().nowPosition
         baseBind.currentPosition.text = mTime.format(position)
         baseBind.seekBar.configBuilder
                 .max(song.dt!!.toFloat())
@@ -141,7 +137,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
         baseBind.seekBar.setProgress(position)
         baseBind.allDuration.text = mTime.format(song.dt)
 
-        if (Player.get().isPlaying) {
+        if (MyPlayer.get().isPlaying) {
             baseBind.startOrPause.setImageResource(R.drawable.ic_baseline_pause_24)
         } else {
             baseBind.startOrPause.setImageResource(R.drawable.ic_baseline_play_arrow_24)
@@ -151,23 +147,24 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
+        if (!MyPlayer.get().isPaused) {
+            runLoop()
+        }
     }
 
     override fun onStop() {
         super.onStop()
         pauseLoop()
         EventBus.getDefault().unregister(this)
+        pauseLoop()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: MessageEvent) {
         try {
             if (TextUtils.equals("PlayerActivity", event.receiver)) {
-                if (Player.get().isPlaying) {
-                    baseBind.startOrPause.setImageResource(R.drawable.ic_baseline_pause_24)
-                } else {
-                    baseBind.startOrPause.setImageResource(R.drawable.ic_baseline_play_arrow_24)
-                }
+                Log.d("invoke", "invoke11")
+                baseBind.startOrPause.setImageResource(R.drawable.ic_baseline_pause_24)
                 runLoop()
             }
         } catch (ex: Exception) {
