@@ -34,38 +34,25 @@ class FragmentMain : BaseFragment<FragmentMainBinding>() {
 
     override fun initData() {
         if (!mViewModel.isLoaded) {
-            RxHttp.get("http://192.243.123.124:3000/recommend/resource")
-                    .asClass(RecmdPlayListResponse::class.java)
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        mViewModel.isLoaded = true
-                        it.getListData()?.let { list ->
-                            if (list.isNotEmpty()) {
-                                mViewModel.playList.addAll(list)
-                                playListHorizontalAdapter.notifyDataSetChanged()
-                            }
-                        }
-                    }) { throwable -> throwable.printStackTrace() }
+            mViewModel.repoPlayLists.initApi().subscribe {
+                mViewModel.isLoaded = true
+                it.getListData()?.let { list ->
+                    if (list.isNotEmpty()) {
+                        mViewModel.playList.addAll(list)
+                        playListHorizontalAdapter.notifyDataSetChanged()
+                    }
+                }
+            }
 
-
-
-            RxHttp.get("http://192.243.123.124:3000/recommend/songs")
-                    .asClass(DailySongList::class.java)
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        mViewModel.isLoaded = true
-                        it.data?.let { item ->
-                            item.dailySongs?.let { listSong ->
-                                if (listSong.isNotEmpty()) {
-                                    mViewModel.listSong.addAll(listSong)
-                                    songListAdapter.notifyDataSetChanged()
-                                }
-                            }
-
-                        }
-                    }) { throwable -> throwable.printStackTrace() }
+            mViewModel.repoSongs.initApi().subscribe {
+                mViewModel.isLoaded = true
+                it.getListData()?.let { list ->
+                    if (list.isNotEmpty()) {
+                        mViewModel.listSong.addAll(list)
+                        songListAdapter.notifyDataSetChanged()
+                    }
+                }
+            }
         }
     }
 
