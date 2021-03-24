@@ -23,7 +23,8 @@ abstract class ListViewModel<Bean> : ViewModel() {
 
         if (isRefresh) {
             repository.pageNo = 1
-            repository.initApi().subscribeOn(Schedulers.newThread())
+            repository.initApi()
+                    .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
                         isLoaded = true
@@ -42,7 +43,8 @@ abstract class ListViewModel<Bean> : ViewModel() {
                         it.printStackTrace()
                     })
         } else {
-            repository.initApi().subscribeOn(Schedulers.newThread())
+            repository.initApi()
+                    .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
                         repository.onResponse(it)
