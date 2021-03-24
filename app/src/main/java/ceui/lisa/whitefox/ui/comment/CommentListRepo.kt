@@ -1,5 +1,6 @@
 package ceui.lisa.whitefox.ui.comment
 
+import android.text.TextUtils
 import ceui.lisa.whitefox.core.RemoteData
 import ceui.lisa.whitefox.models.CommentResponse
 import ceui.lisa.whitefox.models.CommentsBean
@@ -40,7 +41,12 @@ class CommentListRepo : RemoteData<CommentsBean>() {
     override fun <Response : ListShow<CommentsBean>> onResponse(response: Response) {
         super.onResponse(response)
         if (response is CommentResponse) {
-            cursor = (response as CommentResponse).data!!.cursor!!
+            if (sortType == 3) {
+                val temp = (response as CommentResponse).data?.cursor
+                if (!TextUtils.isEmpty(temp)) {
+                    cursor = temp!!.toLong()
+                }
+            }
         }
     }
 }
