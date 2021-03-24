@@ -24,6 +24,11 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, FragmentPlayList())
                     .commit()
+
+//            val intent = Intent(this, TemplateActivity::class.java)
+//            intent.putExtra(TemplateActivity.NAME, "歌曲评论")
+//            intent.putExtra("songID", 555959L)
+//            startActivity(intent)
         }
     }
 }

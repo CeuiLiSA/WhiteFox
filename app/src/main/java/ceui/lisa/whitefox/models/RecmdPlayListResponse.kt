@@ -17,4 +17,8 @@ class RecmdPlayListResponse: ListShow<PlaylistBean> {
     override fun getListData(): List<PlaylistBean>? {
         return recommend
     }
+
+    override fun hasMore(): Boolean {
+        return false
+    }
 }

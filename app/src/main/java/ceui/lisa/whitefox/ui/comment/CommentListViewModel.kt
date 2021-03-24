@@ -6,10 +6,6 @@ import ceui.lisa.whitefox.viewmodels.ListViewModel
 
 class CommentListViewModel: ListViewModel<CommentsBean>() {
 
-    override fun loadRepo(): Repository<CommentsBean> {
-        return CommentListRepo()
-    }
-
     fun setID(id: Long) {
         (repository as CommentListRepo).id = id
     }
@@ -20,5 +16,9 @@ class CommentListViewModel: ListViewModel<CommentsBean>() {
 
     fun getSortType(): Int {
         return (repository as CommentListRepo).sortType
+    }
+
+    override fun loadRepo(): Repository<CommentsBean> {
+        return CommentListRepo()
     }
 }

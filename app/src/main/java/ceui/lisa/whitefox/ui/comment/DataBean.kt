@@ -17,7 +17,7 @@ class DataBean {
     var currentComment: Any? = null
     var totalCount: Int? = null
     var hasMore: Boolean? = null
-    var cursor: String? = null
+    var cursor: Long? = null
     var sortType: Int? = null
     var sortTypeList: List<SortTypeListBean>? = null
 }

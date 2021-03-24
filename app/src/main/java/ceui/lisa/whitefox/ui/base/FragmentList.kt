@@ -15,6 +15,8 @@ import ceui.lisa.whitefox.R
 import ceui.lisa.whitefox.adapters.BaseAdapter
 import ceui.lisa.whitefox.viewmodels.ListViewModel
 import com.hjq.toast.ToastUtils
+import com.scwang.smart.refresh.footer.ClassicsFooter
+import com.scwang.smart.refresh.header.FalsifyFooter
 import com.scwang.smart.refresh.header.MaterialHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import jp.wasabeef.recyclerview.animators.LandingAnimator
@@ -56,6 +58,13 @@ abstract class FragmentList<Bean> : Fragment() {
                 mAdapter.notifyItemRangeInserted(mAdapter.itemCount, t.size)
             }
         })
+        mViewModel.hasMore.observe(this, object : Observer<Boolean> {
+            override fun onChanged(t: Boolean) {
+                if (!t) {
+                    refreshLayout?.setRefreshFooter(FalsifyFooter(requireContext()))
+                }
+            }
+        })
         mViewModel.loadResult.observe(this, object :Observer<Int>{
             override fun onChanged(t: Int?) {
                 Log.d("liveData refresh", "onChanged ")
@@ -67,13 +76,21 @@ abstract class FragmentList<Bean> : Fragment() {
                     } else if (t == 2) {
                         refreshLayout?.finishRefresh(false)
                         ToastUtils.show("加载失败")
+                    } else if (t == 3) {
+                        refreshLayout?.finishLoadMore()
+                    } else if (t == 4) {
+                        refreshLayout?.finishLoadMore(false)
+                        ToastUtils.show("加载失败")
                     } else {
 
                     }
                 }
             }
         })
-        refreshLayout?.autoRefresh()
+        if (!mViewModel.isLoaded) {
+            refreshLayout?.autoRefresh()
+            Log.d("traceFragmentList", "autoRefresh")
+        }
     }
 
     open fun loadFromLocal() {
@@ -92,10 +109,15 @@ abstract class FragmentList<Bean> : Fragment() {
         baseItemAnimator.removeDuration = 400L
         recyclerView?.itemAnimator = baseItemAnimator
         refreshLayout?.setRefreshHeader(MaterialHeader(requireContext()))
+        refreshLayout?.setRefreshFooter(ClassicsFooter(requireContext()))
         refreshLayout?.setOnRefreshListener {
-            Log.d("trace ", "OnRefreshListener")
+            Log.d("traceFragmentList", "OnRefreshListener")
             mAdapter.clear()
-            mViewModel.loadFirst(true)
+            mViewModel.loadData(true)
+        }
+        refreshLayout?.setOnLoadMoreListener {
+            Log.d("trace ", "OnLoadMoreListener")
+            mViewModel.loadData(false)
         }
     }
 

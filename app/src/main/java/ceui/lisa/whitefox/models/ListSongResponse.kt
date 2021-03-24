@@ -19,4 +19,8 @@ class ListSongResponse : ListShow<Song> {
     override fun getListData(): List<Song>? {
         return playlist?.tracks
     }
+
+    override fun hasMore(): Boolean {
+        return false
+    }
 }

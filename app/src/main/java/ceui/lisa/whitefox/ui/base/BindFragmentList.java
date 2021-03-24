@@ -19,8 +19,13 @@ public abstract class BindFragmentList<Layout extends ViewDataBinding, Bean>
     @Nullable
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        baseBind = DataBindingUtil.inflate(inflater, layout(), container, false);
-        return baseBind.getRoot();
+        try {
+            baseBind = DataBindingUtil.inflate(inflater, layout(), container, false);
+            return baseBind.getRoot();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return null;
+        }
     }
 
     public abstract int layout();

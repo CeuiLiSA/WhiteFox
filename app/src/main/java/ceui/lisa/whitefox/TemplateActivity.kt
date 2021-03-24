@@ -19,7 +19,10 @@ class TemplateActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         if (savedInstanceState != null) {
+            Log.d("methodTrace", "TemplateActivity savedInstanceState != null")
             return
+        } else {
+            Log.d("methodTrace", "TemplateActivity savedInstanceState == null")
         }
 
         val fragmentName = intent.getStringExtra(NAME)
@@ -34,11 +37,15 @@ class TemplateActivity : AppCompatActivity() {
             fragment = FragmentCommentList()
         }
 
-        Log.d("method trace", "TemplateActivity")
         if (fragment != null) {
             supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, fragment)
                     .commit()
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        Log.d("methodTrace", "onSaveInstanceState")
     }
 }

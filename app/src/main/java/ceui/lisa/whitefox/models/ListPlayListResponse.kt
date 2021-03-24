@@ -17,4 +17,8 @@ class ListPlayListResponse: ListShow<PlaylistBean> {
     override fun getListData(): List<PlaylistBean>? {
         return playlist
     }
+
+    override fun hasMore(): Boolean {
+        return false
+    }
 }

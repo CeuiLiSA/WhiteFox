@@ -18,8 +18,12 @@ class LocalSongsRepo : LocalData<String>() {
                 result.add(file.name)
             }
             val listShow: ListShow<String> = object : ListShow<String> {
-                override fun getListData(): List<String>? {
+                override fun getListData(): List<String> {
                     return result
+                }
+
+                override fun hasMore(): Boolean {
+                    return true
                 }
             }
             emitter.onNext(listShow)

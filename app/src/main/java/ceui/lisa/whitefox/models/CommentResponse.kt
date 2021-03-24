@@ -14,4 +14,12 @@ class CommentResponse : ListShow<CommentsBean> {
     override fun getListData(): List<CommentsBean>? {
         return data?.comments
     }
+
+    override fun hasMore(): Boolean {
+        if (data?.hasMore != null) {
+            return data?.hasMore!!
+        } else {
+            return false
+        }
+    }
 }
