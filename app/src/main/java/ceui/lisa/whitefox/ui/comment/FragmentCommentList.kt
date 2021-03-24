@@ -7,6 +7,7 @@ import ceui.lisa.whitefox.adapters.BaseAdapter
 import ceui.lisa.whitefox.adapters.CommentListAdapter
 import ceui.lisa.whitefox.core.OnCheckChangeListener
 import ceui.lisa.whitefox.databinding.FragmentCommentListBinding
+import ceui.lisa.whitefox.databinding.RecyCommentBinding
 import ceui.lisa.whitefox.databinding.RecySongItemBinding
 import ceui.lisa.whitefox.models.CommentsBean
 import ceui.lisa.whitefox.ui.base.BindFragmentList
@@ -24,7 +25,7 @@ class FragmentCommentList : BindFragmentList<FragmentCommentListBinding, Comment
         (mViewModel as CommentListViewModel).setID(id)
     }
 
-    override fun initAdapter(): BaseAdapter<CommentsBean, RecySongItemBinding> {
+    override fun initAdapter(): BaseAdapter<CommentsBean, RecyCommentBinding> {
         return CommentListAdapter(mViewModel.playList)
     }
 

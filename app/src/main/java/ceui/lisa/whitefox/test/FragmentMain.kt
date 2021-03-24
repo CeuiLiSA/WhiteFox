@@ -73,6 +73,11 @@ class FragmentMain : BaseFragment<FragmentMainBinding>() {
             mContext.startActivity(intent)
         }
 
+        baseBind.myPlaylist.setOnClickListener {
+            val intent = Intent(mContext, TemplateActivity::class.java)
+            intent.putExtra(TemplateActivity.NAME, "个人歌单列表")
+            mContext.startActivity(intent)
+        }
 
         baseBind.list1.addItemDecoration(LinearItemHorizontalDecoration(DensityUtil.dp2px(12.0f)))
         baseBind.list1.layoutManager = LinearLayoutManager(

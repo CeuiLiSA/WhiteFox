@@ -31,4 +31,20 @@ class AccountBean {
     var vipType: Int? = null
     var viptypeVersion: Long? = null
     var anonimousUser: Boolean? = null
+
+    var avatarDetail: Any? = null
+    var locationInfo: Any? = null
+    var liveInfo: Any? = null
+    var followed: Boolean? = null
+    var relationTag: Any? = null
+    var anonym: Int? = null
+    var userId: Int? = null
+    var userType: Int? = null
+    var nickname: String? = null
+    var avatarUrl: String? = null
+    var authStatus: Int? = null
+    var expertTags: Any? = null
+    var experts: Any? = null
+    var remarkName: Any? = null
+    var isHug: Boolean? = null
 }

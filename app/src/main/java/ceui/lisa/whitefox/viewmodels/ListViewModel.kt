@@ -23,6 +23,7 @@ abstract class ListViewModel<Bean> : ViewModel() {
 
         if (isRefresh) {
             repository.pageNo = 1
+            repository.offset = 0
             repository.initApi()
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -32,6 +33,7 @@ abstract class ListViewModel<Bean> : ViewModel() {
                         repository.onResponse(it)
                         it.getListData()?.let { list ->
                             if (list.isNotEmpty()) {
+                                repository.offset += list.size
                                 playList.addAll(list)
                                 liveData.value = playList
                             }
@@ -51,6 +53,7 @@ abstract class ListViewModel<Bean> : ViewModel() {
                         repository.pageNo++
                         it.getListData()?.let { list ->
                             if (list.isNotEmpty()) {
+                                repository.offset += list.size
                                 playList.addAll(list)
                                 liveData.value = playList
                             }

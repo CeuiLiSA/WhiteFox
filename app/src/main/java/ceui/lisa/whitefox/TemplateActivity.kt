@@ -8,6 +8,7 @@ import ceui.lisa.whitefox.test.FragmentLocalSongs
 import ceui.lisa.whitefox.ui.comment.FragmentCommentList
 import ceui.lisa.whitefox.ui.songlist.FragmentSongList
 import ceui.lisa.whitefox.ui.login.FragmentLogin
+import ceui.lisa.whitefox.ui.playlist.FragmentPlayList
 
 class TemplateActivity : AppCompatActivity() {
 
@@ -20,10 +21,7 @@ class TemplateActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         if (savedInstanceState != null) {
-            Log.d("methodTrace", "TemplateActivity savedInstanceState != null")
             return
-        } else {
-            Log.d("methodTrace", "TemplateActivity savedInstanceState == null")
         }
 
         val fragmentName = intent.getStringExtra(NAME)
@@ -38,6 +36,8 @@ class TemplateActivity : AppCompatActivity() {
             fragment = FragmentCommentList()
         } else if ("本地已下载音乐" == fragmentName) {
             fragment = FragmentLocalSongs()
+        } else if ("个人歌单列表" == fragmentName) {
+            fragment = FragmentPlayList()
         }
 
         if (fragment != null) {
@@ -45,10 +45,5 @@ class TemplateActivity : AppCompatActivity() {
                     .replace(R.id.fragment_container, fragment)
                     .commit()
         }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        Log.d("methodTrace", "onSaveInstanceState")
     }
 }

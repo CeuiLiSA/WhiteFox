@@ -13,6 +13,9 @@ class PlayListRepo : RemoteData<PlaylistBean>() {
     override fun initApi(): Observable<out ListShow<PlaylistBean>> {
         return RxHttp.get("http://192.243.123.124:3000/user/playlist")
             .add("uid", App.user.account!!.id)
+            .add("limit", pageSize)
+            .add("offset", offset)
+            .add("cookie", "cookie")
             .asClass(ListPlayListResponse::class.java)
     }
 }

@@ -1,7 +1,5 @@
 package ceui.lisa.whitefox.models
 
-import ceui.lisa.whitefox.ui.comment.UserBean
-
 class CommentsBean {
     /**
      * user : {"locationInfo":null,"liveInfo":null,"anonym":0,"vipType":10,"nickname":"Aimertia-iko","avatarUrl":"https://p4.music.126.net/jGj0vkahAvHu2gqrHcdvkA==/18526770929949905.jpg","remarkName":null,"experts":null,"authStatus":0,"vipRights":{"associator":null,"musicPackage":{"vipCode":220,"rights":true},"redVipAnnualCount":-1,"redVipLevel":1},"expertTags":null,"avatarDetail":null,"userType":0,"userId":481495105}
@@ -20,14 +18,14 @@ class CommentsBean {
      * repliedMark : null
      * liked : false
      */
-    var user: UserBean? = null
+    var user: AccountBean? = null
     var beReplied: List<BeRepliedBean>? = null
     var pendantData: Any? = null
     var showFloorComment: Any? = null
     var status: Int? = null
     var commentId: Long? = null
     var content: String? = null
-    var time: Long? = null
+    var time: String? = null
     var likedCount: Int? = null
     var expressionUrl: Any? = null
     var commentLocationType: Int? = null

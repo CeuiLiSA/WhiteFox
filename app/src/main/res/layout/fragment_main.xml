@@ -11,21 +11,38 @@
         android:orientation="vertical"
         android:layout_height="match_parent">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:id="@+id/local_files"
-            android:text="本地音乐"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
             android:layout_height="wrap_content">
 
-        </Button>
+            <Button
+                android:layout_width="wrap_content"
+                android:id="@+id/local_files"
+                android:text="本地音乐"
+                android:layout_height="wrap_content">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:id="@+id/recmd_songs"
-            android:text="每日推荐"
-            android:layout_height="wrap_content">
+            </Button>
 
-        </Button>
+            <Button
+                android:layout_width="wrap_content"
+                android:id="@+id/recmd_songs"
+                android:text="每日推荐"
+                android:layout_height="wrap_content">
+
+            </Button>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:id="@+id/my_playlist"
+                android:text="歌单列表"
+                android:layout_height="wrap_content">
+
+            </Button>
+
+        </LinearLayout>
+
+
 
         <TextView
             android:layout_width="wrap_content"

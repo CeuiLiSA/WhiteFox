@@ -14,7 +14,7 @@ class SongListRepo : RemoteData<Song>() {
 
     override fun initApi(): Observable<out ListShow<Song>> {
         return RxHttp.get("http://192.243.123.124:3000/playlist/detail?id=$id")
-            .add("uid", App.user.account!!.id)
-            .asClass(ListSongResponse::class.java)
+                .add("limit", 1000)
+                .asClass(ListSongResponse::class.java)
     }
 }
