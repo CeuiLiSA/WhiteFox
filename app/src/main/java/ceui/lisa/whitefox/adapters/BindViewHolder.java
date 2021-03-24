@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class BindViewHolder<Layout extends ViewDataBinding> extends RecyclerView.ViewHolder {
 
-    protected Layout baseBind;
+    public Layout baseBind;
 
     public BindViewHolder(@NonNull View itemView) {
         super(itemView);

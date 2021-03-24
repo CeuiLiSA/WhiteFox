@@ -19,6 +19,7 @@ class PlayListHorizontalAdapter(values: MutableList<PlaylistBean>) : BaseAdapter
         Glide.with(holder.itemView.context).load(values[position].picUrl).into(holder.baseBind.playlistPhoto)
         holder.itemView.setOnClickListener { v ->
             val intent = Intent(v?.context, TemplateActivity::class.java)
+            intent.putExtra(TemplateActivity.NAME, "歌单->歌曲列表")
             intent.putExtra("playlistID", values[position].id)
             v?.context?.startActivity(intent)
         }

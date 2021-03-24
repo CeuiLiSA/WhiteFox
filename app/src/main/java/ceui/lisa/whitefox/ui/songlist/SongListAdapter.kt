@@ -1,8 +1,10 @@
-package ceui.lisa.whitefox.adapters
+package ceui.lisa.whitefox.ui.songlist
 
 import android.content.Intent
 import ceui.lisa.whitefox.MyPlayer
 import ceui.lisa.whitefox.R
+import ceui.lisa.whitefox.adapters.BaseAdapter
+import ceui.lisa.whitefox.adapters.BindViewHolder
 import ceui.lisa.whitefox.databinding.RecySongItemBinding
 import ceui.lisa.whitefox.models.Song
 import ceui.lisa.whitefox.ui.PlayerActivity

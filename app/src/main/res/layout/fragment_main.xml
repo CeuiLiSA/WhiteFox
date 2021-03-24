@@ -11,11 +11,27 @@
         android:orientation="vertical"
         android:layout_height="match_parent">
 
+        <Button
+            android:layout_width="wrap_content"
+            android:id="@+id/local_files"
+            android:text="本地音乐"
+            android:layout_height="wrap_content">
+
+        </Button>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:id="@+id/recmd_songs"
+            android:text="每日推荐"
+            android:layout_height="wrap_content">
+
+        </Button>
+
         <TextView
             android:layout_width="wrap_content"
-            android:text="Recently Played"
+            android:text="推荐歌单"
             android:textSize="20sp"
-            android:layout_marginTop="54dp"
+            android:layout_marginTop="@dimen/thirty_six_dp"
             android:layout_marginStart="@dimen/twenty_four_dp"
             android:textStyle="bold"
             android:textColor="@color/white"
@@ -26,7 +42,6 @@
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:id="@+id/list_1"
-            android:visibility="gone"
             android:layout_height="wrap_content">
 
 

@@ -14,13 +14,7 @@ import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import java.util.UUID;
-
-import ceui.lisa.whitefox.test.MessageEvent;
 
 
 public abstract class BaseFragment<Layout extends ViewDataBinding> extends Fragment {
@@ -62,13 +56,28 @@ public abstract class BaseFragment<Layout extends ViewDataBinding> extends Fragm
         try {
             rootView = inflater.inflate(layout(), container, false);
             baseBind = DataBindingUtil.bind(rootView);
-            Log.d("method trace" + className, "onCreateView");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        try {
+            initModel();
+            onViewModelCreated();
+
             initView();
             initData();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return rootView;
+    }
+
+    public void initModel() {
+
     }
 
     public abstract int layout();
@@ -80,6 +89,10 @@ public abstract class BaseFragment<Layout extends ViewDataBinding> extends Fragm
     public abstract void initView();
 
     public void initData() {
+
+    }
+
+    public void onViewModelCreated() {
 
     }
 }

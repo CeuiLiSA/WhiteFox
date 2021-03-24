@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import ceui.lisa.whitefox.test.FragmentLocalSongs
 import ceui.lisa.whitefox.ui.comment.FragmentCommentList
 import ceui.lisa.whitefox.ui.songlist.FragmentSongList
 import ceui.lisa.whitefox.ui.login.FragmentLogin
@@ -35,6 +36,8 @@ class TemplateActivity : AppCompatActivity() {
             fragment = FragmentSongList()
         } else if ("歌曲评论" == fragmentName) {
             fragment = FragmentCommentList()
+        } else if ("本地已下载音乐" == fragmentName) {
+            fragment = FragmentLocalSongs()
         }
 
         if (fragment != null) {

@@ -19,6 +19,10 @@ class ListPlayListResponse: ListShow<PlaylistBean> {
     }
 
     override fun hasMore(): Boolean {
-        return false
+        if (more != null) {
+            return more!!
+        } else {
+            return false
+        }
     }
 }

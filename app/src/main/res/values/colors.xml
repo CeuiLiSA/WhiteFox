@@ -8,7 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="play_button_bg">#FF27293e</color>
-    <color name="player_bg">#FF1e1b2e</color>
+    <color name="player_bg">#FF080019</color>
 
     <color name="delivery_header_cloud">#ECEFF1</color>
     <color name="glare_unselected_text">#7b7b7b</color>

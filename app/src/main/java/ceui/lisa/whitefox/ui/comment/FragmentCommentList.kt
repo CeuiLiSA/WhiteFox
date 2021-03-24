@@ -19,6 +19,7 @@ class FragmentCommentList : BindFragmentList<FragmentCommentListBinding, Comment
     }
 
     override fun onViewModelCreated() {
+        super.onViewModelCreated()
         val id = requireActivity().intent.getLongExtra("songID", 0L)
         (mViewModel as CommentListViewModel).setID(id)
     }

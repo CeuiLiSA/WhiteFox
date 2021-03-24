@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ceui.lisa.whitefox.R
 import ceui.lisa.whitefox.adapters.BaseAdapter
+import ceui.lisa.whitefox.databinding.FragmentItemListBinding
 import ceui.lisa.whitefox.viewmodels.ListViewModel
 import com.hjq.toast.ToastUtils
 import com.scwang.smart.refresh.footer.ClassicsFooter
@@ -21,19 +22,12 @@ import com.scwang.smart.refresh.header.MaterialHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import jp.wasabeef.recyclerview.animators.LandingAnimator
 
-abstract class FragmentList<Bean> : Fragment() {
+abstract class FragmentList<Bean> : BaseFragment<FragmentItemListBinding>() {
 
     lateinit var mAdapter: BaseAdapter<Bean, out ViewDataBinding>
     lateinit var mViewModel: ListViewModel<Bean>
     var recyclerView: RecyclerView? = null
     var refreshLayout: SmartRefreshLayout? = null
-
-    override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_item_list, container, false)
-    }
 
     abstract fun modelClass(): Class<out ListViewModel<Bean>>
 
@@ -45,13 +39,11 @@ abstract class FragmentList<Bean> : Fragment() {
         refreshLayout = view.findViewById(R.id.smart_refresh_layout)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun initModel() {
         mViewModel = ViewModelProvider(requireActivity()).get(modelClass())
-        onViewModelCreated()
-        initView()
-        mAdapter = initAdapter()
-        onAdapterCreated()
+    }
+
+    override fun onViewModelCreated() {
         mViewModel.liveData.observe(this, object :Observer<MutableList<Bean>>{
             override fun onChanged(t: MutableList<Bean>) {
                 Log.d("liveData list", "onChanged ")
@@ -87,20 +79,13 @@ abstract class FragmentList<Bean> : Fragment() {
                 }
             }
         })
-        if (!mViewModel.isLoaded) {
-            refreshLayout?.autoRefresh()
-            Log.d("traceFragmentList", "autoRefresh")
-        }
+
+        mAdapter = initAdapter()
+        recyclerView?.adapter = mAdapter
     }
 
-    open fun loadFromLocal() {
 
-    }
-
-    open fun onViewModelCreated() {
-    }
-
-    open fun initView() {
+    override fun initView() {
         recyclerView?.layoutManager = LinearLayoutManager(requireContext())
         val baseItemAnimator = LandingAnimator()
         baseItemAnimator.addDuration = 400L
@@ -121,7 +106,14 @@ abstract class FragmentList<Bean> : Fragment() {
         }
     }
 
-    open fun onAdapterCreated() {
-        recyclerView?.adapter = mAdapter
+    override fun initData() {
+        if (!mViewModel.isLoaded) {
+            refreshLayout?.autoRefresh()
+            Log.d("traceFragmentList", "autoRefresh")
+        }
+    }
+
+    override fun layout(): Int {
+        return R.layout.fragment_item_list
     }
 }
