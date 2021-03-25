@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
 import android.util.Log
+import android.widget.SeekBar
 import ceui.lisa.whitefox.MyPlayer
 import ceui.lisa.whitefox.R
 import ceui.lisa.whitefox.TemplateActivity
@@ -12,11 +13,9 @@ import ceui.lisa.whitefox.databinding.ActivityPlayerBinding
 import ceui.lisa.whitefox.models.Song
 import ceui.lisa.whitefox.test.MessageEvent
 import ceui.lisa.whitefox.ui.base.BaseActivity
-import com.blankj.utilcode.util.BarUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.bumptech.glide.request.RequestOptions.bitmapTransform
-import com.xw.repo.BubbleSeekBar
 import jp.wasabeef.glide.transformations.BlurTransformation
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -37,7 +36,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
             baseBind.currentPosition.text = mTime.format(position)
 
             //设置进度条
-            baseBind.seekBar.setProgress(position)
+            baseBind.seekBar.progress = position
             mHandler.postDelayed(this, 1000L)
             Log.d("MyRunnable running", "((()(()()()$position")
         }
@@ -77,31 +76,18 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
                 MyPlayer.get().start()
             }
         }
-        baseBind.seekBar.onProgressChangedListener = object : BubbleSeekBar.OnProgressChangedListener{
-            override fun onProgressChanged(
-                bubbleSeekBar: BubbleSeekBar?,
-                progress: Int,
-                progressFloat: Float,
-                fromUser: Boolean
-            ) {
+        baseBind.seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
             }
 
-            override fun getProgressOnActionUp(
-                bubbleSeekBar: BubbleSeekBar?,
-                progress: Int,
-                progressFloat: Float
-            ) {
-                MyPlayer.get().seekTo(progress)
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
             }
 
-            override fun getProgressOnFinally(
-                bubbleSeekBar: BubbleSeekBar?,
-                progress: Int,
-                progressFloat: Float,
-                fromUser: Boolean
-            ) {
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                MyPlayer.get().seekTo(seekBar!!.progress)
             }
-        }
+
+        })
         setSongData(MyPlayer.get().nowPlaySong)
     }
 
@@ -139,11 +125,10 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
         baseBind.singerName.text = song.ar!![0].name
         val position = MyPlayer.get().nowPosition
         baseBind.currentPosition.text = mTime.format(position)
-        baseBind.seekBar.configBuilder
-                .max(song.dt!!.toFloat())
-                .build()
-        baseBind.seekBar.setProgress(position)
+        baseBind.seekBar.max = song.dt!!
+        baseBind.seekBar.progress = position
         baseBind.allDuration.text = mTime.format(song.dt)
+        baseBind.seekBar.secondaryProgress = 0
 
         if (MyPlayer.get().isPlaying) {
             baseBind.startOrPause.setImageResource(R.drawable.ic_baseline_pause_24)
@@ -155,6 +140,10 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
     override fun onStart() {
         super.onStart()
         EventBus.getDefault().register(this)
+        MyPlayer.get().setBufferListener {
+            baseBind.seekBar.secondaryProgress = it
+            Log.d("playSong seekBar", "当前进度$it")
+        }
         if (!MyPlayer.get().isPaused) {
             runLoop()
         }
@@ -164,6 +153,7 @@ class PlayerActivity : BaseActivity<ActivityPlayerBinding>() {
         super.onStop()
         pauseLoop()
         EventBus.getDefault().unregister(this)
+        MyPlayer.get().bufferListener = null
         pauseLoop()
     }
 

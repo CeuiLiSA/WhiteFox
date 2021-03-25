@@ -89,18 +89,16 @@
             </RelativeLayout>
 
 
-            <com.xw.repo.BubbleSeekBar
+            <androidx.appcompat.widget.AppCompatSeekBar
                 android:layout_width="match_parent"
                 android:progress="50"
                 android:id="@+id/seek_bar"
-                app:bsb_hide_bubble="true"
-                app:bsb_second_track_color="#a930ef"
-                app:bsb_track_color="#343144"
+                android:progressDrawable="@drawable/seekbar_bg"
                 android:layout_marginTop="@dimen/six_teen_dp"
                 android:layout_marginBottom="@dimen/six_teen_dp"
-                android:layout_height="4dp">
+                android:layout_height="wrap_content">
 
-            </com.xw.repo.BubbleSeekBar>
+            </androidx.appcompat.widget.AppCompatSeekBar>
 
             <RelativeLayout
                 android:layout_width="match_parent"

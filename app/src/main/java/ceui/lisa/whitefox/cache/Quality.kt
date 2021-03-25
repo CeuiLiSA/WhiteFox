@@ -11,5 +11,7 @@ object Quality {
             if (true) {
             }
             return "br=128000"
+//            return "br=320000"
+//            return "br=128000"
         }
 }

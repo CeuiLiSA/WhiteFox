@@ -23,6 +23,7 @@ import java.util.List;
 
 import ceui.lisa.whitefox.cache.LocalFile;
 import ceui.lisa.whitefox.cache.Quality;
+import ceui.lisa.whitefox.core.BufferListener;
 import ceui.lisa.whitefox.models.Song;
 import ceui.lisa.whitefox.models.SongUrl;
 import ceui.lisa.whitefox.test.FeedBack;
@@ -70,6 +71,9 @@ public class MyPlayer {
                                             @Override
                                             public void accept(Progress progress) throws Throwable {
                                                 Log.d("playSong",  "当前进度" + progress.getProgress());
+                                                if (mBufferListener != null) {
+                                                    mBufferListener.update(progress.getProgress() * song.getDt() / 100);
+                                                }
                                             }
                                         })
                                         .subscribeOn(Schedulers.newThread())
@@ -105,6 +109,9 @@ public class MyPlayer {
     }
 
     private void invoke(Song song, String path) {
+        if (mBufferListener != null) {
+            mBufferListener.update(song.getDt());
+        }
         MediaItem mediaItem = MediaItem.fromUri(path);
         mPlayer.setMediaItem(mediaItem);
         mPlayer.prepare();
@@ -130,8 +137,8 @@ public class MyPlayer {
         return !mPlayer.isPlaying() && mPlayer.getCurrentPosition() > 1;
     }
 
-    public float getNowPosition() {
-        return (float) mPlayer.getCurrentPosition();
+    public int getNowPosition() {
+        return (int) mPlayer.getCurrentPosition();
     }
 
     public void start() {
@@ -197,7 +204,6 @@ public class MyPlayer {
     }
 
     private MyPlayer() {
-
     }
 
     private static class Holder {
@@ -206,5 +212,15 @@ public class MyPlayer {
 
     public static MyPlayer get() {
         return Holder.INSTANCE;
+    }
+
+    private BufferListener mBufferListener = null;
+
+    public BufferListener getBufferListener() {
+        return mBufferListener;
+    }
+
+    public void setBufferListener(BufferListener bufferListener) {
+        mBufferListener = bufferListener;
     }
 }

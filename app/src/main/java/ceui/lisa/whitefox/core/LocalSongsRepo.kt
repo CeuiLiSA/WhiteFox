@@ -5,28 +5,33 @@ import ceui.lisa.whitefox.cache.LocalFile.getParentFile
 import ceui.lisa.whitefox.test.ListShow
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableOnSubscribe
+import java.io.File
 import java.util.*
 
-class LocalSongsRepo : LocalData<String>() {
+class LocalSongsRepo : LocalData<File>() {
 
-    override fun initApi(): Observable<out ListShow<String>> {
-        return Observable.create<ListShow<String>>(ObservableOnSubscribe<ListShow<String>> { emitter ->
+    override fun initApi(): Observable<out ListShow<File>> {
+        return Observable.create { emitter ->
             Log.d("LocalData", "LocalSongsRepo")
             val parent = getParentFile()
-            val result: MutableList<String> = ArrayList()
-            for (file in parent.listFiles()) {
-                result.add(file.name)
+            val result: MutableList<File> = ArrayList()
+            val tempList = parent.listFiles()
+            if (tempList != null) {
+                for (listFile in tempList) {
+                    result.add(listFile)
+                }
+                result.reverse()
             }
-            val listShow: ListShow<String> = object : ListShow<String> {
-                override fun getListData(): List<String> {
+            val listShow: ListShow<File> = object : ListShow<File> {
+                override fun getListData(): List<File> {
                     return result
                 }
 
                 override fun hasMore(): Boolean {
-                    return true
+                    return false
                 }
             }
             emitter.onNext(listShow)
-        })
+        }
     }
 }

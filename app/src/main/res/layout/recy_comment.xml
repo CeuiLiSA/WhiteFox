@@ -102,7 +102,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="0.6dp"
             android:layout_below="@+id/reply_comment"
             android:layout_alignStart="@id/user_name"
             android:layout_marginTop="@dimen/eight_dp"
