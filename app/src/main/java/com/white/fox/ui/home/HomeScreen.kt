@@ -3,6 +3,7 @@ package com.white.fox.ui.home
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.white.fox.session.SessionManager
 import com.white.fox.ui.common.ContentTemplate
 import com.white.fox.ui.common.NavViewModel
 import com.white.fox.ui.common.Screen
@@ -15,6 +16,14 @@ class HomeScreen : Screen {
         ContentTemplate("Welcome to Nav3") {
             Button(onClick = { navViewModel.navigate(ProductScreen(Product("123"))) }) {
                 Text("Click to navigate")
+            }
+
+            Button(onClick = {
+                SessionManager.logOut {
+                    navViewModel.reset()
+                }
+            }) {
+                Text("Log Out")
             }
         }
     }

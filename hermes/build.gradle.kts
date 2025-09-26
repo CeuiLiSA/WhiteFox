@@ -55,6 +55,7 @@ dependencies {
 
     api(libs.mmkv)
     api(libs.timber)
+    api(libs.gson)
 
 
     testImplementation(libs.junit)

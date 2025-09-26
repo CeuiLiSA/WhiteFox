@@ -43,6 +43,7 @@ android {
 dependencies {
 
     implementation(project(":hermes"))
+    implementation(project(":models"))
 
 
 }

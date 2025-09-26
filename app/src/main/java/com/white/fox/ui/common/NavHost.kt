@@ -14,10 +14,8 @@ import timber.log.Timber
 
 
 class NavViewModel : ViewModel() {
-    private val _backStack =
-        mutableStateListOf(if (SessionManager.isLoggedIn()) HomeScreen() else LandingScreen())
+    private val _backStack = mutableStateListOf(defaultScreen())
     val backStack: List<Screen> get() = _backStack
-
 
     fun navigate(screen: Screen) {
         _backStack.add(screen)
@@ -30,6 +28,15 @@ class NavViewModel : ViewModel() {
     fun clearAndNavigate(screen: Screen) {
         _backStack.clear()
         _backStack.add(screen)
+    }
+
+    fun reset() {
+        _backStack.clear()
+        _backStack.add(defaultScreen())
+    }
+
+    private fun defaultScreen(): Screen {
+        return if (SessionManager.isLoggedIn()) HomeScreen() else LandingScreen()
     }
 }
 

@@ -22,3 +22,4 @@ dependencyResolutionManagement {
 rootProject.name = "WhiteFox"
 include(":app")
 include(":hermes")
+include(":models")
