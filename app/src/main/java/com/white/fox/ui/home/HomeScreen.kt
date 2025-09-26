@@ -19,9 +19,7 @@ class HomeScreen : Screen {
             }
 
             Button(onClick = {
-                SessionManager.logOut {
-                    navViewModel.reset()
-                }
+                SessionManager.logOut()
             }) {
                 Text("Log Out")
             }

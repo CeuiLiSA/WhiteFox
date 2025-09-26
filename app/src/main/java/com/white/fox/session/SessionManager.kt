@@ -29,22 +29,20 @@ object SessionManager {
         }
     }
 
-    fun logOut(onSuccess: () -> Unit) {
+    fun logOut() {
         try {
             _prefStore.putString(CURRENT_SESSION_JSON, null)
             _session.value = null
-            onSuccess()
         } catch (ex: Exception) {
             Timber.e(ex)
         }
     }
 
-    fun logIn(json: String, onSuccess: () -> Unit) {
+    fun logIn(json: String) {
         try {
             if (json.isNotEmpty()) {
                 _session.value = _gson.fromJson(json, AccountResponse::class.java)
                 _prefStore.putString(CURRENT_SESSION_JSON, json)
-                onSuccess()
             }
         } catch (ex: Exception) {
             Timber.e(ex)

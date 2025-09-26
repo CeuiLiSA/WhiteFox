@@ -51,6 +51,7 @@ dependencies {
     api(libs.androidx.lifecycle.viewmodel.navigation3)
     api(libs.androidx.material3.adaptive.navigation3)
     api(libs.kotlinx.serialization.core)
+    api(libs.androidx.compose.runtime.livedata)
 
 
     api(libs.mmkv)

@@ -17,7 +17,6 @@ import com.white.fox.session.SessionManager
 import com.white.fox.ui.common.ContentTemplate
 import com.white.fox.ui.common.NavViewModel
 import com.white.fox.ui.common.Screen
-import com.white.fox.ui.home.HomeScreen
 
 class LandingScreen : Screen {
     @Composable
@@ -39,9 +38,7 @@ class LandingScreen : Screen {
                 onClick = {
                     val token = tokenState.value
                     if (token.isNotEmpty()) {
-                        SessionManager.logIn(token) {
-                            navViewModel.clearAndNavigate(HomeScreen())
-                        }
+                        SessionManager.logIn(token)
                     }
                 },
                 modifier = Modifier.fillMaxWidth(0.5f)
