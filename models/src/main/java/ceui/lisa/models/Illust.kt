@@ -1,0 +1,28 @@
+package ceui.lisa.models
+
+data class Illust(
+    val caption: String? = null,
+    val create_date: String? = null,
+    val height: Int = 0,
+    val id: Long,
+    val image_urls: ImageUrls? = null,
+    val is_bookmarked: Boolean? = null,
+    val illust_ai_type: Int = 0,
+    val is_muted: Boolean? = null,
+    val meta_pages: List<MetaPage>? = null,
+    val meta_single_page: MetaSinglePage? = null,
+    val page_count: Int = 0,
+    val restrict: Int? = null,
+    val sanity_level: Int? = null,
+    val series: Series? = null,
+    val tags: List<Tag>? = null,
+    val title: String? = null,
+    val tools: List<String>? = null,
+    val total_bookmarks: Int? = null,
+    val total_view: Int? = null,
+    val type: String? = null,
+    val user: User? = null,
+    val visible: Boolean? = null,
+    val width: Int = 0,
+    val x_restrict: Int? = null,
+)

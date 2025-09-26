@@ -10,6 +10,7 @@ import com.white.fox.ui.theme.WhiteFoxTheme
 import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

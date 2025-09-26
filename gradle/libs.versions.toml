@@ -1,5 +1,6 @@
 [versions]
 agp = "8.13.0"
+converterGson = "3.0.0"
 gson = "2.13.2"
 kotlin = "2.2.20"
 coreKtx = "1.17.0"
@@ -9,7 +10,12 @@ espressoCore = "3.7.0"
 lifecycleRuntimeKtx = "2.9.4"
 activityCompose = "1.11.0"
 composeBom = "2025.09.01"
+loggingInterceptor = "5.1.0"
 mmkv = "2.2.4"
+okhttp = "5.1.0"
+retrofit = "3.1.0-SNAPSHOT"
+retrofitVersion = "2.9.0"
+squareupRetrofit = "3.0.0"
 timber = "5.0.1"
 appcompat = "1.7.1"
 material = "1.13.0"
@@ -24,6 +30,7 @@ runtimeLivedata = "1.9.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -38,7 +45,10 @@ androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "u
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptor" }
 mmkv = { module = "com.tencent:mmkv", version.ref = "mmkv" }
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "squareupRetrofit" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
