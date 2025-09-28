@@ -11,7 +11,6 @@ class TokenFetcherInterceptor : Interceptor {
         const val TOKEN_ERROR_1 = "Error occurred at the OAuth process"
         const val TOKEN_ERROR_2 = "Invalid refresh token"
         const val HEADER_AUTH = "authorization"
-        const val TOKEN_HEAD = "Bearer "
     }
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -23,7 +22,7 @@ class TokenFetcherInterceptor : Interceptor {
             if (json.contains(TOKEN_ERROR_1) || json.contains(TOKEN_ERROR_2)) {
                 response.close()
                 val tokenForThisRequest = request.header(HEADER_AUTH)
-                    ?.substring(TOKEN_HEAD.length) ?: ""
+                    ?.substring(HeaderInterceptor.TOKEN_HEAD.length) ?: ""
                 val refreshedAccessToken = try {
                     SessionManager.refreshAccessToken(tokenForThisRequest)
                 } catch (ex: Exception) {
@@ -34,7 +33,7 @@ class TokenFetcherInterceptor : Interceptor {
                     val newRequest = chain.request()
                         .newBuilder()
                         .header(
-                            HEADER_AUTH, TOKEN_HEAD + refreshedAccessToken
+                            HEADER_AUTH, HeaderInterceptor.TOKEN_HEAD + refreshedAccessToken
                         )
                         .build()
                     chain.proceed(newRequest)

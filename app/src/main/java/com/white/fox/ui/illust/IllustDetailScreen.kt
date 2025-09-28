@@ -29,7 +29,7 @@ fun IllustDetailScreen(illustId: Long, navViewModel: NavViewModel) {
     }
 
 
-    ContentTemplate("IllustDetailScreen") {
+    ContentTemplate() {
         if (illust == null) {
             CircularProgressIndicator()
         } else {

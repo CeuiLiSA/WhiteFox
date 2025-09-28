@@ -20,7 +20,7 @@ import com.white.fox.ui.common.NavViewModel
 @Composable
 fun LandingScreen(navViewModel: NavViewModel) {
     val tokenState = remember { mutableStateOf("") }
-    ContentTemplate("Landing") {
+    ContentTemplate() {
         OutlinedTextField(
             value = tokenState.value,
             onValueChange = { tokenState.value = it },

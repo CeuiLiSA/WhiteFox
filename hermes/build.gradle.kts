@@ -64,6 +64,9 @@ dependencies {
     api(libs.okhttp)
     api(libs.logging.interceptor)
 
+    api(libs.coil.compose)
+    api(libs.coil.network.okhttp)
+
     implementation(project(":models"))
 
     testImplementation(libs.junit)

@@ -2,6 +2,8 @@ package ceui.lisa.hermes.loader
 
 import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
+import kotlinx.coroutines.delay
+import timber.log.Timber
 import kotlin.reflect.KClass
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.DurationUnit
@@ -30,7 +32,9 @@ class HybridRepository<ValueT : Any>(
         val isCacheValid =
             cachedJson?.isNotEmpty() == true && (now - cachedTime) < cacheDurationMillis
 
+        Timber.d("loading key: ${key}, isCacheValid: ${isCacheValid}")
         return if (isCacheValid) {
+            delay(2000L)
             gson.fromJson(cachedJson, cls.java)
         } else {
             val value = loader()

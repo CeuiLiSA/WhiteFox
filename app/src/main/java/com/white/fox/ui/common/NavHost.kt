@@ -64,7 +64,7 @@ fun NavHost(navViewModel: NavViewModel = viewModel()) {
 
                         else -> {
                             NavEntry(key) {
-                                ContentTemplate("Error") {
+                                ContentTemplate() {
                                     Text("Unknown route")
                                 }
                             }
@@ -74,7 +74,7 @@ fun NavHost(navViewModel: NavViewModel = viewModel()) {
             } catch (ex: Exception) {
                 Timber.e(ex)
                 NavEntry(key) {
-                    ContentTemplate("Error") {
+                    ContentTemplate() {
                         Text("${ex::class.java.simpleName}: ${ex.message}")
                     }
                 }
