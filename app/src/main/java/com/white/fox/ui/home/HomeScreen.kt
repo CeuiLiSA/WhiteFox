@@ -1,5 +1,6 @@
 package com.white.fox.ui.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.white.fox.ui.common.ContentTemplate
 import com.white.fox.ui.common.NavViewModel
+import com.white.fox.ui.common.Route
 import com.white.fox.ui.common.Screen
 
 class HomeScreen : Screen {
@@ -33,7 +35,10 @@ class HomeScreen : Screen {
                                 text = item.title ?: "",
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(horizontal = 16.dp, vertical = 8.dp) // 可选内边距
+                                    .clickable {
+                                        navViewModel.navigate(Route.IllustDetail(item.id))
+                                    }
+                                    .padding(horizontal = 16.dp, vertical = 8.dp) // 可选内边距,
                             )
                         }
                     }

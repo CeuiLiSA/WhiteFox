@@ -11,34 +11,26 @@ import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
 import com.white.fox.session.SessionManager
 import com.white.fox.ui.home.HomeScreen
+import com.white.fox.ui.illust.IllustDetailScreen
 import com.white.fox.ui.landing.LandingScreen
 import timber.log.Timber
 
 
 class NavViewModel : ViewModel() {
-    private val _backStack = mutableStateListOf(defaultScreen())
-    val backStack: List<Screen> get() = _backStack
+    private val _backStack = mutableStateListOf(Route.defaultRoute())
+    val backStack: List<Route> get() = _backStack
 
-    fun navigate(screen: Screen) {
-        _backStack.add(screen)
+    fun navigate(route: Route) {
+        _backStack.add(route)
     }
 
     fun back() {
         _backStack.removeLastOrNull()
     }
 
-    fun clearAndNavigate(screen: Screen) {
-        _backStack.clear()
-        _backStack.add(screen)
-    }
-
     fun reset() {
         _backStack.clear()
-        _backStack.add(defaultScreen())
-    }
-
-    private fun defaultScreen(): Screen {
-        return if (SessionManager.isLoggedIn()) HomeScreen() else LandingScreen()
+        _backStack.add(Route.defaultRoute())
     }
 }
 
@@ -55,13 +47,36 @@ fun NavHost(navViewModel: NavViewModel = viewModel()) {
         onBack = { count -> repeat(count) { navViewModel.back() } },
         entryProvider = { key ->
             try {
+                Timber.d("NavHost entryProvider key: ${key.name}")
                 NavEntry(key) {
-                    key.Content(navViewModel)
+                    when (key) {
+                        is Route.Home -> {
+                            HomeScreen().Content(navViewModel)
+                        }
+
+                        is Route.Landing -> {
+                            LandingScreen().Content(navViewModel)
+                        }
+
+                        is Route.IllustDetail -> {
+                            IllustDetailScreen(key.illustId).Content(navViewModel)
+                        }
+
+                        else -> {
+                            NavEntry(key) {
+                                ContentTemplate("Error") {
+                                    Text("Unknown route")
+                                }
+                            }
+                        }
+                    }
                 }
             } catch (ex: Exception) {
                 Timber.e(ex)
                 NavEntry(key) {
-                    Text("Unknown route")
+                    ContentTemplate("Error") {
+                        Text("${ex::class.java.simpleName}: ${ex.message}")
+                    }
                 }
             }
         }
