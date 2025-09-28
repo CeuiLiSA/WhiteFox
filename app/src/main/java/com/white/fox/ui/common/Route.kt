@@ -14,7 +14,7 @@ sealed class Route(
 
     object NotFound : Route("NotFound")
 
-    data class IllustDetail(val illustId: Long) : Route("IllustDetail-${illustId}")
+    data class IllustDetail(val illustId: Long) : Route("IllustDetailScreen-illustId-${illustId}")
 
     companion object {
         fun defaultRoute(): Route {

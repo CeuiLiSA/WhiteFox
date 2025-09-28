@@ -99,9 +99,9 @@ fun IllustDetailScreen(illustId: Long, navViewModel: NavViewModel) {
                     if (state.progress != null && progressFraction.value < 1f) {
                         CircularProgressIndicator(
                             progress = { animatedProgress.value },
-                            modifier = Modifier.size(48.dp),
+                            modifier = Modifier.size(32.dp),
                             color = Color.White,
-                            strokeWidth = 4.dp
+                            strokeWidth = 6.dp
                         )
                     }
 

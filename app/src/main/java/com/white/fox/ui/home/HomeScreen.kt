@@ -16,7 +16,10 @@ import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -55,18 +58,21 @@ fun HomeScreen(navViewModel: NavViewModel) {
                 verticalItemSpacing = 4.dp,
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                items(homeData.displayList) { item ->
-                    ObjectPool.update(item)
-                    val url = item.image_urls?.large
+                items(homeData.displayList, { illust -> illust.id }) { illust ->
+                    val rememberedItem = rememberUpdatedState(illust)
+                    LaunchedEffect(rememberedItem.value.id) {
+                        ObjectPool.update(rememberedItem.value)
+                    }
+                    val url = illust.image_urls?.large
 
-                    val aspectRatio = if (item.height > 0) {
-                        item.width.toFloat() / item.height.toFloat()
-                    } else 1f
+                    val aspectRatio = remember(illust.width, illust.height) {
+                        if (illust.height > 0) illust.width.toFloat() / illust.height.toFloat() else 1f
+                    }
 
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { navViewModel.navigate(Route.IllustDetail(item.id)) }
+                            .clickable { navViewModel.navigate(Route.IllustDetail(illust.id)) }
                     ) {
                         Box(
                             modifier = Modifier
@@ -84,7 +90,7 @@ fun HomeScreen(navViewModel: NavViewModel) {
                                         .add("Referer", "https://app-api.pixiv.net/")
                                         .build()
                                 ).build(),
-                                contentDescription = item.id.toString(),
+                                contentDescription = illust.id.toString(),
                                 modifier = Modifier.matchParentSize(),
                                 contentScale = ContentScale.Crop
                             )

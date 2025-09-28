@@ -17,7 +17,7 @@ class HybridRepository<ValueT : Any>(
     private val prefStore by lazy { MMKV.mmkvWithID(TAG) }
     private val gson by lazy { Gson() }
 
-    private val cacheDurationMillis = 5.minutes.toLong(DurationUnit.MILLISECONDS)
+    private val cacheDurationMillis = 20.minutes.toLong(DurationUnit.MILLISECONDS)
 
     override suspend fun load(): ValueT {
         val key = keyProducer()
