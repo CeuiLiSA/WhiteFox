@@ -51,15 +51,15 @@ fun NavHost(navViewModel: NavViewModel = viewModel()) {
                 NavEntry(key) {
                     when (key) {
                         is Route.Home -> {
-                            HomeScreen().Content(navViewModel)
+                            HomeScreen(navViewModel)
                         }
 
                         is Route.Landing -> {
-                            LandingScreen().Content(navViewModel)
+                            LandingScreen(navViewModel)
                         }
 
                         is Route.IllustDetail -> {
-                            IllustDetailScreen(key.illustId).Content(navViewModel)
+                            IllustDetailScreen(key.illustId, navViewModel)
                         }
 
                         else -> {

@@ -25,4 +25,7 @@ data class Illust(
     val visible: Boolean? = null,
     val width: Int = 0,
     val x_restrict: Int? = null,
-)
+) : ModelObject {
+    override val objectUniqueId: Long
+        get() = id
+}

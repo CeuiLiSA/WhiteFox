@@ -64,6 +64,8 @@ dependencies {
     api(libs.okhttp)
     api(libs.logging.interceptor)
 
+    implementation(project(":models"))
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

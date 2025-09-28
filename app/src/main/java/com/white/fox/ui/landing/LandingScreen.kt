@@ -16,35 +16,32 @@ import androidx.compose.ui.unit.sp
 import com.white.fox.session.SessionManager
 import com.white.fox.ui.common.ContentTemplate
 import com.white.fox.ui.common.NavViewModel
-import com.white.fox.ui.common.Screen
 
-class LandingScreen : Screen {
-    @Composable
-    override fun Content(navViewModel: NavViewModel) {
-        val tokenState = remember { mutableStateOf("") }
-        ContentTemplate("Landing") {
-            OutlinedTextField(
-                value = tokenState.value,
-                onValueChange = { tokenState.value = it },
-                label = { Text("Token") },
-                textStyle = LocalTextStyle.current.copy(fontSize = 14.sp),
-                modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .padding(bottom = 16.dp)
-                    .height(120.dp)
-            )
+@Composable
+fun LandingScreen(navViewModel: NavViewModel) {
+    val tokenState = remember { mutableStateOf("") }
+    ContentTemplate("Landing") {
+        OutlinedTextField(
+            value = tokenState.value,
+            onValueChange = { tokenState.value = it },
+            label = { Text("Token") },
+            textStyle = LocalTextStyle.current.copy(fontSize = 14.sp),
+            modifier = Modifier
+                .fillMaxWidth(0.8f)
+                .padding(bottom = 16.dp)
+                .height(120.dp)
+        )
 
-            Button(
-                onClick = {
-                    val token = tokenState.value
-                    if (token.isNotEmpty()) {
-                        SessionManager.logIn(token)
-                    }
-                },
-                modifier = Modifier.fillMaxWidth(0.5f)
-            ) {
-                Text("Login")
-            }
+        Button(
+            onClick = {
+                val token = tokenState.value
+                if (token.isNotEmpty()) {
+                    SessionManager.logIn(token)
+                }
+            },
+            modifier = Modifier.fillMaxWidth(0.5f)
+        ) {
+            Text("Login")
         }
     }
 }

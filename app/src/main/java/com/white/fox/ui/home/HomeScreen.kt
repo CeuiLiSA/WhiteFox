@@ -12,35 +12,34 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import ceui.lisa.hermes.objectpool.ObjectPool
 import com.white.fox.ui.common.ContentTemplate
 import com.white.fox.ui.common.NavViewModel
 import com.white.fox.ui.common.Route
-import com.white.fox.ui.common.Screen
 
-class HomeScreen : Screen {
-    @Composable
-    override fun Content(navViewModel: NavViewModel) {
-        val homeViewModel: HomeViewModal = viewModel()
-        val homeData = homeViewModel.valueContent.resultFlow.collectAsState().value
+@Composable
+fun HomeScreen(navViewModel: NavViewModel) {
+    val homeViewModel: HomeViewModal = viewModel()
+    val homeData = homeViewModel.valueContent.resultFlow.collectAsState().value
 
-        ContentTemplate("Welcome to Nav3") {
-            if (homeData == null) {
-                CircularProgressIndicator()
-            } else {
-                // 如果有列表
-                LazyColumn {
-                    homeData.displayList.let { displayList ->
-                        items(displayList) { item ->
-                            Text(
-                                text = item.title ?: "",
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        navViewModel.navigate(Route.IllustDetail(item.id))
-                                    }
-                                    .padding(horizontal = 16.dp, vertical = 8.dp) // 可选内边距,
-                            )
-                        }
+    ContentTemplate("Welcome to Nav3") {
+        if (homeData == null) {
+            CircularProgressIndicator()
+        } else {
+            // 如果有列表
+            LazyColumn {
+                homeData.displayList.let { displayList ->
+                    items(displayList) { item ->
+                        ObjectPool.update(item)
+                        Text(
+                            text = item.title ?: "",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    navViewModel.navigate(Route.IllustDetail(item.id))
+                                }
+                                .padding(horizontal = 16.dp, vertical = 8.dp) // 可选内边距,
+                        )
                     }
                 }
             }

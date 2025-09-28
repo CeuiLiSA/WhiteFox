@@ -14,4 +14,7 @@ data class User(
     val require_policy_agreement: Boolean? = null,
     val x_restrict: Int? = null,
     val comment: String? = null,
-)
+) : ModelObject {
+    override val objectUniqueId: Long
+        get() = id
+}
