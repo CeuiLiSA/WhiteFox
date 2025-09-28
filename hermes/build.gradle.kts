@@ -68,6 +68,8 @@ dependencies {
     api(libs.sketch.compose)
     api(libs.sketch.http)
 
+    api(libs.sketch.extensions.compose)
+
     implementation(project(":models"))
 
     testImplementation(libs.junit)
