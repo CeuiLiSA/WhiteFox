@@ -26,11 +26,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import ceui.lisa.hermes.loadstate.LoadReason
 import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.hermes.objectpool.ObjectPool
-import coil3.compose.AsyncImage
-import coil3.network.NetworkHeaders
-import coil3.network.httpHeaders
-import coil3.request.ImageRequest
-import coil3.request.crossfade
+import com.github.panpf.sketch.AsyncImage
+import com.github.panpf.sketch.http.HttpHeaders
+import com.github.panpf.sketch.request.ImageRequest
+import com.github.panpf.sketch.request.httpHeaders
 import com.white.fox.ui.common.NavViewModel
 import com.white.fox.ui.common.RefreshTemplate
 import com.white.fox.ui.common.Route
@@ -69,29 +68,26 @@ fun HomeScreen(navViewModel: NavViewModel) {
                             .fillMaxWidth()
                             .clickable { navViewModel.navigate(Route.IllustDetail(item.id)) }
                     ) {
-                        if (url != null) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .aspectRatio(aspectRatio)
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(Purple80)
-                            ) {
-                                AsyncImage(
-                                    model = ImageRequest.Builder(LocalContext.current)
-                                        .data(url)
-                                        .crossfade(true)
-                                        .httpHeaders(
-                                            NetworkHeaders.Builder()
-                                                .add("Referer", "https://app-api.pixiv.net/")
-                                                .build()
-                                        )
-                                        .build(),
-                                    contentDescription = item.title ?: "",
-                                    contentScale = ContentScale.Crop,
-                                    modifier = Modifier.matchParentSize()
-                                )
-                            }
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .aspectRatio(aspectRatio)
+                                .clip(RoundedCornerShape(8.dp))
+                                .background(Purple80)
+                        ) {
+                            AsyncImage(
+                                request = ImageRequest.Builder(
+                                    LocalContext.current,
+                                    url
+                                ).httpHeaders(
+                                    HttpHeaders.Builder()
+                                        .add("Referer", "https://app-api.pixiv.net/")
+                                        .build()
+                                ).build(),
+                                contentDescription = item.id.toString(),
+                                modifier = Modifier.matchParentSize(),
+                                contentScale = ContentScale.Crop
+                            )
                         }
                     }
                 }

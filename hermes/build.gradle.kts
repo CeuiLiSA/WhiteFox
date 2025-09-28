@@ -64,8 +64,9 @@ dependencies {
     api(libs.okhttp)
     api(libs.logging.interceptor)
 
-    api(libs.coil.compose)
-    api(libs.coil.network.okhttp)
+    api(libs.zoomimage.compose.sketch4.core)
+    api(libs.sketch.compose)
+    api(libs.sketch.http)
 
     implementation(project(":models"))
 
