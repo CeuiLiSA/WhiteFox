@@ -5,7 +5,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
@@ -22,13 +22,12 @@ import androidx.compose.ui.unit.dp
 import ceui.lisa.hermes.objectpool.ObjectPool
 import ceui.lisa.models.Illust
 import com.github.panpf.sketch.Sketch
-import com.github.panpf.sketch.http.HttpHeaders
 import com.github.panpf.sketch.rememberAsyncImageState
 import com.github.panpf.sketch.request.ImageRequest
-import com.github.panpf.sketch.request.httpHeaders
 import com.github.panpf.zoomimage.SketchZoomAsyncImage
 import com.white.fox.ui.common.ContentTemplate
 import com.white.fox.ui.common.NavViewModel
+import com.white.fox.ui.home.withHeader
 import com.white.fox.ui.theme.Purple80
 
 @Composable
@@ -49,9 +48,6 @@ fun IllustDetailScreen(illustId: Long, navViewModel: NavViewModel) {
                 illust.meta_pages?.firstOrNull()?.image_urls?.original
             }
 
-            val aspectRatio = if (illust.height > 0) {
-                illust.width.toFloat() / illust.height.toFloat()
-            } else 1f
 
             Column(
                 modifier = Modifier
@@ -60,7 +56,7 @@ fun IllustDetailScreen(illustId: Long, navViewModel: NavViewModel) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .aspectRatio(aspectRatio)
+                        .fillMaxHeight()
                         .background(Purple80),
                     contentAlignment = Alignment.Center
                 ) {
@@ -68,13 +64,9 @@ fun IllustDetailScreen(illustId: Long, navViewModel: NavViewModel) {
                         request = ImageRequest.Builder(
                             LocalContext.current,
                             url
-                        ).httpHeaders(
-                            HttpHeaders.Builder()
-                                .add("Referer", "https://app-api.pixiv.net/")
-                                .build()
-                        ).build(),
+                        ).withHeader().build(),
                         contentDescription = illust.id.toString(),
-                        contentScale = ContentScale.Crop,
+                        contentScale = ContentScale.Fit,
                         sketch = sketch,
                         modifier = Modifier
                             .matchParentSize(),

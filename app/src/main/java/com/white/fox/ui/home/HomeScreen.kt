@@ -85,11 +85,7 @@ fun HomeScreen(navViewModel: NavViewModel) {
                                 request = ImageRequest.Builder(
                                     LocalContext.current,
                                     url
-                                ).httpHeaders(
-                                    HttpHeaders.Builder()
-                                        .add("Referer", "https://app-api.pixiv.net/")
-                                        .build()
-                                ).build(),
+                                ).withHeader().build(),
                                 contentDescription = illust.id.toString(),
                                 modifier = Modifier.matchParentSize(),
                                 contentScale = ContentScale.Crop
@@ -100,4 +96,17 @@ fun HomeScreen(navViewModel: NavViewModel) {
             }
         }
     }
+}
+
+private const val IMG_HEADER_NAME = "Referer"
+private const val IMG_HEADER_VALUE = "https://app-api.pixiv.net/"
+
+
+fun ImageRequest.Builder.withHeader(): ImageRequest.Builder {
+    httpHeaders(
+        HttpHeaders.Builder()
+            .add(IMG_HEADER_NAME, IMG_HEADER_VALUE)
+            .build()
+    )
+    return this
 }
