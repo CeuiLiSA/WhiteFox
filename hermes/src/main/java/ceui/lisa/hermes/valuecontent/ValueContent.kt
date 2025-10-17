@@ -6,6 +6,8 @@ import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.hermes.loadstate.RefreshOwner
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import timber.log.Timber
@@ -16,24 +18,21 @@ class ValueContent<ValueT>(
 ) : RefreshOwner {
 
     private val _taskMutex = Mutex()
-    val resultFlow = MutableStateFlow<ValueT?>(null)
-    val loadStateFlow = MutableStateFlow<LoadState?>(null)
-
+    private val _loadStateFlow =
+        MutableStateFlow<LoadState<ValueT>>(LoadState.Loading(LoadReason.InitialLoad))
+    val loadState: StateFlow<LoadState<ValueT>> = _loadStateFlow.asStateFlow()
 
     override fun refresh(reason: LoadReason) {
         coroutineScope.launch {
-            if (!_taskMutex.tryLock()) {
-                return@launch
-            }
+            if (!_taskMutex.tryLock()) return@launch
 
+            _loadStateFlow.value = LoadState.Loading(reason)
             try {
-                loadStateFlow.emit(LoadState.Loading(reason))
-                val result = repository.load()
-                resultFlow.emit(result)
-                loadStateFlow.emit(LoadState.Loaded(true))
+                val data = repository.load()
+                _loadStateFlow.value = LoadState.Loaded(data)
             } catch (ex: Exception) {
                 Timber.e(ex)
-                loadStateFlow.emit(LoadState.Error(ex))
+                _loadStateFlow.value = LoadState.Error(ex)
             } finally {
                 _taskMutex.unlock()
             }

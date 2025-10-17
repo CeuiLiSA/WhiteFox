@@ -2,8 +2,6 @@ package ceui.lisa.hermes.loader
 
 import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
-import kotlinx.coroutines.delay
-import timber.log.Timber
 import kotlin.reflect.KClass
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.DurationUnit
@@ -16,33 +14,29 @@ class HybridRepository<ValueT : Any>(
 
     private val prefStore by lazy { MMKV.mmkvWithID(TAG) }
     private val gson by lazy { Gson() }
-
     private val cacheDurationMillis = 20.minutes.toLong(DurationUnit.MILLISECONDS)
 
     override suspend fun load(): ValueT {
         val key = keyProducer()
-        val jsonKey = "${JSON_KEY_PREFIX}$key"
-        val timeKey = "${TIME_KEY_PREFIX}$key"
-
-        val cachedJson = prefStore.getString(jsonKey, null)
-        val cachedTime = prefStore.getLong(timeKey, 0L)
-
         val now = System.currentTimeMillis()
 
-        val isCacheValid =
-            cachedJson?.isNotEmpty() == true && (now - cachedTime) < cacheDurationMillis
+        val cachedJson = prefStore.getString(jsonKey(key), null)
+        val cachedTime = prefStore.getLong(timeKey(key), 0L)
 
-        Timber.d("loading key: ${key}, isCacheValid: ${isCacheValid}")
-        return if (isCacheValid) {
-            delay(2000L)
-            gson.fromJson(cachedJson, cls.java)
-        } else {
-            val value = loader()
-            prefStore.putString(jsonKey, gson.toJson(value))
-            prefStore.putLong(timeKey, now)
-            value
+        val pending = cachedJson
+            ?.takeIf { it.isNotEmpty() && (now - cachedTime) < cacheDurationMillis }
+            ?.let {
+                runCatching { gson.fromJson(it, cls.java) }.getOrNull()
+            }
+
+        return pending ?: loader().also { value ->
+            prefStore.putString(jsonKey(key), gson.toJson(value))
+            prefStore.putLong(timeKey(key), now)
         }
     }
+
+    private fun jsonKey(key: String) = "$JSON_KEY_PREFIX$key"
+    private fun timeKey(key: String) = "$TIME_KEY_PREFIX$key"
 
     companion object {
         private const val TAG = "HybridRepository"
@@ -50,4 +44,5 @@ class HybridRepository<ValueT : Any>(
         private const val TIME_KEY_PREFIX = "HybridRepository-time-"
     }
 }
+
 

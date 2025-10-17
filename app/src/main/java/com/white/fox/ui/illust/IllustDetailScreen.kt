@@ -29,17 +29,18 @@ import com.white.fox.ui.common.ContentTemplate
 import com.white.fox.ui.common.NavViewModel
 import com.white.fox.ui.home.withHeader
 import com.white.fox.ui.theme.Purple80
+import timber.log.Timber
 
 @Composable
 fun IllustDetailScreen(illustId: Long, navViewModel: NavViewModel) {
     // 创建 Sketch 实例
     val sketch = Sketch.Builder(LocalContext.current).build()
-    val illustLiveData = ObjectPool.get<Illust>(illustId)
-    val illust = illustLiveData.observeAsState().value
+    val illust = ObjectPool.get<Illust>(illustId).observeAsState().value
     val state = rememberAsyncImageState()
 
     ContentTemplate() {
         if (illust == null) {
+            Timber.d("sasadasdw illust == null")
             CircularProgressIndicator()
         } else {
             val url = if (illust.page_count == 1) {
