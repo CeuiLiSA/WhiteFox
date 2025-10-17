@@ -1,96 +1,87 @@
 package com.white.fox.ui.home
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import ceui.lisa.hermes.loader.Repository
 import ceui.lisa.hermes.loadstate.LoadReason
-import ceui.lisa.hermes.loadstate.LoadState
-import ceui.lisa.hermes.objectpool.ObjectPool
-import com.github.panpf.sketch.AsyncImage
+import ceui.lisa.models.HomeIllustResponse
 import com.github.panpf.sketch.http.HttpHeaders
 import com.github.panpf.sketch.request.ImageRequest
 import com.github.panpf.sketch.request.httpHeaders
 import com.white.fox.ui.common.NavViewModel
 import com.white.fox.ui.common.RefreshTemplate
 import com.white.fox.ui.common.Route
-import com.white.fox.ui.theme.Purple80
+import com.white.fox.ui.illust.IllustItem
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeScreen(navViewModel: NavViewModel) {
-    val homeViewModel: HomeViewModal = viewModel()
-    val homeData = homeViewModel.valueContent.resultFlow.collectAsState().value
-    val loadState = homeViewModel.valueContent.loadStateFlow.collectAsState().value
-    val refreshing = loadState is LoadState.Loading && loadState.reason == LoadReason.PullRefresh
-    RefreshTemplate(refreshing, {
-        homeViewModel.valueContent.refresh(LoadReason.PullRefresh)
-    }) {
-        if (homeData == null) {
-            CircularProgressIndicator()
-        } else {
-            LazyVerticalStaggeredGrid(
-                columns = StaggeredGridCells.Fixed(2),
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(4.dp),
-                verticalItemSpacing = 4.dp,
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                items(homeData.displayList, { illust -> illust.id }) { illust ->
-                    val rememberedItem = rememberUpdatedState(illust)
-                    LaunchedEffect(rememberedItem.value.id) {
-                        ObjectPool.update(rememberedItem.value)
-                    }
-                    val url = illust.image_urls?.large
+fun HomeScreen(navViewModel: NavViewModel, repository: Repository<HomeIllustResponse>) {
 
-                    val aspectRatio = remember(illust.width, illust.height) {
-                        if (illust.height > 0) illust.width.toFloat() / illust.height.toFloat() else 1f
-                    }
+    val homeViewModel: HomeViewModel = viewModel(
+        factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return HomeViewModel(repository) as T
+            }
+        }
+    )
 
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { navViewModel.navigate(Route.IllustDetail(illust.id)) }
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .aspectRatio(aspectRatio)
-                                .clip(RoundedCornerShape(8.dp))
-                                .background(Purple80)
-                        ) {
-                            AsyncImage(
-                                request = ImageRequest.Builder(
-                                    LocalContext.current,
-                                    url
-                                ).withHeader().build(),
-                                contentDescription = illust.id.toString(),
-                                modifier = Modifier.matchParentSize(),
-                                contentScale = ContentScale.Crop
-                            )
-                        }
+    val uiState by homeViewModel.uiState.collectAsState()
+
+    RefreshTemplate(
+        isRefreshing = uiState is HomeUiState.Loading && (uiState as HomeUiState.Loading).reason != LoadReason.InitialLoad,
+        onRefresh = { homeViewModel.refresh(LoadReason.PullRefresh) }
+    ) {
+        when (val state = uiState) {
+            is HomeUiState.Loading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+
+            is HomeUiState.Error -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("加载失败，请重试", color = Color.Red)
+                }
+            }
+
+            is HomeUiState.Success -> {
+                LazyVerticalStaggeredGrid(
+                    columns = StaggeredGridCells.Fixed(2),
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(4.dp),
+                    verticalItemSpacing = 4.dp,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    items(state.data, key = { it.id }) { illust ->
+                        IllustItem(
+                            illust = illust,
+                            onClick = { navViewModel.navigate(Route.IllustDetail(illust.id)) }
+                        )
                     }
                 }
             }

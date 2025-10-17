@@ -9,6 +9,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
+import ceui.lisa.hermes.loader.HybridRepository
+import ceui.lisa.models.HomeIllustResponse
+import com.white.fox.client.Client
 import com.white.fox.session.SessionManager
 import com.white.fox.ui.home.HomeScreen
 import com.white.fox.ui.illust.IllustDetailScreen
@@ -51,7 +54,12 @@ fun NavHost(navViewModel: NavViewModel = viewModel()) {
                 NavEntry(key) {
                     when (key) {
                         is Route.Home -> {
-                            HomeScreen(navViewModel)
+                            val repository = HybridRepository(
+                                loader = { Client.appApi.getHomeData("illust") },
+                                keyProducer = { "getHomeData-illust" },
+                                HomeIllustResponse::class
+                            )
+                            HomeScreen(navViewModel, repository)
                         }
 
                         is Route.Landing -> {
