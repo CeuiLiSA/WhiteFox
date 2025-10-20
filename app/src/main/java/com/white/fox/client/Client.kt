@@ -1,13 +1,13 @@
 package com.white.fox.client
 
-import com.white.fox.session.SessionManager
+import ceui.lisa.models.AccountResponse
+import com.white.fox.session.ISessionManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
 import okhttp3.logging.HttpLoggingInterceptor
@@ -17,7 +17,7 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 class Client(
-    private val sessionManager: SessionManager,
+    private val sessionManager: ISessionManager<AccountResponse>,
 ) {
 
     val appApi: AppApi by lazy {
@@ -101,9 +101,7 @@ class Client(
                             true
                         ).execute().body()
                         if (accountResponse != null) {
-                            withContext(Dispatchers.Main) {
-                                sessionManager.updateSession(accountResponse)
-                            }
+                            sessionManager.updateSession(accountResponse)
                             accountResponse.access_token
                         } else {
                             throw RuntimeException("newRefreshToken failed")

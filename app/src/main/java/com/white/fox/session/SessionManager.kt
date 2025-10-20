@@ -11,7 +11,7 @@ import timber.log.Timber
 class SessionManager(
     private val prefStore: PrefStore,
     private val gson: Gson,
-) {
+) : ISessionManager<AccountResponse> {
 
     private val _session = MutableStateFlow<AccountResponse?>(null)
     val session: StateFlow<AccountResponse?> = _session.asStateFlow()
@@ -30,38 +30,33 @@ class SessionManager(
         }
     }
 
-    fun logOut() {
-        try {
-            prefStore.putString(CURRENT_SESSION_JSON, null)
-            _session.value = null
-        } catch (ex: Exception) {
-            Timber.e(ex)
-        }
-    }
-
     fun logIn(json: String) {
-        try {
-            if (json.isNotEmpty()) {
-                val account = gson.fromJson(json, AccountResponse::class.java)
-                _session.value = account
-                prefStore.putString(CURRENT_SESSION_JSON, json)
+        if (json.isNotEmpty()) {
+            try {
+                val accountResponse = gson.fromJson(json, AccountResponse::class.java)
+                updateSession(accountResponse)
+            } catch (ex: Exception) {
+                Timber.e(ex)
             }
-        } catch (ex: Exception) {
-            Timber.e(ex)
         }
     }
 
-    fun isLoggedIn(): Boolean {
+    override fun isLoggedIn(): Boolean {
         return _session.value != null
     }
 
-    fun getAccessToken(): String? = _session.value?.access_token
+    override fun getAccessToken(): String? = _session.value?.access_token
 
-    fun getRefreshToken(): String? = _session.value?.refresh_token
+    override fun getRefreshToken(): String? = _session.value?.refresh_token
 
-    fun updateSession(accountResponse: AccountResponse) {
-        _session.value = accountResponse
-        prefStore.putString(CURRENT_SESSION_JSON, gson.toJson(accountResponse))
+    override fun updateSession(data: AccountResponse?) {
+        if (data == null) {
+            _session.value = null
+            prefStore.putString(CURRENT_SESSION_JSON, null)
+        } else {
+            _session.value = data
+            prefStore.putString(CURRENT_SESSION_JSON, gson.toJson(data))
+        }
     }
 
     companion object {
