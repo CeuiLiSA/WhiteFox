@@ -8,18 +8,45 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.white.fox.session.SessionManager
+import ceui.lisa.hermes.db.GeneralEntity
+import com.white.fox.Dependency
 import com.white.fox.ui.common.ContentTemplate
-import com.white.fox.ui.common.NavViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @Composable
-fun LandingScreen(navViewModel: NavViewModel) {
+fun LandingScreen(dependency: Dependency) {
     val tokenState = remember { mutableStateOf("") }
+
+    val db = dependency.database
+    LaunchedEffect(Unit) {
+        withContext(Dispatchers.IO) {
+            db.generalDao().insert(GeneralEntity(1L, """{"age": 12}""", 99999, 99999))
+        }
+    }
+
+    // 1️⃣ 用 LaunchedEffect 来查询数据库
+    LaunchedEffect(Unit) {
+        withContext(Dispatchers.IO) {
+            // 假设我们查询 recordType = 99999, id = 1
+            val entity = db.generalDao().getByRecordTypeAndId(99999, 1L)
+            entity?.let {
+                // 回到主线程更新状态
+                withContext(Dispatchers.Main) {
+                    // 将 json 字符串放到输入框
+                    tokenState.value = it.json
+                }
+            }
+        }
+    }
+
+
     ContentTemplate() {
         OutlinedTextField(
             value = tokenState.value,
@@ -36,7 +63,7 @@ fun LandingScreen(navViewModel: NavViewModel) {
             onClick = {
                 val token = tokenState.value
                 if (token.isNotEmpty()) {
-                    SessionManager.logIn(token)
+                    dependency.sessionManager.logIn(token)
                 }
             },
             modifier = Modifier.fillMaxWidth(0.5f)

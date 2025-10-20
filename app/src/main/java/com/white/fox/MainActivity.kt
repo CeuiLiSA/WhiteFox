@@ -4,24 +4,33 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.white.fox.session.SessionManager
+import androidx.activity.viewModels
 import com.white.fox.ui.common.NavHost
+import com.white.fox.ui.common.NavViewModel
 import com.white.fox.ui.theme.WhiteFoxTheme
-import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
-    
+
+    private val navViewModel: NavViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val serviceProvider =
+            (application as? ServiceProvider) ?: throw RuntimeException("ServiceProvider not found")
+        val dependency = Dependency(
+            navViewModel = navViewModel,
+            database = serviceProvider.database,
+            client = serviceProvider.client,
+            sessionManager = serviceProvider.sessionManager,
+            prefStore = serviceProvider.prefStore,
+            gson = serviceProvider.gson,
+        )
         setContent {
             WhiteFoxTheme {
-                NavHost()
+                NavHost(dependency)
             }
-        }
-
-        SessionManager.session.observe(this) {
-            Timber.d("SessionManager session: ${it}")
         }
     }
 }

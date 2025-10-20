@@ -1,12 +1,11 @@
 package com.white.fox.client
 
-import com.white.fox.session.SessionManager
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 import timber.log.Timber
 
-class HeaderInterceptor(private val needToken: Boolean) : Interceptor {
+class HeaderInterceptor(private val getAccessToken: (() -> String?)? = null) : Interceptor {
 
     companion object {
         const val TOKEN_HEAD = "Bearer "
@@ -23,11 +22,11 @@ class HeaderInterceptor(private val needToken: Boolean) : Interceptor {
 
     private fun addHeader(before: Request.Builder): Request.Builder {
         val requestNonce = RequestNonce.build()
-        if (needToken) {
+        if (getAccessToken != null) {
             try {
                 before.addHeader(
                     HEADER_AUTH,
-                    TOKEN_HEAD + SessionManager.getAccessToken()
+                    TOKEN_HEAD + getAccessToken()
                 )
             } catch (ex: Exception) {
                 Timber.e(ex)

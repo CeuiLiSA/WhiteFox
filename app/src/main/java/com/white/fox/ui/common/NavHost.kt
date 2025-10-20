@@ -3,24 +3,25 @@ package com.white.fox.ui.common
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
 import ceui.lisa.hermes.loader.HybridRepository
 import ceui.lisa.models.HomeIllustResponse
-import com.white.fox.client.Client
+import com.white.fox.Dependency
 import com.white.fox.session.SessionManager
+import com.white.fox.ui.common.Route.Home
+import com.white.fox.ui.common.Route.Landing
 import com.white.fox.ui.home.HomeScreen
 import com.white.fox.ui.illust.IllustDetailScreen
 import com.white.fox.ui.landing.LandingScreen
 import timber.log.Timber
 
 
-class NavViewModel : ViewModel() {
-    private val _backStack = mutableStateListOf(Route.defaultRoute())
+class NavViewModel(private val sessionManager: SessionManager) : ViewModel() {
+    private val _backStack = mutableStateListOf(defaultRoute())
     val backStack: List<Route> get() = _backStack
 
     fun navigate(route: Route) {
@@ -33,57 +34,51 @@ class NavViewModel : ViewModel() {
 
     fun reset() {
         _backStack.clear()
-        _backStack.add(Route.defaultRoute())
+        _backStack.add(defaultRoute())
+    }
+
+    private fun defaultRoute(): Route {
+        return if (sessionManager.isLoggedIn()) {
+            Home
+        } else {
+            Landing
+        }
     }
 }
 
 @Composable
-fun NavHost(navViewModel: NavViewModel = viewModel()) {
-    val sessionState = SessionManager.session.observeAsState()
-
+fun NavHost(dependency: Dependency) {
+    val sessionState = dependency.sessionManager.session.collectAsState()
     LaunchedEffect(sessionState.value) {
-        navViewModel.reset()
+        dependency.navViewModel.reset()
     }
 
     NavDisplay(
-        backStack = navViewModel.backStack,
-        onBack = { count -> repeat(count) { navViewModel.back() } },
+        backStack = dependency.navViewModel.backStack,
+        onBack = { count -> repeat(count) { dependency.navViewModel.back() } },
         entryProvider = { key ->
-            try {
-                Timber.d("NavHost entryProvider key: ${key.name}")
-                NavEntry(key) {
-                    when (key) {
-                        is Route.Home -> {
-                            val repository = HybridRepository(
-                                loader = { Client.appApi.getHomeData("illust") },
-                                keyProducer = { "getHomeData-illust" },
-                                HomeIllustResponse::class
-                            )
-                            HomeScreen(navViewModel, repository)
-                        }
-
-                        is Route.Landing -> {
-                            LandingScreen(navViewModel)
-                        }
-
-                        is Route.IllustDetail -> {
-                            IllustDetailScreen(key.illustId, navViewModel)
-                        }
-
-                        else -> {
-                            NavEntry(key) {
-                                ContentTemplate() {
-                                    Text("Unknown route")
-                                }
-                            }
-                        }
+            Timber.d("NavHost entryProvider key: ${key.name}")
+            NavEntry(key) {
+                when (key) {
+                    is Home -> {
+                        val repository = HybridRepository(
+                            loader = { dependency.client.appApi.getHomeData("illust") },
+                            keyProducer = { "getHomeData-illust" },
+                            HomeIllustResponse::class
+                        )
+                        HomeScreen(dependency, repository)
                     }
-                }
-            } catch (ex: Exception) {
-                Timber.e(ex)
-                NavEntry(key) {
-                    ContentTemplate() {
-                        Text("${ex::class.java.simpleName}: ${ex.message}")
+
+                    is Landing -> {
+                        LandingScreen(dependency)
+                    }
+
+                    is Route.IllustDetail -> {
+                        IllustDetailScreen(key.illustId, dependency)
+                    }
+
+                    else -> {
+                        ContentTemplate() { Text("Unknown route") }
                     }
                 }
             }

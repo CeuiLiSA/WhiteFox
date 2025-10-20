@@ -28,14 +28,14 @@ import ceui.lisa.models.HomeIllustResponse
 import com.github.panpf.sketch.http.HttpHeaders
 import com.github.panpf.sketch.request.ImageRequest
 import com.github.panpf.sketch.request.httpHeaders
-import com.white.fox.ui.common.NavViewModel
+import com.white.fox.Dependency
 import com.white.fox.ui.common.RefreshTemplate
 import com.white.fox.ui.common.Route.IllustDetail
 import com.white.fox.ui.illust.IllustItem
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeScreen(navViewModel: NavViewModel, repository: Repository<HomeIllustResponse>) {
+fun HomeScreen(dependency: Dependency, repository: Repository<HomeIllustResponse>) {
     val homeViewModel: HomeViewModel = viewModel(
         factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
@@ -80,7 +80,7 @@ fun HomeScreen(navViewModel: NavViewModel, repository: Repository<HomeIllustResp
                     ObjectPool.update(illust)
                     IllustItem(
                         illust = illust,
-                        onClick = { navViewModel.navigate(IllustDetail(illust.id)) }
+                        onClick = { dependency.navViewModel.navigate(IllustDetail(illust.id)) }
                     )
                 }
             }

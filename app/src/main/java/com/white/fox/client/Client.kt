@@ -1,5 +1,6 @@
 package com.white.fox.client
 
+import com.white.fox.session.TokenProvider
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
 import okhttp3.logging.HttpLoggingInterceptor
@@ -7,12 +8,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-object Client {
-
-    const val REQUEST_TIME = 10L
-    const val APP_API_HOST = "https://app-api.pixiv.net"
-    const val OAUTH_HOST = "https://oauth.secure.pixiv.net"
-
+class Client(private val tokenProvider: TokenProvider) {
 
     val appApi: AppApi by lazy {
         createAPPAPI(AppApi::class.java)
@@ -30,8 +26,8 @@ object Client {
             .protocols(listOf(Protocol.HTTP_1_1))
 
 
-        okhttpClientBuilder.addInterceptor(HeaderInterceptor(true))
-        okhttpClientBuilder.addInterceptor(TokenFetcherInterceptor())
+        okhttpClientBuilder.addInterceptor(HeaderInterceptor { tokenProvider.getAccessToken() })
+        okhttpClientBuilder.addInterceptor(TokenFetcherInterceptor(tokenProvider))
         okhttpClientBuilder.addInterceptor(HttpLoggingInterceptor().apply {
             setLevel(HttpLoggingInterceptor.Level.BODY)
         })
@@ -51,7 +47,7 @@ object Client {
             .readTimeout(REQUEST_TIME, TimeUnit.SECONDS)
             .protocols(listOf(Protocol.HTTP_1_1))
 
-        okhttpClientBuilder.addInterceptor(HeaderInterceptor(false))
+        okhttpClientBuilder.addInterceptor(HeaderInterceptor())
         okhttpClientBuilder.addInterceptor(HttpLoggingInterceptor().apply {
             setLevel(HttpLoggingInterceptor.Level.BODY)
         })
@@ -68,4 +64,9 @@ object Client {
     }
 
 
+    companion object {
+        const val REQUEST_TIME = 10L
+        const val APP_API_HOST = "https://app-api.pixiv.net"
+        const val OAUTH_HOST = "https://oauth.secure.pixiv.net"
+    }
 }

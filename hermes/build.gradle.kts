@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -69,6 +70,12 @@ dependencies {
     api(libs.sketch.http)
 
     api(libs.sketch.extensions.compose)
+
+
+    val room_version = "2.8.1"
+    api("androidx.room:room-runtime:$room_version")
+    api("androidx.room:room-ktx:${room_version}")
+    ksp("androidx.room:room-compiler:$room_version")
 
     implementation(project(":models"))
 

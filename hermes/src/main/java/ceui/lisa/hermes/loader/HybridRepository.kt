@@ -1,7 +1,7 @@
 package ceui.lisa.hermes.loader
 
+import ceui.lisa.hermes.PrefStore
 import com.google.gson.Gson
-import com.tencent.mmkv.MMKV
 import kotlin.reflect.KClass
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.DurationUnit
@@ -12,7 +12,7 @@ class HybridRepository<ValueT : Any>(
     private val cls: KClass<ValueT>
 ) : Repository<ValueT> {
 
-    private val prefStore by lazy { MMKV.mmkvWithID(TAG) }
+    private val prefStore by lazy { PrefStore(TAG) }
     private val gson by lazy { Gson() }
     private val cacheDurationMillis = 20.minutes.toLong(DurationUnit.MILLISECONDS)
 
@@ -20,8 +20,8 @@ class HybridRepository<ValueT : Any>(
         val key = keyProducer()
         val now = System.currentTimeMillis()
 
-        val cachedJson = prefStore.getString(jsonKey(key), null)
-        val cachedTime = prefStore.getLong(timeKey(key), 0L)
+        val cachedJson = prefStore.getString(jsonKey(key))
+        val cachedTime = prefStore.getLong(timeKey(key))
 
         val pending = cachedJson
             ?.takeIf { it.isNotEmpty() && (now - cachedTime) < cacheDurationMillis }
