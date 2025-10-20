@@ -70,6 +70,10 @@ fun HomeScreen(dependency: Dependency, viewModel: HomeViewModel) {
                     )
                 }
             }
+
+            is LoadState.Processing -> {
+
+            }
         }
     }
 }

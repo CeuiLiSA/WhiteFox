@@ -1,6 +1,5 @@
 package com.white.fox.client
 
-import ceui.lisa.hermes.loader.ProgressInterceptor
 import ceui.lisa.models.AccountResponse
 import com.white.fox.session.ISessionManager
 import kotlinx.coroutines.CoroutineScope
@@ -37,7 +36,6 @@ class Client(
             .protocols(listOf(Protocol.HTTP_1_1))
 
 
-        okhttpClientBuilder.addInterceptor(ProgressInterceptor())
         okhttpClientBuilder.addInterceptor(HeaderInterceptor { sessionManager.getAccessToken() })
         okhttpClientBuilder.addInterceptor(TokenFetcherInterceptor { tokenForThisRequest ->
             refreshAccessToken(tokenForThisRequest)
@@ -62,9 +60,6 @@ class Client(
             .protocols(listOf(Protocol.HTTP_1_1))
 
         okhttpClientBuilder.addInterceptor(HeaderInterceptor())
-        okhttpClientBuilder.addInterceptor(HttpLoggingInterceptor().apply {
-            setLevel(HttpLoggingInterceptor.Level.BODY)
-        })
         okhttpClientBuilder.addInterceptor(HttpLoggingInterceptor().apply {
             setLevel(HttpLoggingInterceptor.Level.BODY)
         })

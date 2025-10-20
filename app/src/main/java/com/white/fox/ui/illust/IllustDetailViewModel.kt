@@ -2,13 +2,14 @@ package com.white.fox.ui.illust
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ceui.lisa.hermes.PrefStore
 import ceui.lisa.hermes.loader.KProgressListener
+import ceui.lisa.hermes.loader.ProgressInterceptor
 import ceui.lisa.hermes.loadstate.LoadReason
 import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.hermes.loadstate.RefreshOwner
 import ceui.lisa.hermes.objectpool.ObjectPool
 import ceui.lisa.models.Illust
-import com.white.fox.client.AppApi
 import com.white.fox.client.buildReferer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,14 +17,17 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import timber.log.Timber
 import java.io.File
-import kotlin.io.path.createTempFile
-import kotlin.io.path.outputStream
-import kotlin.io.path.pathString
 
-class IllustDetailViewModel(private val illustId: Long, private val appApi: AppApi) : ViewModel(),
-    RefreshOwner {
+
+class IllustDetailViewModel(
+    private val illustId: Long,
+    private val cacheDir: File,
+    private val prefStore: PrefStore,
+) : ViewModel(), RefreshOwner {
 
     private val _loadStateMap = hashMapOf<Int, MutableStateFlow<LoadState<File>>>()
 
@@ -60,27 +64,52 @@ class IllustDetailViewModel(private val illustId: Long, private val appApi: AppA
             } else {
                 illust.meta_pages?.getOrNull(index)?.image_urls?.original
             } ?: return
-            val tmpFile = createTempFile("illust_${illustId}_p${index}_", ".jpg")
 
-            appApi.generalGetWithProgress(url, illustId.buildReferer(), object : KProgressListener {
-                override fun update(bytesRead: Long, contentLength: Long, done: Boolean) {
-                    val percent = ((bytesRead * 100) / contentLength.toFloat())
-                    Timber.d("download progress: %.2f%%".format(percent))
-                    if (done) {
-                        Timber.d("download done from update")
-                    }
+            val cachedFile =
+                prefStore.getString(url)?.takeIf { it.isNotEmpty() }?.let { path -> File(path) }
+            if (cachedFile != null && cachedFile.exists()) {
+                loadStateFlow.value = LoadState.Loaded(cachedFile)
+                return
+            }
 
-                    Timber.d("asddsaadsadsw2  bytesRead: ${bytesRead}, contentLength: ${contentLength}")
-
+            val parentFile = File(cacheDir, "FoxImagesCache").apply {
+                if (!exists()) {
+                    mkdir()
                 }
-            }).byteStream().use { input ->
-                tmpFile.outputStream().use { output ->
-                    input.copyTo(output)
-                    Timber.d("download done from copyTo")
+            }
+            val outputFile = File(parentFile, "illust_${illustId}_p${index}.png")
+
+            val client = OkHttpClient.Builder()
+                .addInterceptor(ProgressInterceptor())
+                .build()
+
+            val listener = object : KProgressListener {
+                override fun update(bytesRead: Long, contentLength: Long, done: Boolean) {
+                    val percent = if (done) 100f else (bytesRead * 100 / contentLength.toFloat())
+                    loadStateFlow.value = LoadState.Processing(percent)
                 }
             }
 
-            loadStateFlow.value = LoadState.Loaded(File(tmpFile.pathString))
+            val request = Request.Builder()
+                .url(url)
+                .tag(KProgressListener::class.java, listener)
+                .addHeader("Referer", illustId.buildReferer())
+                .build()
+
+            client.newCall(request).execute().use { response ->
+                if (!response.isSuccessful) {
+                    throw Exception("Failed to download image: ${response.code}")
+                }
+
+                response.body.byteStream().use { input ->
+                    outputFile.outputStream().use { output ->
+                        input.copyTo(output)
+                        prefStore.putString(url, outputFile.path)
+                    }
+                }
+            }
+
+            loadStateFlow.value = LoadState.Loaded(outputFile)
         } catch (ex: Exception) {
             Timber.e(ex)
             loadStateFlow.value = LoadState.Error(ex)

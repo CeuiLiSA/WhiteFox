@@ -4,13 +4,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
+import ceui.lisa.hermes.PrefStore
 import ceui.lisa.hermes.loader.HybridRepository
 import ceui.lisa.models.HomeIllustResponse
+import com.github.panpf.sketch.util.application
 import com.white.fox.Dependency
 import com.white.fox.ui.common.Route.Home
 import com.white.fox.ui.common.Route.Landing
@@ -57,6 +60,7 @@ fun NavHost(dependency: Dependency) {
                     }
 
                     is Route.IllustDetail -> {
+                        val cacheDir = LocalContext.current.application.cacheDir
                         val viewModel: IllustDetailViewModel = viewModel(
                             key = key.name,
                             factory = object : ViewModelProvider.Factory {
@@ -64,7 +68,8 @@ fun NavHost(dependency: Dependency) {
                                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                                     return IllustDetailViewModel(
                                         key.illustId,
-                                        dependency.client.appApi
+                                        cacheDir,
+                                        PrefStore("FoxImagesCache")
                                     ) as T
                                 }
                             },
