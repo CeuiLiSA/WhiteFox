@@ -58,6 +58,7 @@ fun NavHost(dependency: Dependency) {
 
                     is Route.IllustDetail -> {
                         val viewModel: IllustDetailViewModel = viewModel(
+                            key = key.name,
                             factory = object : ViewModelProvider.Factory {
                                 @Suppress("UNCHECKED_CAST")
                                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -66,7 +67,7 @@ fun NavHost(dependency: Dependency) {
                                         dependency.client.appApi
                                     ) as T
                                 }
-                            }
+                            },
                         )
                         IllustDetailScreen(key.illustId, dependency, viewModel)
                     }

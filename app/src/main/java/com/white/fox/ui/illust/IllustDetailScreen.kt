@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import ceui.lisa.hermes.PrefStore
 import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.hermes.objectpool.ObjectPool
@@ -42,6 +43,7 @@ import com.white.fox.Dependency
 import com.white.fox.ui.home.withHeader
 import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
+import java.io.File
 
 @Composable
 fun IllustDetailScreen(illustId: Long, dependency: Dependency, viewModel: IllustDetailViewModel) {
@@ -55,7 +57,6 @@ fun IllustDetailScreen(illustId: Long, dependency: Dependency, viewModel: Illust
     val state = rememberAsyncImageState()
 
     val loadState = viewModel.getStateFlow(0).collectAsState()
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -93,47 +94,53 @@ fun IllustDetailScreen(illustId: Long, dependency: Dependency, viewModel: Illust
                     }
             }
 
-            Box(
-                modifier = Modifier
-                    .fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                SketchZoomAsyncImage(
-                    request = ImageRequest.Builder(context, url)
-                        .withHeader()
-                        .build(),
-                    contentDescription = illust.id.toString(),
-                    contentScale = ContentScale.Fit,
-                    sketch = sketch,
-                    modifier = Modifier.matchParentSize(),
-                    state = state
-                )
-
-                val progressFraction = remember(state.progress) {
-                    derivedStateOf {
-                        state.progress?.let { progress ->
-                            if (progress.totalLength > 0L) {
-                                progress.completedLength.toFloat() / progress.totalLength
-                            } else 0f
-                        } ?: 0f
-                    }
-                }
-
-                val animatedProgress = animateFloatAsState(
-                    targetValue = progressFraction.value,
-                    animationSpec = tween(durationMillis = 300)
-                )
-
-                if (state.progress != null && progressFraction.value < 1f) {
-                    CircularProgressIndicator(
-                        progress = { animatedProgress.value },
-                        modifier = Modifier.size(32.dp),
-                        color = Color.White,
-                        strokeWidth = 6.dp
+            if (loadState.value is LoadState.Loaded<File>) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    SketchZoomAsyncImage(
+                        request = ImageRequest.Builder(
+                            context,
+                            (loadState.value as LoadState.Loaded<File>).data.toUri().toString()
+                        )
+                            .withHeader()
+                            .build(),
+                        contentDescription = illust.id.toString(),
+                        contentScale = ContentScale.Fit,
+                        sketch = sketch,
+                        modifier = Modifier.matchParentSize(),
+                        state = state
                     )
+
+                    val progressFraction = remember(state.progress) {
+                        derivedStateOf {
+                            state.progress?.let { progress ->
+                                if (progress.totalLength > 0L) {
+                                    progress.completedLength.toFloat() / progress.totalLength
+                                } else 0f
+                            } ?: 0f
+                        }
+                    }
+
+                    val animatedProgress = animateFloatAsState(
+                        targetValue = progressFraction.value,
+                        animationSpec = tween(durationMillis = 300)
+                    )
+
+                    if (state.progress != null && progressFraction.value < 1f) {
+                        CircularProgressIndicator(
+                            progress = { animatedProgress.value },
+                            modifier = Modifier.size(32.dp),
+                            color = Color.White,
+                            strokeWidth = 6.dp
+                        )
+                    }
                 }
             }
         }
+
 
         if (loadState.value is LoadState.Loaded) {
             Button(

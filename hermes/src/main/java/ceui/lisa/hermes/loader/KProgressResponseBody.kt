@@ -33,7 +33,10 @@ class KProgressResponseBody(
                 if (bytesRead != -1L) {
                     totalBytesRead += bytesRead
                 }
-                listener.update(totalBytesRead, responseBody.contentLength(), bytesRead == -1L)
+                val contentL = contentLength()
+                if (contentL > 0L) {
+                    listener.update(totalBytesRead, contentL, bytesRead == -1L)
+                }
                 return bytesRead
             }
         }

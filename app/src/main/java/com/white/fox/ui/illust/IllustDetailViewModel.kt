@@ -66,10 +66,17 @@ class IllustDetailViewModel(private val illustId: Long, private val appApi: AppA
                 override fun update(bytesRead: Long, contentLength: Long, done: Boolean) {
                     val percent = ((bytesRead * 100) / contentLength.toFloat())
                     Timber.d("download progress: %.2f%%".format(percent))
+                    if (done) {
+                        Timber.d("download done from update")
+                    }
+
+                    Timber.d("asddsaadsadsw2  bytesRead: ${bytesRead}, contentLength: ${contentLength}")
+
                 }
             }).byteStream().use { input ->
                 tmpFile.outputStream().use { output ->
                     input.copyTo(output)
+                    Timber.d("download done from copyTo")
                 }
             }
 
