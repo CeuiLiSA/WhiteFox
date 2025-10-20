@@ -23,3 +23,5 @@ data class Dependency(
     val prefStore: PrefStore,
     val gson: Gson,
 )
+
+class ServiceProviderException : RuntimeException()

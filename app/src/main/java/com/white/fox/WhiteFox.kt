@@ -36,7 +36,7 @@ class WhiteFox : Application(), ServiceProvider {
     override val gson: Gson by lazy { Gson() }
 
     override val sessionManager: SessionManager by lazy {
-        SessionManager(prefStore, gson, client.authApi)
+        SessionManager(prefStore, gson)
     }
 
     override val client: Client by lazy { Client(sessionManager) }

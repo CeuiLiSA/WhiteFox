@@ -4,47 +4,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateListOf
-import androidx.lifecycle.ViewModel
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
 import ceui.lisa.hermes.loader.HybridRepository
 import ceui.lisa.models.HomeIllustResponse
 import com.white.fox.Dependency
-import com.white.fox.session.SessionManager
 import com.white.fox.ui.common.Route.Home
 import com.white.fox.ui.common.Route.Landing
 import com.white.fox.ui.home.HomeScreen
 import com.white.fox.ui.illust.IllustDetailScreen
 import com.white.fox.ui.landing.LandingScreen
 import timber.log.Timber
-
-
-class NavViewModel(private val sessionManager: SessionManager) : ViewModel() {
-    private val _backStack = mutableStateListOf(defaultRoute())
-    val backStack: List<Route> get() = _backStack
-
-    fun navigate(route: Route) {
-        _backStack.add(route)
-    }
-
-    fun back() {
-        _backStack.removeLastOrNull()
-    }
-
-    fun reset() {
-        _backStack.clear()
-        _backStack.add(defaultRoute())
-    }
-
-    private fun defaultRoute(): Route {
-        return if (sessionManager.isLoggedIn()) {
-            Home
-        } else {
-            Landing
-        }
-    }
-}
 
 @Composable
 fun NavHost(dependency: Dependency) {

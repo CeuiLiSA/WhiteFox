@@ -1,12 +1,12 @@
 package com.white.fox.client
 
-import com.white.fox.session.TokenProvider
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
 import timber.log.Timber
 
-class TokenFetcherInterceptor(private val tokenProvider: TokenProvider) : Interceptor {
+class TokenFetcherInterceptor(private val refreshAccessToken: suspend (tokenForThisRequest: String) -> String?) :
+    Interceptor {
 
     companion object {
         const val TOKEN_ERROR_1 = "Error occurred at the OAuth process"
@@ -27,7 +27,7 @@ class TokenFetcherInterceptor(private val tokenProvider: TokenProvider) : Interc
 
                 val refreshedAccessToken = runBlocking {
                     try {
-                        tokenProvider.refreshAccessToken(tokenForThisRequest)
+                        refreshAccessToken(tokenForThisRequest)
                     } catch (ex: Exception) {
                         Timber.e(ex)
                         null

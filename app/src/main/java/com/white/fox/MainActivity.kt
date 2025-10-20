@@ -7,18 +7,24 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import com.white.fox.ui.common.NavHost
 import com.white.fox.ui.common.NavViewModel
+import com.white.fox.ui.common.NavViewModelFactory
 import com.white.fox.ui.theme.WhiteFoxTheme
 
 class MainActivity : ComponentActivity() {
 
-    private val navViewModel: NavViewModel by viewModels()
+    private val navViewModel: NavViewModel by viewModels(factoryProducer = {
+        NavViewModelFactory(
+            sessionManager = (application as? ServiceProvider)?.sessionManager
+                ?: throw ServiceProviderException()
+        )
+    })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         val serviceProvider =
-            (application as? ServiceProvider) ?: throw RuntimeException("ServiceProvider not found")
+            (application as? ServiceProvider) ?: throw ServiceProviderException()
         val dependency = Dependency(
             navViewModel = navViewModel,
             database = serviceProvider.database,
