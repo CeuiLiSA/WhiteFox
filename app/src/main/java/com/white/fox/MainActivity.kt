@@ -13,10 +13,10 @@ import com.white.fox.ui.theme.WhiteFoxTheme
 class MainActivity : ComponentActivity() {
 
     private val navViewModel: NavViewModel by viewModels(factoryProducer = {
-        NavViewModelFactory(
-            sessionManager = (application as? ServiceProvider)?.sessionManager
+        NavViewModelFactory {
+            (application as? ServiceProvider)?.sessionManager
                 ?: throw ServiceProviderException()
-        )
+        }
     })
 
     override fun onCreate(savedInstanceState: Bundle?) {
