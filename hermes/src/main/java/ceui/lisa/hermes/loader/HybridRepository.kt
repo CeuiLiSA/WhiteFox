@@ -1,7 +1,7 @@
 package ceui.lisa.hermes.loader
 
 import ceui.lisa.hermes.PrefStore
-import com.google.gson.Gson
+import ceui.lisa.hermes.db.gson
 import kotlin.reflect.KClass
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.DurationUnit
@@ -13,7 +13,6 @@ class HybridRepository<ValueT : Any>(
 ) : Repository<ValueT> {
 
     private val prefStore by lazy { PrefStore(TAG) }
-    private val gson by lazy { Gson() }
     private val cacheDurationMillis = 20.minutes.toLong(DurationUnit.MILLISECONDS)
 
     override suspend fun load(): ValueT {

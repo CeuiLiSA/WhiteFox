@@ -1,11 +1,10 @@
 package ceui.lisa.hermes
 
-import com.google.gson.Gson
+import ceui.lisa.hermes.db.gson
 import com.tencent.mmkv.MMKV
 
 class PrefStore(private val tag: String) {
 
-    val gson = Gson()
     val impl: MMKV by lazy { MMKV.mmkvWithID(tag) }
 
     fun put(key: String, obj: Any) {
