@@ -4,13 +4,19 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
@@ -20,8 +26,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import ceui.lisa.hermes.PrefStore
+import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.hermes.objectpool.ObjectPool
 import ceui.lisa.models.Illust
 import com.github.panpf.sketch.Sketch
@@ -30,16 +39,14 @@ import com.github.panpf.sketch.request.ImageRequest
 import com.github.panpf.sketch.request.ImageResult
 import com.github.panpf.zoomimage.SketchZoomAsyncImage
 import com.white.fox.Dependency
-import com.white.fox.ui.common.ContentTemplate
 import com.white.fox.ui.home.withHeader
-import com.white.fox.ui.theme.Purple80
 import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
 
 @Composable
-fun IllustDetailScreen(illustId: Long, dependency: Dependency) {
-    // 创建 Sketch 实例
-    val sketch = Sketch.Builder(LocalContext.current).build()
+fun IllustDetailScreen(illustId: Long, dependency: Dependency, viewModel: IllustDetailViewModel) {
+    val context = LocalContext.current
+    val sketch = remember { Sketch.Builder(context).build() }
     val prefStore = remember {
         Timber.d("dasasdadsw2 ✅ prefStore new ed")
         PrefStore("ImageCache")
@@ -47,10 +54,18 @@ fun IllustDetailScreen(illustId: Long, dependency: Dependency) {
     val illust = ObjectPool.get<Illust>(illustId).observeAsState().value
     val state = rememberAsyncImageState()
 
-    ContentTemplate() {
+    val loadState = viewModel.getStateFlow(0).collectAsState()
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+    ) {
         if (illust == null) {
-            Timber.d("sasadasdw illust == null")
-            CircularProgressIndicator()
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center),
+                color = Color.White
+            )
         } else {
             val url = if (illust.page_count == 1) {
                 illust.meta_single_page?.original_image_url
@@ -59,7 +74,7 @@ fun IllustDetailScreen(illustId: Long, dependency: Dependency) {
             }
 
             val isOriginalUrlLoaded = prefStore.getBoolean(url)
-            Timber.d("dasasdadsw2 isOriginalUrlLoaded: ${isOriginalUrlLoaded}")
+            Timber.d("dasasdadsw2 isOriginalUrlLoaded: $isOriginalUrlLoaded")
 
             LaunchedEffect(Unit) {
                 snapshotFlow { state.result }
@@ -78,55 +93,65 @@ fun IllustDetailScreen(illustId: Long, dependency: Dependency) {
                     }
             }
 
-            Column(
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight()
-                        .background(Purple80),
-                    contentAlignment = Alignment.Center
-                ) {
-                    SketchZoomAsyncImage(
-                        request = ImageRequest.Builder(
-                            LocalContext.current,
-                            url
-                        ).withHeader().build(),
-                        contentDescription = illust.id.toString(),
-                        contentScale = ContentScale.Fit,
-                        sketch = sketch,
-                        modifier = Modifier
-                            .matchParentSize(),
-                        state = state
-                    )
+                SketchZoomAsyncImage(
+                    request = ImageRequest.Builder(context, url)
+                        .withHeader()
+                        .build(),
+                    contentDescription = illust.id.toString(),
+                    contentScale = ContentScale.Fit,
+                    sketch = sketch,
+                    modifier = Modifier.matchParentSize(),
+                    state = state
+                )
 
-                    val progressFraction = remember(state.progress) {
-                        derivedStateOf {
-                            state.progress?.let { progress ->
-                                if (progress.totalLength > 0L) {
-                                    progress.completedLength.toFloat() / progress.totalLength
-                                } else 0f
-                            } ?: 0f
-                        }
+                val progressFraction = remember(state.progress) {
+                    derivedStateOf {
+                        state.progress?.let { progress ->
+                            if (progress.totalLength > 0L) {
+                                progress.completedLength.toFloat() / progress.totalLength
+                            } else 0f
+                        } ?: 0f
                     }
-
-                    val animatedProgress = animateFloatAsState(
-                        targetValue = progressFraction.value,
-                        animationSpec = tween(durationMillis = 300)
-                    )
-
-                    if (state.progress != null && progressFraction.value < 1f) {
-                        CircularProgressIndicator(
-                            progress = { animatedProgress.value },
-                            modifier = Modifier.size(32.dp),
-                            color = Color.White,
-                            strokeWidth = 6.dp
-                        )
-                    }
-
                 }
+
+                val animatedProgress = animateFloatAsState(
+                    targetValue = progressFraction.value,
+                    animationSpec = tween(durationMillis = 300)
+                )
+
+                if (state.progress != null && progressFraction.value < 1f) {
+                    CircularProgressIndicator(
+                        progress = { animatedProgress.value },
+                        modifier = Modifier.size(32.dp),
+                        color = Color.White,
+                        strokeWidth = 6.dp
+                    )
+                }
+            }
+        }
+
+        if (loadState.value is LoadState.Loaded) {
+            Button(
+                onClick = { /* 下载逻辑 */ },
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 24.dp)
+                    .fillMaxWidth(0.6f)
+                    .height(48.dp),
+                shape = RoundedCornerShape(24.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.White.copy(alpha = 0.9f))
+            ) {
+                Text(
+                    text = "下载原图",
+                    color = Color.Black,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }

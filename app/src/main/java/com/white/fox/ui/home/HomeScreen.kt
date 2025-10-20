@@ -17,14 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
-import ceui.lisa.hermes.loader.Repository
 import ceui.lisa.hermes.loadstate.LoadReason
 import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.hermes.objectpool.ObjectPool
-import ceui.lisa.models.HomeIllustResponse
 import com.github.panpf.sketch.http.HttpHeaders
 import com.github.panpf.sketch.request.ImageRequest
 import com.github.panpf.sketch.request.httpHeaders
@@ -35,24 +30,15 @@ import com.white.fox.ui.illust.IllustItem
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeScreen(dependency: Dependency, repository: Repository<HomeIllustResponse>) {
-    val homeViewModel: HomeViewModel = viewModel(
-        factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return HomeViewModel(repository) as T
-            }
-        }
-    )
-
-    val loadState by homeViewModel.loadState.collectAsState()
+fun HomeScreen(dependency: Dependency, viewModel: HomeViewModel) {
+    val loadState by viewModel.loadState.collectAsState()
 
     val isRefreshing =
         loadState is LoadState.Loading && (loadState as? LoadState.Loading)?.reason != LoadReason.InitialLoad
 
     RefreshTemplate(
         isRefreshing = isRefreshing,
-        onRefresh = { homeViewModel.refresh(LoadReason.PullRefresh) }
+        onRefresh = { viewModel.refresh(LoadReason.PullRefresh) }
     ) {
         when (val state = loadState) {
             is LoadState.Loading -> Box(

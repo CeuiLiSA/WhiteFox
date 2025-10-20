@@ -4,6 +4,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
 import ceui.lisa.hermes.loader.HybridRepository
@@ -12,7 +15,9 @@ import com.white.fox.Dependency
 import com.white.fox.ui.common.Route.Home
 import com.white.fox.ui.common.Route.Landing
 import com.white.fox.ui.home.HomeScreen
+import com.white.fox.ui.home.HomeViewModel
 import com.white.fox.ui.illust.IllustDetailScreen
+import com.white.fox.ui.illust.IllustDetailViewModel
 import com.white.fox.ui.landing.LandingScreen
 import timber.log.Timber
 
@@ -36,7 +41,15 @@ fun NavHost(dependency: Dependency) {
                             keyProducer = { "getHomeData-illust" },
                             HomeIllustResponse::class
                         )
-                        HomeScreen(dependency, repository)
+                        val viewModel: HomeViewModel = viewModel(
+                            factory = object : ViewModelProvider.Factory {
+                                @Suppress("UNCHECKED_CAST")
+                                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                                    return HomeViewModel(repository) as T
+                                }
+                            }
+                        )
+                        HomeScreen(dependency, viewModel)
                     }
 
                     is Landing -> {
@@ -44,7 +57,18 @@ fun NavHost(dependency: Dependency) {
                     }
 
                     is Route.IllustDetail -> {
-                        IllustDetailScreen(key.illustId, dependency)
+                        val viewModel: IllustDetailViewModel = viewModel(
+                            factory = object : ViewModelProvider.Factory {
+                                @Suppress("UNCHECKED_CAST")
+                                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                                    return IllustDetailViewModel(
+                                        key.illustId,
+                                        dependency.client.appApi
+                                    ) as T
+                                }
+                            }
+                        )
+                        IllustDetailScreen(key.illustId, dependency, viewModel)
                     }
 
                     else -> {

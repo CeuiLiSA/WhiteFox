@@ -28,7 +28,7 @@ class ValueContent<ValueT>(
 
             _loadStateFlow.value = LoadState.Loading(reason)
             try {
-                val data = repository.load()
+                val data = repository.load(reason)
                 _loadStateFlow.value = LoadState.Loaded(data)
             } catch (ex: Exception) {
                 Timber.e(ex)
