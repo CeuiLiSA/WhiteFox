@@ -46,6 +46,9 @@ dependencies {
     api(libs.androidx.appcompat)
     api(libs.material)
 
+    api(libs.androidx.compose.material.icons.core)
+    api(libs.androidx.compose.material.icons.extended)
+
 
     api(libs.androidx.navigation3.ui)
     api(libs.androidx.navigation3.runtime)

@@ -69,6 +69,7 @@ fun NavHost(dependency: Dependency) {
                                     return IllustDetailViewModel(
                                         key.illustId,
                                         cacheDir,
+                                        dependency,
                                         PrefStore("FoxImagesCache")
                                     ) as T
                                 }

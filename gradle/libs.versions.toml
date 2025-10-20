@@ -12,6 +12,7 @@ lifecycleRuntimeKtx = "2.9.4"
 activityCompose = "1.11.0"
 composeBom = "2025.09.01"
 loggingInterceptor = "5.1.0"
+materialIconsCore = "1.7.8"
 mmkv = "2.2.4"
 okhttp = "5.1.0"
 retrofit = "3.1.0-SNAPSHOT"
@@ -34,6 +35,8 @@ runtimeLivedata = "1.9.2"
 zoomimageComposeSketch4Core = "1.4.0"
 
 [libraries]
+androidx-compose-material-icons-core = { module = "androidx.compose.material:material-icons-core", version.ref = "materialIconsCore" }
+androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsCore" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilCompose" }

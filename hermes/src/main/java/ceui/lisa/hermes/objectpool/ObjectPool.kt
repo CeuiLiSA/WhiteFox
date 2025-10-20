@@ -1,14 +1,15 @@
 package ceui.lisa.hermes.objectpool
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import ceui.lisa.models.ModelObject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlin.reflect.KClass
 
 object ObjectPool {
 
-    private val _map = hashMapOf<ObjectKey, MutableLiveData<Any>>()
+    private val _map = hashMapOf<ObjectKey, MutableStateFlow<Any?>>()
 
+    // 更新对象
     inline fun <reified ObjectT : ModelObject> update(obj: ObjectT) {
         update(obj, ObjectT::class)
     }
@@ -19,29 +20,25 @@ object ObjectPool {
     ) {
         val key = ObjectKey(obj.objectUniqueId, objCls)
         val record = getMutableRecord(key)
-        try {
-            record.value = obj
-        } catch (ex: Exception) {
-            throw RuntimeException(ex)
-        }
+        record.value = obj
     }
 
-    inline fun <reified ObjectT : ModelObject> get(id: Long): LiveData<ObjectT> {
+    // 获取 StateFlow
+    inline fun <reified ObjectT : ModelObject> get(id: Long): StateFlow<ObjectT?> {
         return get(id, ObjectT::class)
     }
 
     fun <ObjectT : ModelObject> get(
         objectId: Long,
         objCls: KClass<ObjectT>,
-    ): LiveData<ObjectT> {
+    ): StateFlow<ObjectT?> {
         val key = ObjectKey(objectId, objCls)
-        return getMutableRecord(key) as LiveData<ObjectT>
+        @Suppress("UNCHECKED_CAST")
+        return getMutableRecord(key) as StateFlow<ObjectT?>
     }
 
-    private fun getMutableRecord(key: ObjectKey): MutableLiveData<Any> {
-        return _map.getOrPut(key) {
-            MutableLiveData()
-        }
+    // 内部获取 MutableStateFlow
+    private fun getMutableRecord(key: ObjectKey): MutableStateFlow<Any?> {
+        return _map.getOrPut(key) { MutableStateFlow(null) }
     }
-
 }

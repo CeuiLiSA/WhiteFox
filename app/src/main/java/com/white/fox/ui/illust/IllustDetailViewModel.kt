@@ -10,6 +10,7 @@ import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.hermes.loadstate.RefreshOwner
 import ceui.lisa.hermes.objectpool.ObjectPool
 import ceui.lisa.models.Illust
+import com.white.fox.Dependency
 import com.white.fox.client.buildReferer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,10 +27,14 @@ import java.io.File
 class IllustDetailViewModel(
     private val illustId: Long,
     private val cacheDir: File,
+    private val dependency: Dependency,
     private val prefStore: PrefStore,
 ) : ViewModel(), RefreshOwner {
 
     private val _loadStateMap = hashMapOf<Int, MutableStateFlow<LoadState<File>>>()
+
+    private val _bookmarkLoading = MutableStateFlow(false)
+    val bookmarkLoading: StateFlow<Boolean> = _bookmarkLoading
 
     private fun getLoadStateFlow(index: Int): MutableStateFlow<LoadState<File>> {
         return _loadStateMap.getOrPut(index) {
@@ -116,4 +121,25 @@ class IllustDetailViewModel(
         }
     }
 
+    fun toggleBookmark() {
+        viewModelScope.launch {
+            _bookmarkLoading.value = true
+            try {
+                withContext(Dispatchers.IO) {
+                    val illust = ObjectPool.get<Illust>(illustId).value ?: return@withContext
+                    if (illust.is_bookmarked == true) {
+                        dependency.client.appApi.removeBookmark(illustId)
+                        ObjectPool.update(illust.copy(is_bookmarked = false))
+                    } else {
+                        dependency.client.appApi.postBookmark(illustId)
+                        ObjectPool.update(illust.copy(is_bookmarked = true))
+                    }
+                }
+            } catch (ex: Exception) {
+                Timber.e(ex)
+            } finally {
+                _bookmarkLoading.value = false
+            }
+        }
+    }
 }

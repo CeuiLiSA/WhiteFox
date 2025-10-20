@@ -1,12 +1,11 @@
 package com.white.fox.client
 
-import ceui.lisa.hermes.loader.KProgressListener
 import ceui.lisa.models.HomeIllustResponse
-import okhttp3.ResponseBody
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
-import retrofit2.http.Header
+import retrofit2.http.POST
 import retrofit2.http.Path
-import retrofit2.http.Url
 
 interface AppApi {
 
@@ -16,12 +15,18 @@ interface AppApi {
         @Path("type") type: String,
     ): HomeIllustResponse
 
-    @GET
-    suspend fun generalGetWithProgress(
-        @Url url: String,
-        @Header("Referer") referer: String,
-        @retrofit2.http.Tag listener: KProgressListener
-    ): ResponseBody
+    @FormUrlEncoded
+    @POST("/v2/illust/bookmark/add")
+    suspend fun postBookmark(
+        @Field("illust_id") illust_id: Long,
+        @Field("restrict") restrict: String = "public"
+    )
+
+    @FormUrlEncoded
+    @POST("/v1/illust/bookmark/delete")
+    suspend fun removeBookmark(
+        @Field("illust_id") illust_id: Long
+    )
 }
 
 fun Long.buildReferer(): String {
