@@ -15,9 +15,7 @@ import com.white.fox.ui.theme.WhiteFoxTheme
 
 class MainActivity : ComponentActivity() {
 
-    private val navViewModel: NavViewModel by constructVM(
-        { (application as ServiceProvider).sessionManager })
-    { sessionManager ->
+    private val navViewModel by constructVM({ requireSessionManager() }) { sessionManager ->
         NavViewModel(sessionManager)
     }
 
@@ -25,8 +23,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val serviceProvider =
-            (application as? ServiceProvider) ?: throw ServiceProviderException()
+        val serviceProvider = (application as? ServiceProvider) ?: throw ServiceProviderException()
         val dependency = Dependency(
             database = serviceProvider.database,
             client = serviceProvider.client,
@@ -37,8 +34,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             WhiteFoxTheme {
                 CompositionLocalProvider(
-                    LocalDependency provides dependency,
-                    LocalNavViewModel provides navViewModel
+                    LocalDependency provides dependency, LocalNavViewModel provides navViewModel
                 ) {
                     NavHost()
                 }

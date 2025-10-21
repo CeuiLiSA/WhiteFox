@@ -1,5 +1,6 @@
 package com.white.fox
 
+import androidx.activity.ComponentActivity
 import ceui.lisa.hermes.PrefStore
 import ceui.lisa.hermes.db.AppDatabase
 import com.google.gson.Gson
@@ -15,3 +16,7 @@ interface ServiceProvider {
 }
 
 class ServiceProviderException : RuntimeException()
+
+fun ComponentActivity.requireSessionManager(): SessionManager {
+    return (application as? ServiceProvider)?.sessionManager ?: throw ServiceProviderException()
+}
