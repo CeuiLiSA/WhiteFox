@@ -8,8 +8,10 @@ sealed class Route(
     val name: String
 ) {
 
-    object Home : Route("Home")
+    object Main : Route("Main")
     object Landing : Route("Landing")
+
+    object Search : Route("Search")
 
     data class IllustDetail(val illustId: Long) : Route("IllustDetailScreen-illustId-${illustId}")
 }

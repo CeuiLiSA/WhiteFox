@@ -18,8 +18,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import ceui.lisa.models.Illust
 import com.github.panpf.sketch.AsyncImage
+import com.github.panpf.sketch.http.HttpHeaders
 import com.github.panpf.sketch.request.ImageRequest
-import com.white.fox.ui.home.withHeader
+import com.github.panpf.sketch.request.httpHeaders
 import com.white.fox.ui.theme.Purple80
 
 @Composable
@@ -63,4 +64,16 @@ fun IllustItem(
             }
         }
     }
+}
+
+
+private const val IMG_HEADER_NAME = "Referer"
+private const val IMG_HEADER_VALUE = "https://app-api.pixiv.net/"
+
+
+fun ImageRequest.Builder.withHeader(): ImageRequest.Builder {
+    httpHeaders(
+        HttpHeaders.Builder().add(IMG_HEADER_NAME, IMG_HEADER_VALUE).build()
+    )
+    return this
 }

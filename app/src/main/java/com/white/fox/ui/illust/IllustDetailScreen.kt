@@ -34,7 +34,6 @@ import ceui.lisa.models.Illust
 import com.github.panpf.sketch.Sketch
 import com.github.panpf.sketch.request.ImageRequest
 import com.github.panpf.zoomimage.SketchZoomAsyncImage
-import com.white.fox.ui.home.withHeader
 import java.io.File
 
 @Composable
