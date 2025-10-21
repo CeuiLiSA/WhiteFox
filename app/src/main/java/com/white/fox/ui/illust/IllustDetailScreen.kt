@@ -16,7 +16,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -50,9 +49,7 @@ fun IllustDetailScreen(
     val illust = illustState.value
     val loadState = viewModel.getStateFlow(0).collectAsState()
 
-    val isBookmarked by remember(illust) {
-        derivedStateOf { illust?.is_bookmarked ?: false }
-    }
+
 
     Box(
         modifier = Modifier
@@ -113,10 +110,7 @@ fun IllustDetailScreen(
                 .align(Alignment.BottomEnd)
                 .padding(24.dp)
         ) {
-            BookmarkButton(
-                isBookmarked = isBookmarked,
-                viewModel = viewModel,
-            )
+            BookmarkButton(illustId)
         }
 
         when (val state = loadState.value) {

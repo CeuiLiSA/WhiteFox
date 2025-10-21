@@ -33,8 +33,6 @@ class IllustDetailViewModel(
 
     private val _loadStateMap = hashMapOf<Int, MutableStateFlow<LoadState<File>>>()
 
-    private val _bookmarkLoading = MutableStateFlow(false)
-    val bookmarkLoading: StateFlow<Boolean> = _bookmarkLoading
 
     private fun getLoadStateFlow(index: Int): MutableStateFlow<LoadState<File>> {
         return _loadStateMap.getOrPut(index) {
@@ -118,28 +116,6 @@ class IllustDetailViewModel(
         } catch (ex: Exception) {
             Timber.e(ex)
             loadStateFlow.value = LoadState.Error(ex)
-        }
-    }
-
-    fun toggleBookmark() {
-        viewModelScope.launch {
-            _bookmarkLoading.value = true
-            try {
-                withContext(Dispatchers.IO) {
-                    val illust = ObjectPool.get<Illust>(illustId).value ?: return@withContext
-                    if (illust.is_bookmarked == true) {
-                        dependency.client.appApi.removeBookmark(illustId)
-                        ObjectPool.update(illust.copy(is_bookmarked = false))
-                    } else {
-                        dependency.client.appApi.postBookmark(illustId)
-                        ObjectPool.update(illust.copy(is_bookmarked = true))
-                    }
-                }
-            } catch (ex: Exception) {
-                Timber.e(ex)
-            } finally {
-                _bookmarkLoading.value = false
-            }
         }
     }
 }
