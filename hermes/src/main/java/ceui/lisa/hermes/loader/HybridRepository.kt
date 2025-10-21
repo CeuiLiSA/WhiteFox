@@ -3,6 +3,8 @@ package ceui.lisa.hermes.loader
 import ceui.lisa.hermes.PrefStore
 import ceui.lisa.hermes.db.gson
 import ceui.lisa.hermes.loadstate.LoadReason
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlin.reflect.KClass
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.DurationUnit
@@ -16,22 +18,31 @@ class HybridRepository<ValueT : Any>(
     private val prefStore by lazy { PrefStore(TAG) }
     private val cacheDurationMillis = 20.minutes.toLong(DurationUnit.MILLISECONDS)
 
-    override suspend fun load(reason: LoadReason): ValueT {
+    private val _valueFlow = MutableStateFlow<ValueT?>(null)
+    override val valueFlow: StateFlow<ValueT?> = _valueFlow
+
+    override suspend fun load(reason: LoadReason) {
         val key = keyProducer()
         val now = System.currentTimeMillis()
 
         val cachedJson = prefStore.getString(jsonKey(key))
         val cachedTime = prefStore.getLong(timeKey(key))
 
-        val pending = cachedJson
-            ?.takeIf { reason != LoadReason.PullRefresh && it.isNotEmpty() && (now - cachedTime) < cacheDurationMillis }
+        val cached = cachedJson
+            ?.takeIf { reason == LoadReason.InitialLoad && it.isNotEmpty() }
             ?.let {
                 runCatching { gson.fromJson(it, cls.java) }.getOrNull()
             }
+        if (cached != null) {
+            _valueFlow.value = cached
+        }
 
-        return pending ?: loader().also { value ->
-            prefStore.putString(jsonKey(key), gson.toJson(value))
-            prefStore.putLong(timeKey(key), now)
+        if (cached == null || (now - cachedTime) > cacheDurationMillis) {
+            loader().also { value ->
+                _valueFlow.value = value
+                prefStore.putString(jsonKey(key), gson.toJson(value))
+                prefStore.putLong(timeKey(key), now)
+            }
         }
     }
 
