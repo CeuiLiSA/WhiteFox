@@ -10,8 +10,8 @@ import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.hermes.loadstate.RefreshOwner
 import ceui.lisa.hermes.objectpool.ObjectPool
 import ceui.lisa.models.Illust
-import com.white.fox.Dependency
 import com.white.fox.client.buildReferer
+import com.white.fox.ui.common.Dependency
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

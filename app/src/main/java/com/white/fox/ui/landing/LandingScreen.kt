@@ -13,13 +13,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.white.fox.Dependency
 import com.white.fox.ui.common.ContentTemplate
+import com.white.fox.ui.common.LocalDependency
 
 @Composable
-fun LandingScreen(dependency: Dependency) {
+fun LandingScreen() {
+    val dependency = LocalDependency.current
     val tokenState = remember { mutableStateOf("") }
-
     ContentTemplate() {
         OutlinedTextField(
             value = tokenState.value,

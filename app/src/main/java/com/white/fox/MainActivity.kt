@@ -4,17 +4,23 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
+import androidx.compose.runtime.CompositionLocalProvider
+import ceui.lisa.hermes.viewmodel.constructVM
+import com.white.fox.ui.common.Dependency
+import com.white.fox.ui.common.LocalDependency
+import com.white.fox.ui.common.LocalNavViewModel
 import com.white.fox.ui.common.NavHost
 import com.white.fox.ui.common.NavViewModel
-import com.white.fox.ui.common.NavViewModelFactory
 import com.white.fox.ui.theme.WhiteFoxTheme
+import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
 
-    private val navViewModel: NavViewModel by viewModels(factoryProducer = {
-        NavViewModelFactory { (application as ServiceProvider).sessionManager }
-    })
+    private val navViewModel: NavViewModel by constructVM(
+        { (application as ServiceProvider).sessionManager })
+    { sessionManager ->
+        NavViewModel(sessionManager)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +29,6 @@ class MainActivity : ComponentActivity() {
         val serviceProvider =
             (application as? ServiceProvider) ?: throw ServiceProviderException()
         val dependency = Dependency(
-            navViewModel = navViewModel,
             database = serviceProvider.database,
             client = serviceProvider.client,
             sessionManager = serviceProvider.sessionManager,
@@ -32,7 +37,15 @@ class MainActivity : ComponentActivity() {
         )
         setContent {
             WhiteFoxTheme {
-                NavHost(dependency)
+                CompositionLocalProvider(
+                    LocalDependency provides dependency,
+                    LocalNavViewModel provides navViewModel
+                ) {
+
+                    Timber.d("dsadasdasw2 MainActivity nav: ${LocalNavViewModel.current}")
+                    Timber.d("dsadasdasw2 MainActivity dep: ${LocalDependency.current}")
+                    NavHost()
+                }
             }
         }
     }

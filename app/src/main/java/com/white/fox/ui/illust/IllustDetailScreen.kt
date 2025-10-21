@@ -34,16 +34,13 @@ import ceui.lisa.hermes.objectpool.ObjectPool
 import ceui.lisa.models.Illust
 import com.github.panpf.sketch.Sketch
 import com.github.panpf.sketch.request.ImageRequest
-import com.github.panpf.sketch.util.application
 import com.github.panpf.zoomimage.SketchZoomAsyncImage
-import com.white.fox.Dependency
 import com.white.fox.ui.home.withHeader
 import java.io.File
 
 @Composable
 fun IllustDetailScreen(
     illustId: Long,
-    dependency: Dependency,
     viewModel: IllustDetailViewModel
 ) {
     val context = LocalContext.current
@@ -86,7 +83,6 @@ fun IllustDetailScreen(
         )
 
         if (loadState.value is LoadState.Loaded<File>) {
-            val context = LocalContext.current.application
             val imgFile = (loadState.value as LoadState.Loaded<File>).data
             Button(
                 onClick = {

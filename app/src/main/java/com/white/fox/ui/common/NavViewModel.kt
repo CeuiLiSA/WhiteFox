@@ -1,6 +1,7 @@
 package com.white.fox.ui.common
 
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.lifecycle.ViewModel
 import com.white.fox.session.SessionManager
 import com.white.fox.ui.common.Route.Home
@@ -30,4 +31,8 @@ class NavViewModel(private val sessionManager: SessionManager) : ViewModel() {
             Landing
         }
     }
+}
+
+val LocalNavViewModel = staticCompositionLocalOf<NavViewModel> {
+    error("No NavViewModel provided")
 }
