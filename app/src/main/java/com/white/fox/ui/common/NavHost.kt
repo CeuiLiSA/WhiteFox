@@ -54,7 +54,9 @@ fun NavHost() {
 
                     is Route.IllustDetail -> {
                         val cacheDir = LocalContext.current.application.cacheDir
-                        val viewModel = constructVM({ dependency }) { dep ->
+                        val viewModel = constructKeyedVM(
+                            { "illust-detail-model-${key.illustId}" },
+                            { dependency }) { dep ->
                             IllustDetailViewModel(
                                 key.illustId, cacheDir, dependency, PrefStore("FoxImagesCache")
                             )
