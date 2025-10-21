@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import timber.log.Timber
@@ -26,14 +27,9 @@ class ValueContent<ValueT>(
         coroutineScope.launch {
             if (!_taskMutex.tryLock()) return@launch
 
-            _loadStateFlow.value = LoadState.Loading(reason)
             try {
+                _loadStateFlow.value = LoadState.Loading(reason)
                 repository.load(reason)
-                repository.valueFlow.collect { value ->
-                    if (value != null) {
-                        _loadStateFlow.value = LoadState.Loaded(value)
-                    }
-                }
             } catch (ex: Exception) {
                 Timber.e(ex)
                 _loadStateFlow.value = LoadState.Error(ex)
@@ -44,6 +40,13 @@ class ValueContent<ValueT>(
     }
 
     init {
+        coroutineScope.launch {
+            repository.valueFlow.collectLatest { value ->
+                if (value != null) {
+                    _loadStateFlow.value = LoadState.Loaded(value)
+                }
+            }
+        }
         refresh(LoadReason.InitialLoad)
     }
 }

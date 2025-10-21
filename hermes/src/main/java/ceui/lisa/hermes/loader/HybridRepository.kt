@@ -29,20 +29,18 @@ class HybridRepository<ValueT : Any>(
         val cachedTime = prefStore.getLong(timeKey(key))
 
         val cached = cachedJson
-            ?.takeIf { reason == LoadReason.InitialLoad && it.isNotEmpty() }
-            ?.let {
-                runCatching { gson.fromJson(it, cls.java) }.getOrNull()
-            }
-        if (cached != null) {
+            ?.takeIf { it.isNotEmpty() }
+            ?.let { runCatching { gson.fromJson(it, cls.java) }.getOrNull() }
+
+        if (reason == LoadReason.InitialLoad && cached != null) {
             _valueFlow.value = cached
         }
 
-        if (cached == null || (now - cachedTime) > cacheDurationMillis) {
-            loader().also { value ->
-                _valueFlow.value = value
-                prefStore.putString(jsonKey(key), gson.toJson(value))
-                prefStore.putLong(timeKey(key), now)
-            }
+        if (cached == null || reason != LoadReason.InitialLoad || (now - cachedTime) > cacheDurationMillis) {
+            val newData = loader()
+            _valueFlow.value = newData
+            prefStore.putString(jsonKey(key), gson.toJson(newData))
+            prefStore.putLong(timeKey(key), now)
         }
     }
 
