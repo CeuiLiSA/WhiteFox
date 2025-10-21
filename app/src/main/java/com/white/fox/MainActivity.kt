@@ -12,7 +12,6 @@ import com.white.fox.ui.common.LocalNavViewModel
 import com.white.fox.ui.common.NavHost
 import com.white.fox.ui.common.NavViewModel
 import com.white.fox.ui.theme.WhiteFoxTheme
-import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
 
@@ -41,9 +40,6 @@ class MainActivity : ComponentActivity() {
                     LocalDependency provides dependency,
                     LocalNavViewModel provides navViewModel
                 ) {
-
-                    Timber.d("dsadasdasw2 MainActivity nav: ${LocalNavViewModel.current}")
-                    Timber.d("dsadasdasw2 MainActivity dep: ${LocalDependency.current}")
                     NavHost()
                 }
             }

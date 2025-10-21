@@ -23,12 +23,10 @@ import ceui.lisa.hermes.objectpool.ObjectPool
 import com.github.panpf.sketch.http.HttpHeaders
 import com.github.panpf.sketch.request.ImageRequest
 import com.github.panpf.sketch.request.httpHeaders
-import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.LocalNavViewModel
 import com.white.fox.ui.common.RefreshTemplate
 import com.white.fox.ui.common.Route.IllustDetail
 import com.white.fox.ui.illust.IllustItem
-import timber.log.Timber
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -37,9 +35,6 @@ fun HomeScreen(viewModel: HomeViewModel) {
     val navViewModel = LocalNavViewModel.current
     val isRefreshing =
         loadState is LoadState.Loading && (loadState as? LoadState.Loading)?.reason != LoadReason.InitialLoad
-
-    Timber.d("dsadasdasw2 HomeScreen nav: ${LocalNavViewModel.current}")
-    Timber.d("dsadasdasw2 HomeScreen dep: ${LocalDependency.current}")
 
     RefreshTemplate(
         isRefreshing = isRefreshing,

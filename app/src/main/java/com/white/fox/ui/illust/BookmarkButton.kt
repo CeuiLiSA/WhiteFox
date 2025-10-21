@@ -17,9 +17,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.white.fox.ui.common.LocalDependency
-import com.white.fox.ui.common.LocalNavViewModel
-import timber.log.Timber
 
 @Composable
 fun BookmarkButton(
@@ -27,9 +24,6 @@ fun BookmarkButton(
     viewModel: IllustDetailViewModel,
 ) {
     val loading by viewModel.bookmarkLoading.collectAsState()
-
-    Timber.d("dsadasdasw2 BookmarkButton nav: ${LocalNavViewModel.current}")
-    Timber.d("dsadasdasw2 BookmarkButton dep: ${LocalDependency.current}")
 
     Box(
         modifier = Modifier
