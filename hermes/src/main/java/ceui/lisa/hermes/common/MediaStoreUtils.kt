@@ -1,0 +1,167 @@
+package ceui.lisa.hermes.common
+
+import android.content.ContentUris
+import android.content.ContentValues
+import android.content.Context
+import android.os.Build
+import android.os.Environment
+import android.provider.MediaStore
+import timber.log.Timber
+import java.io.File
+import java.io.FileInputStream
+import java.io.IOException
+
+
+fun saveImageToGallery(context: Context, imageFile: File, displayName: String) {
+    runCatching {
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, displayName)
+            put(
+                MediaStore.Images.Media.RELATIVE_PATH,
+                "${Environment.DIRECTORY_DCIM}/ShaftImages"
+            )
+        }
+
+        val contentResolver =
+            context.contentResolver ?: return@runCatching
+
+        val uri =
+            contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+                ?: return@runCatching // 如果URI为空，返回
+
+        contentResolver.openOutputStream(uri)?.use { outputStream ->
+            FileInputStream(imageFile).use { inputStream ->
+                inputStream.copyTo(outputStream)
+            }
+        }
+
+        Timber.d("saveImageToGallery success")
+    }.onFailure { ex ->
+        when (ex) {
+            is IOException -> Timber.e("SaveImage IOException while saving image: ${ex.message}")
+            is SecurityException -> Timber.e("SaveImage SecurityException: Permission issue: ${ex.message}")
+            else -> Timber.e("SaveImage Unexpected error: ${ex.message}")
+        }
+    }
+}
+
+
+fun getImageIdInGallery(context: Context, displayName: String): Long? {
+    val contentResolver = context.contentResolver
+
+    return runCatching {
+        val projection = arrayOf(MediaStore.Images.Media._ID)
+        val selection = "${MediaStore.Images.Media.DISPLAY_NAME} = ?"
+        val selectionArgs = arrayOf(displayName)
+
+        contentResolver.query(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            projection,
+            selection,
+            selectionArgs,
+            null
+        )?.use { cursor ->
+            if (cursor.moveToFirst()) {
+                val idColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+                cursor.getLong(idColumnIndex)
+            } else {
+                null // 未找到匹配的图片
+            }
+        }
+    }.onFailure { ex ->
+        // 打印日志以便调试
+        Timber.e(ex)
+    }.getOrNull() // 如果发生异常，返回 null
+}
+
+
+fun deleteImageById(context: Context, imageId: Long): Boolean {
+    // 获取 ContentResolver
+    val contentResolver = context.contentResolver
+
+    // 构造图片的 Uri
+    val imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageId)
+
+    return runCatching {
+        // 从 MediaStore 删除图片
+        val rowsDeleted = contentResolver.delete(imageUri, null, null)
+        if (rowsDeleted > 0) {
+            // 删除成功
+            true
+        } else {
+            // 删除失败（可能未找到指定 ID 的图片）
+            false
+        }
+    }.onFailure { ex ->
+        // 打印异常日志，便于调试
+        Timber.e(ex)
+    }.getOrDefault(false) // 如果发生异常，返回 false
+}
+
+
+fun saveToDownloadsScopedStorage(context: Context, fileName: String, content: String): Boolean {
+    try {
+        val resolver = context.contentResolver
+
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, fileName) // 文件名
+            put(MediaStore.MediaColumns.MIME_TYPE, "text/plain") // 文件类型
+            put(
+                MediaStore.MediaColumns.RELATIVE_PATH,
+                Environment.DIRECTORY_DOWNLOADS + "/ShaftNovels"
+            ) // 子目录
+        }
+
+        // 插入文件描述符
+        val uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
+                ?: throw Exception("Failed to create file URI")
+        } else {
+            throw Exception("Failed to create file URI too low system version")
+        }
+
+        // 写入内容到文件
+        resolver.openOutputStream(uri)?.use { outputStream ->
+            outputStream.write(content.toByteArray())
+            outputStream.flush()
+        }
+
+        return true
+    } catch (e: Exception) {
+        e.printStackTrace()
+        return false
+    }
+}
+
+fun getTxtFileIdInDownloads(context: Context, displayName: String): Long? {
+    val contentResolver = context.contentResolver
+
+    return runCatching {
+        val projection = arrayOf(MediaStore.Downloads._ID) // 查询 ID 列
+        val selection =
+            "${MediaStore.Downloads.DISPLAY_NAME} = ? AND ${MediaStore.Downloads.MIME_TYPE} = ?"
+        val selectionArgs = arrayOf(displayName, "text/plain") // 文件名和类型条件
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            contentResolver.query(
+                MediaStore.Downloads.EXTERNAL_CONTENT_URI, // 下载目录的 URI
+                projection,
+                selection,
+                selectionArgs,
+                null
+            )?.use { cursor ->
+                if (cursor.moveToFirst()) {
+                    val idColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Downloads._ID)
+                    cursor.getLong(idColumnIndex) // 返回文件 ID
+                } else {
+                    null // 未找到匹配的文件
+                }
+            }
+        } else {
+            throw Exception("Failed to create file URI too low system version")
+        }
+    }.onFailure { ex ->
+        // 打印异常日志，便于调试
+        Timber.e(ex)
+    }.getOrNull() // 如果发生异常，返回 null
+}

@@ -28,11 +28,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
+import ceui.lisa.hermes.common.saveImageToGallery
 import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.hermes.objectpool.ObjectPool
 import ceui.lisa.models.Illust
 import com.github.panpf.sketch.Sketch
 import com.github.panpf.sketch.request.ImageRequest
+import com.github.panpf.sketch.util.application
 import com.github.panpf.zoomimage.SketchZoomAsyncImage
 import com.white.fox.Dependency
 import com.white.fox.ui.home.withHeader
@@ -83,9 +85,17 @@ fun IllustDetailScreen(
             modifier = Modifier.fillMaxSize()
         )
 
-        if (loadState.value is LoadState.Loaded<*>) {
+        if (loadState.value is LoadState.Loaded<File>) {
+            val context = LocalContext.current.application
+            val imgFile = (loadState.value as LoadState.Loaded<File>).data
             Button(
-                onClick = { /* TODO: 下载逻辑 */ },
+                onClick = {
+                    saveImageToGallery(
+                        context,
+                        imgFile,
+                        imgFile.name
+                    )
+                },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 24.dp)
@@ -102,10 +112,16 @@ fun IllustDetailScreen(
             }
         }
 
-        BookmarkButton(
-            isBookmarked = isBookmarked,
-            viewModel = viewModel,
-        )
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(24.dp)
+        ) {
+            BookmarkButton(
+                isBookmarked = isBookmarked,
+                viewModel = viewModel,
+            )
+        }
 
         when (val state = loadState.value) {
             is LoadState.Loading -> {

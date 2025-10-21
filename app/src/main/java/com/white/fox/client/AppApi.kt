@@ -1,6 +1,7 @@
 package com.white.fox.client
 
 import ceui.lisa.models.HomeIllustResponse
+import ceui.lisa.models.SelfProfile
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -27,6 +28,9 @@ interface AppApi {
     suspend fun removeBookmark(
         @Field("illust_id") illust_id: Long
     )
+
+    @GET("/v1/user/me/state")
+    suspend fun getSelfProfile(): SelfProfile
 }
 
 fun Long.buildReferer(): String {

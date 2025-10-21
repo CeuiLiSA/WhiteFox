@@ -30,23 +30,24 @@ fun BookmarkButton(
             .padding(24.dp)
     ) {
         if (loading) {
-            // 加载转圈
             CircularProgressIndicator(
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(44.dp)
                     .background(Color.Black.copy(alpha = 0.4f), CircleShape)
                     .padding(8.dp),
                 color = Color.White,
-                strokeWidth = 3.dp
+                strokeWidth = 4.dp
             )
         } else {
             IconButton(
                 onClick = { viewModel.toggleBookmark() },
                 modifier = Modifier
+                    .size(44.dp)
                     .background(
                         color = Color.Black.copy(alpha = 0.4f),
                         shape = CircleShape
                     )
+                    .padding(8.dp),
             ) {
                 Icon(
                     imageVector = if (isBookmarked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
