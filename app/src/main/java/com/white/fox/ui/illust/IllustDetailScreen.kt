@@ -104,7 +104,7 @@ fun IllustDetailScreen(
                 .align(Alignment.BottomEnd)
                 .padding(24.dp)
         ) {
-            BookmarkButton(illustId)
+            BookmarkButton(illustId, 44.dp)
         }
 
         when (val state = loadState.value) {

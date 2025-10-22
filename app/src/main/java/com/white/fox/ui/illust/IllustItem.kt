@@ -60,7 +60,7 @@ fun IllustItem(
                     .align(Alignment.BottomEnd)
                     .padding(4.dp)
             ) {
-                BookmarkButton(illust.id)
+                BookmarkButton(illust.id, 36.dp)
             }
         }
     }

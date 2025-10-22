@@ -10,14 +10,17 @@ import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ceui.lisa.hermes.objectpool.ObjectPool
 import ceui.lisa.models.Illust
@@ -25,6 +28,7 @@ import com.white.fox.client.AppApi
 import com.white.fox.ui.common.LocalDependency
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -46,10 +50,12 @@ class BookmarkTask(
                 withContext(Dispatchers.IO) {
                     val illust = ObjectPool.get<Illust>(illustId).value ?: return@withContext
                     if (illust.is_bookmarked == true) {
-                        appApi.removeBookmark(illustId)
+//                        appApi.removeBookmark(illustId)
+                        delay(1000L)
                         ObjectPool.update(illust.copy(is_bookmarked = false))
                     } else {
-                        appApi.postBookmark(illustId)
+//                        appApi.postBookmark(illustId)
+                        delay(1000L)
                         ObjectPool.update(illust.copy(is_bookmarked = true))
                     }
                 }
@@ -65,43 +71,44 @@ class BookmarkTask(
 @Composable
 fun BookmarkButton(
     illustId: Long,
+    sizeDp: Dp,
 ) {
     val dependency = LocalDependency.current
     val coroutineScope = rememberCoroutineScope()
     val task = remember { BookmarkTask(coroutineScope, dependency.client.appApi, illustId) }
     val loading by task.bookmarkLoading.collectAsState()
-
     val illust = ObjectPool.get<Illust>(illustId).collectAsState().value
-
     val isBookmarked by remember(illust) {
         derivedStateOf { illust?.is_bookmarked ?: false }
     }
 
-    Box {
+    Box(
+        modifier = Modifier
+            .size(sizeDp)
+            .background(Color.Black.copy(alpha = 0.4f), CircleShape),
+        contentAlignment = Alignment.Center
+    ) {
         if (loading) {
             CircularProgressIndicator(
-                modifier = Modifier
-                    .size(44.dp)
-                    .background(Color.Black.copy(alpha = 0.4f), CircleShape),
+                modifier = Modifier.size(20.dp),
                 color = Color.White,
-                strokeWidth = 4.dp
+                strokeWidth = 3.dp
             )
         } else {
             IconButton(
                 onClick = { task.toggleBookmark() },
-                modifier = Modifier
-                    .size(44.dp)
-                    .background(
-                        color = Color.Black.copy(alpha = 0.4f),
-                        shape = CircleShape
-                    ),
-            ) {
-                Icon(
-                    imageVector = if (isBookmarked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                    contentDescription = "收藏",
-                    tint = if (isBookmarked) Color.Red else Color.White
-                )
-            }
+                modifier = Modifier.size(sizeDp),
+                colors = IconButtonDefaults.iconButtonColors(
+                    contentColor = if (isBookmarked) Color.Red else Color.White
+                ),
+                content = {
+                    Icon(
+                        imageVector = if (isBookmarked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        contentDescription = "收藏",
+                        tint = if (isBookmarked) Color.Red else Color.White
+                    )
+                }
+            )
         }
     }
 }
