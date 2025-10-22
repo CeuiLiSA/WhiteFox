@@ -28,7 +28,6 @@ import com.white.fox.client.AppApi
 import com.white.fox.ui.common.LocalDependency
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -50,12 +49,10 @@ class BookmarkTask(
                 withContext(Dispatchers.IO) {
                     val illust = ObjectPool.get<Illust>(illustId).value ?: return@withContext
                     if (illust.is_bookmarked == true) {
-//                        appApi.removeBookmark(illustId)
-                        delay(1000L)
+                        appApi.removeBookmark(illustId)
                         ObjectPool.update(illust.copy(is_bookmarked = false))
                     } else {
-//                        appApi.postBookmark(illustId)
-                        delay(1000L)
+                        appApi.postBookmark(illustId)
                         ObjectPool.update(illust.copy(is_bookmarked = true))
                     }
                 }
