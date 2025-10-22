@@ -1,6 +1,5 @@
 package com.white.fox.ui.main
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,7 +14,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -44,8 +42,7 @@ fun LoggedInUser() {
             modifier = Modifier
                 .size(40.dp)
                 .clip(CircleShape)
-                .border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape)
-                .background(Color.Gray.copy(alpha = 0.3f)),
+                .border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape),
             contentScale = ContentScale.Crop
         )
 

@@ -3,7 +3,6 @@ package com.white.fox.ui.illust
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -55,11 +54,7 @@ fun IllustDetailScreen(
 
 
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black)
-    ) {
+    Box(modifier = Modifier.fillMaxSize()) {
         if (illust == null) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center), color = Color.White

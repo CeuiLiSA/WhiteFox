@@ -3,7 +3,9 @@ package com.white.fox.ui.common
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -30,7 +32,8 @@ fun NavHost() {
     NavDisplay(
         backStack = navViewModel.backStack,
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
         onBack = { count -> repeat(count) { navViewModel.back() } },
         entryProvider = { key ->
             Timber.d("NavHost entryProvider key: ${key.name}")
