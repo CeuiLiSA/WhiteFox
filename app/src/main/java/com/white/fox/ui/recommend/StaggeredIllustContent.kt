@@ -37,11 +37,15 @@ fun StaggeredIllustContent(viewModel: ListIllustViewModal) {
         onRefresh = { viewModel.refresh(LoadReason.PullRefresh) }
     ) {
         when (val state = loadState) {
-            is LoadState.Loading -> Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
+            is LoadState.Loading -> {
+                if (state.reason == LoadReason.InitialLoad) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
             }
 
             is LoadState.Error -> Box(
