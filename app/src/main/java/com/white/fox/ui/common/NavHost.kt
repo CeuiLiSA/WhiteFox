@@ -1,8 +1,5 @@
 package com.white.fox.ui.common
 
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -40,16 +37,16 @@ fun NavHost() {
             NavEntry(key) {
                 when (key) {
                     is Route.Main -> MainScreen()
+
+
                     is Route.Landing -> LandingScreen()
                     is Route.Search -> SearchScreen()
                     is Route.Setting -> SettingScreen()
                     is Route.Help -> HelpScreen()
+                    is Route.BookmarkedIllust -> HelpScreen()
                     is Route.IllustDetail -> IllustDetailScreen(key.illustId)
                 }
             }
         },
-        transitionSpec = { EnterTransition.None togetherWith ExitTransition.None },
-        popTransitionSpec = { EnterTransition.None togetherWith ExitTransition.None },
-        predictivePopTransitionSpec = { EnterTransition.None togetherWith ExitTransition.None },
     )
 }

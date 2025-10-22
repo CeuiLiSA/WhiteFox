@@ -22,12 +22,12 @@ import com.white.fox.ui.common.Route
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainTopBar() {
+fun MainTopBar(onMenuClick: () -> Unit) {
     val navViewModel = LocalNavViewModel.current
     var expanded by remember { mutableStateOf(false) }
     val dependency = LocalDependency.current
     TopAppBar(
-        title = { LoggedInUser() },
+        title = { LoggedInUser(onMenuClick) },
         actions = {
             IconButton(onClick = { navViewModel.navigate(Route.Search) }) {
                 Icon(

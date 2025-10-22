@@ -1,6 +1,8 @@
 package com.white.fox.ui.main
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,13 +28,13 @@ import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.illust.withHeader
 
 @Composable
-fun LoggedInUser() {
+fun LoggedInUser(onMenuClick: () -> Unit) {
     val dependency = LocalDependency.current
     val sessionState = dependency.sessionManager.session.collectAsState()
     val user = sessionState.value?.user
 
     Row(
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         AsyncImage(
             request = ImageRequest.Builder(
@@ -42,8 +45,13 @@ fun LoggedInUser() {
             modifier = Modifier
                 .size(40.dp)
                 .clip(CircleShape)
-                .border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape),
-            contentScale = ContentScale.Crop
+                .border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape)
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() }
+                ) {
+                    onMenuClick()
+                },
+            contentScale = ContentScale.Crop,
         )
 
         Spacer(modifier = Modifier.width(8.dp))
