@@ -14,19 +14,27 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.models.Illust
-import com.white.fox.ui.illust.IllustItem
+import ceui.lisa.models.IllustResponse
+import com.white.fox.ui.common.ErrorBlock
+import com.white.fox.ui.common.LoadingBlock
+import com.white.fox.ui.illust.SquareIllustItem
+import com.white.fox.ui.recommend.ListIllustViewModal
 
 @Composable
 fun SectionBlock(
     section: DiscoverSection,
+    viewModel: ListIllustViewModal,
     onItemClick: (Illust) -> Unit,
     onMoreClick: () -> Unit
 ) {
+    val loadState = viewModel.loadState.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -52,17 +60,30 @@ fun SectionBlock(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // 横向滚动的预览图
-        LazyRow(
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(section.items) { item ->
-                IllustItem(
-                    illust = item,
-                    onClick = { onItemClick(item) },
-                )
+        when (val state = loadState.value) {
+            is LoadState.Loading -> LoadingBlock()
+
+            is LoadState.Error -> ErrorBlock(viewModel)
+
+            is LoadState.Loaded<IllustResponse> -> {
+                LazyRow(
+                    contentPadding = PaddingValues(horizontal = 6.dp),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    items(state.data.displayList) { item ->
+                        SquareIllustItem(
+                            illust = item,
+                            sizeDp = 120.dp,
+                            onClick = { },
+                        )
+                    }
+                }
+            }
+
+            is LoadState.Processing -> {
+
             }
         }
+
     }
 }

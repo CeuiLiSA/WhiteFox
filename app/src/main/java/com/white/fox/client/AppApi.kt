@@ -38,6 +38,12 @@ interface AppApi {
         @Path("type") type: String,
         @Query("restrict") restrict: String,
     ): IllustResponse
+
+    @GET("/v1/illust/ranking?filter=for_ios")
+    suspend fun getRankingIllusts(
+        @Query("mode") mode: String,
+        @Query("date") date: String? = null,
+    ): IllustResponse
 }
 
 fun Long.buildReferer(): String {
