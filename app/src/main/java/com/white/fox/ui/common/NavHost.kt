@@ -9,6 +9,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
+import com.white.fox.ui.following.BookmarkedIllustScreen
 import com.white.fox.ui.help.AboutScreen
 import com.white.fox.ui.help.HelpScreen
 import com.white.fox.ui.illust.IllustDetailScreen
@@ -45,7 +46,7 @@ fun NavHost() {
                     is Route.Setting -> SettingScreen()
                     is Route.About -> AboutScreen()
                     is Route.Help -> HelpScreen()
-                    is Route.BookmarkedIllust -> HelpScreen()
+                    is Route.BookmarkedIllust -> BookmarkedIllustScreen(key.userId)
                     is Route.IllustDetail -> IllustDetailScreen(key.illustId)
                 }
             }

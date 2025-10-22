@@ -44,6 +44,12 @@ interface AppApi {
         @Query("mode") mode: String,
         @Query("date") date: String? = null,
     ): IllustResponse
+
+    @GET("/v1/user/bookmarks/illust?filter=for_ios")
+    suspend fun getUserBookmarkedIllusts(
+        @Query("user_id") user_id: Long,
+        @Query("restrict") restrict: String,
+    ): IllustResponse
 }
 
 fun Long.buildReferer(): String {

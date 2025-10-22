@@ -116,7 +116,12 @@ fun MainDrawer(scope: CoroutineScope, drawerState: DrawerState) {
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
         )
-        DrawerItem("收藏的插画", Icons.Default.Bookmark) { /* ... */ }
+        DrawerItem("收藏的插画", Icons.Default.Bookmark) {
+            scope.launch {
+                drawerState.close()
+                navViewModel.navigate(Route.BookmarkedIllust(user?.id ?: 0L))
+            }
+        }
         DrawerItem("浏览历史", Icons.Default.History) { /* ... */ }
 
         HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))

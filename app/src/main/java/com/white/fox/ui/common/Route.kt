@@ -18,7 +18,7 @@ sealed class Route(
 
     object Help : Route("Help")
 
-    object BookmarkedIllust : Route("BookmarkedIllust")
+    data class BookmarkedIllust(val userId: Long) : Route("BookmarkedIllust-userId-${userId}")
 
     data class IllustDetail(val illustId: Long) : Route("IllustDetailScreen-illustId-${illustId}")
 }

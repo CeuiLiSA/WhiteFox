@@ -83,6 +83,10 @@ fun SectionBlock(
             is LoadState.Processing -> {
 
             }
+
+            is LoadState.LoadNext -> {
+
+            }
         }
 
     }

@@ -12,7 +12,7 @@ import ceui.lisa.models.IllustResponse
 import kotlinx.coroutines.flow.StateFlow
 
 class ListIllustViewModal(
-    repository: Repository<IllustResponse>
+    repository: Repository<IllustResponse>,
 ) : ViewModel(), RefreshOwner {
 
     private val valueContent = ValueContent(viewModelScope, repository) { response ->
@@ -23,4 +23,7 @@ class ListIllustViewModal(
     val loadState: StateFlow<LoadState<IllustResponse>> = valueContent.loadState
 
     override fun refresh(reason: LoadReason) = valueContent.refresh(reason)
+    fun loadNextPage() {
+        valueContent.loadNextPage()
+    }
 }
