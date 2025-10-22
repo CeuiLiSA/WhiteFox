@@ -1,17 +1,15 @@
 package com.white.fox.ui.discover
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 
 @Composable
 fun DiscoverScreen() {
-    Box(
-        modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
-    ) {
-        Text("发现页面内容")
+    Column {
+        SectionBlock(DiscoverSection("今日榜单", listOf()), {}, {})
+        SectionBlock(DiscoverSection("热门标签", listOf()), {}, {})
+        SectionBlock(DiscoverSection("推荐用户", listOf()), {}, {})
+        SectionBlock(DiscoverSection("最新作品", listOf()), {}, {})
+        SectionBlock(DiscoverSection("Pixivision", listOf()), {}, {})
     }
 }

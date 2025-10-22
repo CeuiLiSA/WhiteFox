@@ -7,11 +7,11 @@ import ceui.lisa.hermes.loadstate.LoadReason
 import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.hermes.objectpool.ObjectPool
 import ceui.lisa.hermes.valuecontent.ValueContent
-import ceui.lisa.models.HomeIllustResponse
+import ceui.lisa.models.IllustResponse
 import kotlinx.coroutines.flow.StateFlow
 
-class RecommendIllustViewModal(
-    repository: Repository<HomeIllustResponse>
+class ListIllustViewModal(
+    repository: Repository<IllustResponse>
 ) : ViewModel() {
 
     private val valueContent = ValueContent(viewModelScope, repository) { response ->
@@ -19,7 +19,7 @@ class RecommendIllustViewModal(
             ObjectPool.update(illust)
         }
     }
-    val loadState: StateFlow<LoadState<HomeIllustResponse>> = valueContent.loadState
+    val loadState: StateFlow<LoadState<IllustResponse>> = valueContent.loadState
 
     fun refresh(reason: LoadReason) = valueContent.refresh(reason)
 }

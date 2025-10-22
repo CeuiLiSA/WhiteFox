@@ -14,7 +14,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import ceui.lisa.hermes.loader.HybridRepository
-import ceui.lisa.models.HomeIllustResponse
+import ceui.lisa.models.IllustResponse
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.constructKeyedVM
 import kotlinx.coroutines.launch
@@ -65,12 +65,12 @@ fun RecommendScreen() {
                         HybridRepository(
                             loader = { dependency.client.appApi.getHomeData("illust") },
                             keyProducer = { key },
-                            HomeIllustResponse::class
+                            IllustResponse::class
                         )
                     }) { repository ->
-                        RecommendIllustViewModal(repository)
+                        ListIllustViewModal(repository)
                     }
-                    RecommendIllustContent(viewModel = viewModel)
+                    StaggeredIllustContent(viewModel = viewModel)
                 }
 
                 1 -> {
@@ -79,12 +79,12 @@ fun RecommendScreen() {
                         HybridRepository(
                             loader = { dependency.client.appApi.getHomeData("manga") },
                             keyProducer = { key },
-                            HomeIllustResponse::class
+                            IllustResponse::class
                         )
                     }) { repository ->
-                        RecommendIllustViewModal(repository)
+                        ListIllustViewModal(repository)
                     }
-                    RecommendIllustContent(viewModel = viewModel)
+                    StaggeredIllustContent(viewModel = viewModel)
                 }
 
                 2 -> NovelTabContent()

@@ -1,7 +1,7 @@
 package ceui.lisa.models
 
 
-data class HomeIllustResponse(
+data class IllustResponse(
     val illusts: List<Illust> = listOf(),
     val ranking_illusts: List<Illust> = listOf(),
     val next_url: String? = null

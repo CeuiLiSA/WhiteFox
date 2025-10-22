@@ -19,9 +19,9 @@ fun MainBottomBar(selectedTab: Int, onTabSelected: (Int) -> Unit) {
         tonalElevation = 8.dp,
     ) {
         val items = listOf(
-            Triple("首页", Icons.Default.Home, 0),
+            Triple("推荐", Icons.Default.Home, 0),
             Triple("发现", Icons.Default.Search, 1),
-            Triple("我的", Icons.Default.Person, 2)
+            Triple("动态", Icons.Default.Person, 2),
         )
         items.forEach { (label, icon, index) ->
             NavigationBarItem(

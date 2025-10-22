@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -21,12 +22,11 @@ import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.http.HttpHeaders
 import com.github.panpf.sketch.request.ImageRequest
 import com.github.panpf.sketch.request.httpHeaders
-import com.white.fox.ui.theme.Purple80
 
 @Composable
 fun IllustItem(
     illust: Illust,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     val url = illust.image_urls?.large
     val aspectRatio = remember(illust.width, illust.height) {
@@ -43,13 +43,13 @@ fun IllustItem(
                 .fillMaxWidth()
                 .aspectRatio(aspectRatio)
                 .clip(RoundedCornerShape(8.dp))
-                .background(Purple80)
+                .background(MaterialTheme.colorScheme.surfaceVariant)
         ) {
             AsyncImage(
                 request = ImageRequest.Builder(
                     LocalContext.current,
                     url
-                ).withHeader().build(),
+                ).crossfade(true).withHeader().build(),
                 contentDescription = illust.id.toString(),
                 modifier = Modifier.matchParentSize(),
                 contentScale = ContentScale.Crop

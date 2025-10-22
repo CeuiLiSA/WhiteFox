@@ -26,7 +26,7 @@ import com.white.fox.ui.illust.IllustItem
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun RecommendIllustContent(viewModel: RecommendIllustViewModal) {
+fun StaggeredIllustContent(viewModel: ListIllustViewModal) {
     val loadState by viewModel.loadState.collectAsState()
     val navViewModel = LocalNavViewModel.current
     val isRefreshing =
@@ -61,7 +61,7 @@ fun RecommendIllustContent(viewModel: RecommendIllustViewModal) {
                 items(state.data.displayList, key = { it.id }) { illust ->
                     IllustItem(
                         illust = illust,
-                        onClick = { navViewModel.navigate(IllustDetail(illust.id)) }
+                        onClick = { navViewModel.navigate(IllustDetail(illust.id)) },
                     )
                 }
             }
