@@ -11,11 +11,15 @@ class PrefStore(private val tag: String) {
         impl.putString(key, gson.toJson(obj))
     }
 
-    inline fun <reified ObjectT> get(key: String): ObjectT? {
+    fun <ObjectT> get(key: String, cls: Class<ObjectT>): ObjectT? {
         val cachedJson = impl.getString(key, null)
         return cachedJson?.takeIf { it.isNotEmpty() }?.let {
-            runCatching { gson.fromJson(it, ObjectT::class.java) }.getOrNull()
+            runCatching { gson.fromJson(it, cls) }.getOrNull()
         }
+    }
+
+    inline fun <reified ObjectT> get(key: String): ObjectT? {
+        return get(key, ObjectT::class.java)
     }
 
     fun putBoolean(key: String?, value: Boolean) {

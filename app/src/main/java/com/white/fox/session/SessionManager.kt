@@ -17,17 +17,7 @@ class SessionManager(
     val session: StateFlow<AccountResponse?> = _session.asStateFlow()
 
     fun initialize() {
-        try {
-            val json = prefStore.getString(CURRENT_SESSION_JSON)
-            if (!json.isNullOrEmpty()) {
-                _session.value = gson.fromJson(json, AccountResponse::class.java)
-            } else {
-                _session.value = null
-            }
-        } catch (ex: Exception) {
-            _session.value = null
-            Timber.e(ex)
-        }
+        _session.value = prefStore.get<AccountResponse>(CURRENT_SESSION_JSON)
     }
 
     fun logIn(json: String) {

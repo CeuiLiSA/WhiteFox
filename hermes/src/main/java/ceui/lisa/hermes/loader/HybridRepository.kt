@@ -1,7 +1,6 @@
 package ceui.lisa.hermes.loader
 
 import ceui.lisa.hermes.PrefStore
-import ceui.lisa.hermes.db.gson
 import ceui.lisa.hermes.loadstate.LoadReason
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,12 +24,8 @@ class HybridRepository<ValueT : Any>(
         val key = keyProducer()
         val now = System.currentTimeMillis()
 
-        val cachedJson = prefStore.getString(jsonKey(key))
         val cachedTime = prefStore.getLong(timeKey(key))
-
-        val cached = cachedJson
-            ?.takeIf { it.isNotEmpty() }
-            ?.let { runCatching { gson.fromJson(it, cls.java) }.getOrNull() }
+        val cached = prefStore.get(jsonKey(key), cls.java)
 
         if (reason == LoadReason.InitialLoad && cached != null) {
             _valueFlow.value = cached
@@ -39,7 +34,7 @@ class HybridRepository<ValueT : Any>(
         if (cached == null || reason != LoadReason.InitialLoad || (now - cachedTime) > cacheDurationMillis) {
             val newData = loader()
             _valueFlow.value = newData
-            prefStore.putString(jsonKey(key), gson.toJson(newData))
+            prefStore.put(jsonKey(key), newData)
             prefStore.putLong(timeKey(key), now)
         }
     }

@@ -3,7 +3,6 @@ package com.white.fox.ui.common
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -17,7 +16,6 @@ import com.white.fox.ui.landing.LandingScreen
 import com.white.fox.ui.main.MainScreen
 import com.white.fox.ui.search.SearchScreen
 import com.white.fox.ui.setting.SettingScreen
-import com.white.fox.ui.theme.Purple40
 import timber.log.Timber
 
 @Composable
@@ -32,8 +30,7 @@ fun NavHost() {
     NavDisplay(
         backStack = navViewModel.backStack,
         modifier = Modifier
-            .fillMaxSize()
-            .background(Purple40),
+            .fillMaxSize(),
         onBack = { count -> repeat(count) { navViewModel.back() } },
         entryProvider = { key ->
             Timber.d("NavHost entryProvider key: ${key.name}")
