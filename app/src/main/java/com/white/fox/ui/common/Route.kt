@@ -14,6 +14,7 @@ sealed class Route(
     object Search : Route("Search")
 
     object Setting : Route("Setting")
+    object About : Route("About")
 
     object Help : Route("Help")
 

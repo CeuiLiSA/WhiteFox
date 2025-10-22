@@ -2,10 +2,10 @@ package com.white.fox.ui.main
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -13,7 +13,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,9 +45,7 @@ fun LoggedInUser(onMenuClick: () -> Unit) {
                 .size(40.dp)
                 .clip(CircleShape)
                 .border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape)
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() }
-                ) {
+                .clickable {
                     onMenuClick()
                 },
             contentScale = ContentScale.Crop,
@@ -56,7 +53,13 @@ fun LoggedInUser(onMenuClick: () -> Unit) {
 
         Spacer(modifier = Modifier.width(8.dp))
 
-        Column {
+        Column(
+            modifier = Modifier
+                .padding(0.dp, 0.dp, 10.dp, 0.dp)
+                .clickable {
+                    onMenuClick()
+                }
+        ) {
             Text(
                 text = sessionState.value?.user?.name ?: "",
                 fontSize = 18.sp,

@@ -4,6 +4,5 @@ import androidx.compose.runtime.Composable
 import com.white.fox.ui.common.PageScreen
 
 @Composable
-fun HelpScreen() = PageScreen("帮助") {
-
+fun AboutScreen() = PageScreen("关于") {
 }
