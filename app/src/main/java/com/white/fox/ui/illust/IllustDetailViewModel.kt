@@ -10,8 +10,8 @@ import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.hermes.loadstate.RefreshOwner
 import ceui.lisa.hermes.objectpool.ObjectPool
 import ceui.lisa.models.Illust
+import com.blankj.utilcode.util.PathUtils
 import com.white.fox.client.buildReferer
-import com.white.fox.ui.common.Dependency
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,10 +26,9 @@ import java.io.File
 
 class IllustDetailViewModel(
     private val illustId: Long,
-    private val cacheDir: File,
-    private val dependency: Dependency,
-    private val prefStore: PrefStore,
 ) : ViewModel(), RefreshOwner {
+
+    private val prefStore = PrefStore("FoxImagesCache")
 
     private val _loadStateMap = hashMapOf<Int, MutableStateFlow<LoadState<File>>>()
 
@@ -75,7 +74,7 @@ class IllustDetailViewModel(
                 return
             }
 
-            val parentFile = File(cacheDir, "FoxImagesCache").apply {
+            val parentFile = File(PathUtils.getInternalAppCachePath(), "FoxImagesCache").apply {
                 if (!exists()) {
                     mkdir()
                 }

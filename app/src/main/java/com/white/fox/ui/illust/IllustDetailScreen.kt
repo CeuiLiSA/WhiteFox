@@ -34,12 +34,17 @@ import ceui.lisa.models.Illust
 import com.github.panpf.sketch.Sketch
 import com.github.panpf.sketch.request.ImageRequest
 import com.github.panpf.zoomimage.SketchZoomAsyncImage
+import com.white.fox.ui.common.constructKeyedVM
 import java.io.File
 
 @Composable
 fun IllustDetailScreen(
     illustId: Long,
-    viewModel: IllustDetailViewModel
+    viewModel: IllustDetailViewModel = constructKeyedVM(
+        { "illust-detail-model-${illustId}" },
+        { illustId }) { illustId ->
+        IllustDetailViewModel(illustId)
+    }
 ) {
     val context = LocalContext.current
     val sketch = remember { Sketch.Builder(context).build() }
@@ -57,8 +62,7 @@ fun IllustDetailScreen(
     ) {
         if (illust == null) {
             CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center),
-                color = Color.White
+                modifier = Modifier.align(Alignment.Center), color = Color.White
             )
             return@Box
         }
@@ -69,9 +73,7 @@ fun IllustDetailScreen(
         }
 
         SketchZoomAsyncImage(
-            request = ImageRequest.Builder(context, imageUri)
-                .withHeader()
-                .build(),
+            request = ImageRequest.Builder(context, imageUri).withHeader().build(),
             contentDescription = illust.id.toString(),
             contentScale = ContentScale.Fit,
             sketch = sketch,
@@ -83,9 +85,7 @@ fun IllustDetailScreen(
             Button(
                 onClick = {
                     saveImageToGallery(
-                        context,
-                        imgFile,
-                        imgFile.name
+                        context, imgFile, imgFile.name
                     )
                 },
                 modifier = Modifier

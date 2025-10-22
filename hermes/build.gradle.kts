@@ -62,6 +62,7 @@ dependencies {
     api(libs.timber)
     api(libs.gson)
 
+    api("com.blankj:utilcodex:1.31.1")
 
     api(libs.retrofit)
     api(libs.converter.gson)

@@ -37,7 +37,9 @@ class ValueContent<ValueT>(
                 }
             } catch (ex: Exception) {
                 Timber.e(ex)
-                _loadStateFlow.value = LoadState.Error(ex)
+                if (repository.valueFlow.value == null) {
+                    _loadStateFlow.value = LoadState.Error(ex)
+                }
             } finally {
                 _taskMutex.unlock()
             }

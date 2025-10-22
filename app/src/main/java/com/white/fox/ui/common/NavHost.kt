@@ -1,19 +1,23 @@
 package com.white.fox.ui.common
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
-import ceui.lisa.hermes.PrefStore
+import com.white.fox.ui.help.HelpScreen
 import com.white.fox.ui.illust.IllustDetailScreen
-import com.white.fox.ui.illust.IllustDetailViewModel
 import com.white.fox.ui.landing.LandingScreen
 import com.white.fox.ui.main.MainScreen
 import com.white.fox.ui.search.SearchScreen
+import com.white.fox.ui.setting.SettingScreen
+import com.white.fox.ui.theme.Purple40
 import timber.log.Timber
 
 @Composable
@@ -28,7 +32,8 @@ fun NavHost() {
     NavDisplay(
         backStack = navViewModel.backStack,
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .background(Purple40),
         onBack = { count -> repeat(count) { navViewModel.back() } },
         entryProvider = { key ->
             Timber.d("NavHost entryProvider key: ${key.name}")
@@ -37,22 +42,14 @@ fun NavHost() {
                     is Route.Main -> MainScreen()
                     is Route.Landing -> LandingScreen()
                     is Route.Search -> SearchScreen()
-                    is Route.IllustDetail -> {
-                        val cacheDir = LocalContext.current.cacheDir
-                        val viewModel = constructKeyedVM(
-                            { "illust-detail-model-${key.illustId}" },
-                            { dependency }) { dep ->
-                            IllustDetailViewModel(
-                                key.illustId,
-                                cacheDir,
-                                dependency,
-                                PrefStore("FoxImagesCache")
-                            )
-                        }
-                        IllustDetailScreen(key.illustId, viewModel)
-                    }
+                    is Route.Setting -> SettingScreen()
+                    is Route.Help -> HelpScreen()
+                    is Route.IllustDetail -> IllustDetailScreen(key.illustId)
                 }
             }
         },
+        transitionSpec = { EnterTransition.None togetherWith ExitTransition.None },
+        popTransitionSpec = { EnterTransition.None togetherWith ExitTransition.None },
+        predictivePopTransitionSpec = { EnterTransition.None togetherWith ExitTransition.None },
     )
 }

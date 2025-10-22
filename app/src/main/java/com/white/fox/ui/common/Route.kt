@@ -13,5 +13,9 @@ sealed class Route(
 
     object Search : Route("Search")
 
+    object Setting : Route("Setting")
+
+    object Help : Route("Help")
+
     data class IllustDetail(val illustId: Long) : Route("IllustDetailScreen-illustId-${illustId}")
 }

@@ -1,4 +1,4 @@
-package com.white.fox.ui.home
+package com.white.fox.ui.recommend
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -26,7 +26,7 @@ import com.white.fox.ui.illust.IllustItem
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeTabContent(viewModel: HomeViewModel) {
+fun RecommendIllustContent(viewModel: RecommendIllustViewModal) {
     val loadState by viewModel.loadState.collectAsState()
     val navViewModel = LocalNavViewModel.current
     val isRefreshing =

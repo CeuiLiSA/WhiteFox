@@ -1,4 +1,4 @@
-package com.white.fox.ui.home
+package com.white.fox.ui.recommend
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +10,7 @@ import ceui.lisa.hermes.valuecontent.ValueContent
 import ceui.lisa.models.HomeIllustResponse
 import kotlinx.coroutines.flow.StateFlow
 
-class HomeViewModel(
+class RecommendIllustViewModal(
     repository: Repository<HomeIllustResponse>
 ) : ViewModel() {
 
