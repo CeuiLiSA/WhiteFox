@@ -4,10 +4,14 @@ import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -34,6 +38,7 @@ import com.github.panpf.sketch.Sketch
 import com.github.panpf.sketch.request.ImageRequest
 import com.github.panpf.zoomimage.SketchZoomAsyncImage
 import com.white.fox.ui.common.constructKeyedVM
+import com.white.fox.ui.main.UserAvatarAndName
 
 @Composable
 fun IllustDetailScreen(
@@ -61,6 +66,7 @@ fun IllustDetailScreen(
             )
             return@Box
         }
+
 
         val value = valueState
         val imageUri = value?.toUri()?.toString() ?: illust.image_urls?.large
@@ -134,6 +140,21 @@ fun IllustDetailScreen(
             }
 
             else -> {}
+        }
+
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding() + 10.dp
+                ),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            val author = illust.user
+            if (author != null) {
+                UserAvatarAndName(author, {})
+            }
         }
     }
 }

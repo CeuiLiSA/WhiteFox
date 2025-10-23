@@ -12,7 +12,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,24 +20,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ceui.lisa.models.User
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.request.ImageRequest
-import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.illust.withHeader
 
 @Composable
-fun LoggedInUser(onMenuClick: () -> Unit) {
-    val dependency = LocalDependency.current
-    val sessionState = dependency.sessionManager.session.collectAsState()
-    val user = sessionState.value?.user
-
+fun UserAvatarAndName(user: User, onMenuClick: () -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         AsyncImage(
             request = ImageRequest.Builder(
                 LocalContext.current,
-                user?.profile_image_urls?.findMaxSizeUrl()
+                user.profile_image_urls?.findMaxSizeUrl()
             ).withHeader().build(),
             contentDescription = "avatar",
             modifier = Modifier
@@ -61,14 +56,14 @@ fun LoggedInUser(onMenuClick: () -> Unit) {
                 }
         ) {
             Text(
-                text = sessionState.value?.user?.name ?: "",
+                text = user.name ?: "",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
             )
 
             Text(
-                text = "@${sessionState.value?.user?.account ?: ""}",
+                text = "@${user.account ?: ""}",
                 fontSize = 13.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

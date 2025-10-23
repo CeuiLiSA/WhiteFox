@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,8 +27,11 @@ fun MainTopBar(onMenuClick: () -> Unit) {
     val navViewModel = LocalNavViewModel.current
     var expanded by remember { mutableStateOf(false) }
     val dependency = LocalDependency.current
+    val sessionState = dependency.sessionManager.session.collectAsState()
+    val user = sessionState.value?.user
+
     TopAppBar(
-        title = { LoggedInUser(onMenuClick) },
+        title = { user?.let { UserAvatarAndName(it, onMenuClick) } },
         actions = {
             IconButton(onClick = { navViewModel.navigate(Route.Search) }) {
                 Icon(
