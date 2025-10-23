@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -31,7 +32,7 @@ fun MainScreen(viewModel: MainScreenViewModel = viewModel()) {
     val selectedTabState by viewModel.selectedTab.collectAsState()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-
+    val saveableStateHolder = rememberSaveableStateHolder()
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = { MainDrawer(scope, drawerState) }
@@ -55,10 +56,12 @@ fun MainScreen(viewModel: MainScreenViewModel = viewModel()) {
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-                when (selectedTabState) {
-                    0 -> RecommendScreen()
-                    1 -> DiscoverScreen()
-                    2 -> FollowingScreen()
+                saveableStateHolder.SaveableStateProvider(key = selectedTabState) {
+                    when (selectedTabState) {
+                        0 -> RecommendScreen()
+                        1 -> DiscoverScreen()
+                        2 -> FollowingScreen()
+                    }
                 }
             }
         }

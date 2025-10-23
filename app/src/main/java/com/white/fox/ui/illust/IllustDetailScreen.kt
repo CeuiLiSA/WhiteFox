@@ -4,17 +4,20 @@ import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -32,6 +35,7 @@ import ceui.lisa.models.Illust
 import com.github.panpf.sketch.Sketch
 import com.github.panpf.sketch.request.ImageRequest
 import com.github.panpf.zoomimage.SketchZoomAsyncImage
+import com.github.panpf.zoomimage.rememberSketchZoomState
 import com.white.fox.ui.common.constructKeyedVM
 import com.white.fox.ui.main.UserAvatarAndName
 
@@ -46,6 +50,7 @@ fun IllustDetailScreen(
 ) {
     val context = LocalContext.current
     val sketch = remember { Sketch.Builder(context).build() }
+    val zoomState = rememberSketchZoomState()
 
     val illustState = ObjectPool.get<Illust>(illustId).collectAsState()
     val illust = illustState.value
@@ -71,6 +76,7 @@ fun IllustDetailScreen(
             contentDescription = illust.id.toString(),
             contentScale = ContentScale.Fit,
             sketch = sketch,
+            zoomState = zoomState,
             modifier = Modifier.fillMaxSize()
         )
 
@@ -79,15 +85,19 @@ fun IllustDetailScreen(
                 .align(Alignment.BottomEnd)
                 .padding(24.dp)
         ) {
-            Row {
-                if (value != null) {
-                    DownloadButton(value)
-                    Spacer(modifier = Modifier.width(10.dp))
-                }
+            Column {
+                Text(illust.title ?: "")
+                Spacer(modifier = Modifier.height(4.dp))
+                Row {
+                    if (value != null) {
+                        DownloadButton(value)
+                        Spacer(modifier = Modifier.width(10.dp))
+                    }
 
-                CommentButton()
-                Spacer(modifier = Modifier.width(10.dp))
-                BookmarkButton(illustId, 44.dp)
+                    CommentButton()
+                    Spacer(modifier = Modifier.width(10.dp))
+                    BookmarkButton(illustId, 44.dp)
+                }
             }
         }
 
