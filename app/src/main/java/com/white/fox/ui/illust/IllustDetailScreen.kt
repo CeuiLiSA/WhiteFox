@@ -3,28 +3,21 @@ package com.white.fox.ui.illust
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -37,7 +30,6 @@ import com.github.panpf.sketch.request.ImageRequest
 import com.github.panpf.zoomimage.SketchZoomAsyncImage
 import com.github.panpf.zoomimage.rememberSketchZoomState
 import com.white.fox.ui.common.constructKeyedVM
-import com.white.fox.ui.main.UserAvatarAndName
 
 @Composable
 fun IllustDetailScreen(
@@ -53,100 +45,84 @@ fun IllustDetailScreen(
     val zoomState = rememberSketchZoomState()
 
     val illustState = ObjectPool.get<Illust>(illustId).collectAsState()
-    val illust = illustState.value
+    val illust = illustState.value ?: return
     val loadState = viewModel.getStateFlow(0).collectAsState()
-
     val valueState by viewModel.valueFlow.collectAsState()
 
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        if (illust == null) {
-            CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center), color = Color.White
-            )
-            return@Box
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            val author = illust.user
+            if (author != null) {
+                UserTopBar(author)
+            }
         }
-
-
-        val value = valueState
-        val imageUri = value?.toUri()?.toString() ?: illust.image_urls?.large
-
-        SketchZoomAsyncImage(
-            request = ImageRequest.Builder(context, imageUri).withHeader().build(),
-            contentDescription = illust.id.toString(),
-            contentScale = ContentScale.Fit,
-            sketch = sketch,
-            zoomState = zoomState,
-            modifier = Modifier.fillMaxSize()
-        )
-
+    ) { innerPadding ->
         Box(
             modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(24.dp)
+                .fillMaxSize()
+                .padding(innerPadding)
         ) {
-            Column {
-                Text(illust.title ?: "")
-                Spacer(modifier = Modifier.height(4.dp))
-                Row {
-                    if (value != null) {
-                        DownloadButton(value)
-                        Spacer(modifier = Modifier.width(10.dp))
-                    }
+            val value = valueState
+            val imageUri = value?.toUri()?.toString() ?: illust.image_urls?.large
+            SketchZoomAsyncImage(
+                request = ImageRequest.Builder(context, imageUri).withHeader().build(),
+                contentDescription = illust.id.toString(),
+                contentScale = ContentScale.Fit,
+                sketch = sketch,
+                zoomState = zoomState,
+                modifier = Modifier
+                    .fillMaxSize()
+            )
 
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    if (value != null) DownloadButton(value)
                     CommentButton()
-                    Spacer(modifier = Modifier.width(10.dp))
                     BookmarkButton(illustId, 44.dp)
                 }
             }
-        }
 
-        when (val state = loadState.value) {
-            is LoadState.Loading -> {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(28.dp)
-                        .align(Alignment.Center),
-                    color = Color.White,
-                    trackColor = Color.White.copy(alpha = 0.3f),
-                    strokeWidth = 5.dp
-                )
-            }
+            // 中心加载指示器
+            when (val state = loadState.value) {
+                is LoadState.Loading -> {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(36.dp)
+                            .align(Alignment.Center),
+                        color = MaterialTheme.colorScheme.primary,
+                        trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
+                        strokeWidth = 4.dp
+                    )
+                }
 
-            is LoadState.Processing -> {
-                val animatedProgress by animateFloatAsState(
-                    targetValue = state.progress / 100f,
-                    animationSpec = tween(500, easing = LinearOutSlowInEasing),
-                    label = "animatedProgress"
-                )
-                CircularProgressIndicator(
-                    progress = { animatedProgress },
-                    modifier = Modifier
-                        .size(28.dp)
-                        .align(Alignment.Center),
-                    trackColor = Color.White.copy(alpha = 0.3f),
-                    color = Color.White,
-                    strokeWidth = 5.dp
-                )
-            }
+                is LoadState.Processing -> {
+                    val animatedProgress by animateFloatAsState(
+                        targetValue = state.progress / 100f,
+                        animationSpec = tween(500, easing = LinearOutSlowInEasing),
+                        label = "animatedProgress"
+                    )
+                    CircularProgressIndicator(
+                        progress = { animatedProgress },
+                        modifier = Modifier
+                            .size(36.dp)
+                            .align(Alignment.Center),
+                        trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
+                        color = MaterialTheme.colorScheme.primary,
+                        strokeWidth = 4.dp
+                    )
+                }
 
-            else -> {}
-        }
-
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding() + 10.dp
-                ),
-            contentAlignment = Alignment.TopCenter
-        ) {
-            val author = illust.user
-            if (author != null) {
-                UserAvatarAndName(author, {})
+                else -> {}
             }
         }
     }
 }
+
 

@@ -1,5 +1,6 @@
 package com.white.fox.ui.main
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
@@ -17,9 +18,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import ceui.lisa.hermes.PrefStore
+import com.blankj.utilcode.util.AppUtils
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.LocalNavViewModel
 import com.white.fox.ui.common.Route
+import com.white.fox.ui.setting.LogoutConfirmDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,8 +35,10 @@ fun MainTopBar(onMenuClick: () -> Unit) {
     val sessionState = dependency.sessionManager.session.collectAsState()
     val user = sessionState.value?.user
 
+    var showConfirmDialog by remember { mutableStateOf(false) }
+
     TopAppBar(
-        title = { user?.let { UserAvatarAndName(it, onMenuClick) } },
+        title = { user?.let { UserAvatarAndName(it, Modifier.fillMaxWidth(), onMenuClick) } },
         actions = {
             IconButton(onClick = { navViewModel.navigate(Route.Search) }) {
                 Icon(
@@ -71,10 +78,23 @@ fun MainTopBar(onMenuClick: () -> Unit) {
                     text = { Text("退出登录") },
                     onClick = {
                         expanded = false
-                        dependency.sessionManager.updateSession(null)
+                        showConfirmDialog = true
                     }
                 )
             }
         },
     )
+
+    if (showConfirmDialog) {
+        LogoutConfirmDialog(
+            onConfirm = {
+                dependency.sessionManager.updateSession(null)
+                PrefStore("HybridRepository").clearAll()
+                dependency.prefStore.clearAll()
+                AppUtils.relaunchApp()
+                showConfirmDialog = false
+            },
+            onDismiss = { showConfirmDialog = false }
+        )
+    }
 }

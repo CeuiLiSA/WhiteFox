@@ -35,7 +35,7 @@ class SessionManager(
         return _session.value != null
     }
 
-    fun loggedInUid(): Long {
+    override fun loggedInUid(): Long {
         return _session.value?.user?.id ?: 0L
     }
 

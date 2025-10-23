@@ -29,7 +29,9 @@ fun NavHost() {
     val navViewModel = LocalNavViewModel.current
     val sessionState = dependency.sessionManager.session.collectAsState()
     LaunchedEffect(sessionState.value) {
-        navViewModel.reset()
+        if (sessionState.value != null) {
+            navViewModel.reset()
+        }
     }
 
     NavDisplay(

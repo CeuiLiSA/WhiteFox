@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -22,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ceui.lisa.models.User
@@ -31,12 +31,19 @@ import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.illust.withHeader
 
 @Composable
-fun UserAvatarAndName(user: User, onMenuClick: () -> Unit) {
+fun UserAvatarAndName(
+    user: User,
+    modifier: Modifier,
+    onMenuClick: () -> Unit
+) {
     val dependency = LocalDependency.current
     val sessionUid = dependency.sessionManager.loggedInUid()
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
     ) {
+        // 头像
         AsyncImage(
             request = ImageRequest.Builder(
                 LocalContext.current,
@@ -47,39 +54,41 @@ fun UserAvatarAndName(user: User, onMenuClick: () -> Unit) {
                 .size(40.dp)
                 .clip(CircleShape)
                 .border(1.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape)
-                .clickable {
-                    onMenuClick()
-                },
+                .clickable { onMenuClick() },
             contentScale = ContentScale.Crop,
         )
 
         Spacer(modifier = Modifier.width(8.dp))
 
+        // 名字 + 账号, 占用剩余空间
         Column(
             modifier = Modifier
-                .padding(0.dp, 0.dp, 10.dp, 0.dp)
-                .clickable {
-                    onMenuClick()
-                }
+                .weight(1f) // 文字占满剩余空间
+                .clickable { onMenuClick() }
         ) {
             Text(
                 text = user.name ?: "",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.onSurface,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
 
             Text(
                 text = "@${user.account ?: ""}",
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
 
         if (sessionUid != user.id) {
+            Spacer(modifier = Modifier.width(8.dp)) // 避免紧贴文字
             Button(
-                onClick = { },
+                onClick = { /* TODO */ },
                 modifier = Modifier.height(32.dp),
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
@@ -90,7 +99,6 @@ fun UserAvatarAndName(user: User, onMenuClick: () -> Unit) {
                     fontSize = 14.sp
                 )
             }
-
         }
     }
 }
