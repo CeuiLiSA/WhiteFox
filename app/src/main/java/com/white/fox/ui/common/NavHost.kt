@@ -15,6 +15,7 @@ import com.white.fox.ui.help.HelpScreen
 import com.white.fox.ui.illust.IllustDetailScreen
 import com.white.fox.ui.landing.LandingScreen
 import com.white.fox.ui.main.MainScreen
+import com.white.fox.ui.rank.RankContainerScreen
 import com.white.fox.ui.search.SearchScreen
 import com.white.fox.ui.setting.SettingScreen
 import timber.log.Timber
@@ -46,6 +47,7 @@ fun NavHost() {
                     is Route.Setting -> SettingScreen()
                     is Route.About -> AboutScreen()
                     is Route.Help -> HelpScreen()
+                    is Route.RankContainer -> RankContainerScreen(key.objectType)
                     is Route.BookmarkedIllust -> BookmarkedIllustScreen(key.userId)
                     is Route.IllustDetail -> IllustDetailScreen(key.illustId)
                 }

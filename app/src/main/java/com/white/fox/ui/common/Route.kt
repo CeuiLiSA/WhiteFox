@@ -18,6 +18,8 @@ sealed class Route(
 
     object Help : Route("Help")
 
+    data class RankContainer(val objectType: String) : Route("RankContainer-${objectType}")
+
     data class BookmarkedIllust(val userId: Long) : Route("BookmarkedIllust-userId-${userId}")
 
     data class IllustDetail(val illustId: Long) : Route("IllustDetailScreen-illustId-${illustId}")

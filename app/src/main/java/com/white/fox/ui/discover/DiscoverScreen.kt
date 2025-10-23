@@ -12,24 +12,61 @@ import com.white.fox.ui.recommend.ListIllustViewModal
 
 @Composable
 fun DiscoverScreen() {
+
+    Column {
+        IllustRankSection()
+        MangaRankSection()
+    }
+}
+
+@Composable
+fun IllustRankSection() {
     val dependency = LocalDependency.current
-    val key = "getRankingData-illust"
+
+    val navViewModel = LocalNavViewModel.current
+
+    val mode = "day"
+    val key = "getRankingData-illust-${mode}"
     val viewModel = constructKeyedVM({ key }, {
         HybridRepository(
-            loader = { dependency.client.appApi.getRankingIllusts("day") },
+            loader = { dependency.client.appApi.getRankingIllusts(mode) },
             keyProducer = { key },
             IllustResponse::class
         )
     }) { repository ->
         ListIllustViewModal(repository, dependency.client.appApi)
     }
+
+    SectionBlock(
+        DiscoverSection("插画榜单"),
+        viewModel,
+        { illust -> navViewModel.navigate(Route.IllustDetail(illust.id)) },
+        { navViewModel.navigate(Route.RankContainer("illust")) },
+    )
+}
+
+@Composable
+fun MangaRankSection() {
+    val dependency = LocalDependency.current
+
     val navViewModel = LocalNavViewModel.current
 
-    Column {
-        SectionBlock(
-            DiscoverSection("今日榜单"),
-            viewModel,
-            { illust -> navViewModel.navigate(Route.IllustDetail(illust.id)) },
-            {})
+    val mode = "day_manga"
+    val key = "getRankingData-illust-${mode}"
+    val viewModel = constructKeyedVM({ key }, {
+        HybridRepository(
+            loader = { dependency.client.appApi.getRankingIllusts(mode) },
+            keyProducer = { key },
+            IllustResponse::class
+        )
+    }) { repository ->
+        ListIllustViewModal(repository, dependency.client.appApi)
     }
+
+    SectionBlock(
+        DiscoverSection("漫画榜单"),
+        viewModel,
+        { illust -> navViewModel.navigate(Route.IllustDetail(illust.id)) },
+        { navViewModel.navigate(Route.RankContainer("manga")) },
+    )
 }

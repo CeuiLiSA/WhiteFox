@@ -1,0 +1,25 @@
+package com.white.fox.ui.rank
+
+import androidx.compose.runtime.Composable
+import ceui.lisa.hermes.loader.HybridRepository
+import ceui.lisa.models.IllustResponse
+import com.white.fox.ui.common.LocalDependency
+import com.white.fox.ui.common.constructKeyedVM
+import com.white.fox.ui.recommend.ListIllustViewModal
+import com.white.fox.ui.recommend.StaggeredIllustContent
+
+@Composable
+fun RankScreen(mode: String) {
+    val dependency = LocalDependency.current
+    val key = "getRankingData-illust-${mode}"
+    val viewModel = constructKeyedVM({ key }, {
+        HybridRepository(
+            loader = { dependency.client.appApi.getRankingIllusts(mode) },
+            keyProducer = { key },
+            IllustResponse::class
+        )
+    }) { repository ->
+        ListIllustViewModal(repository, dependency.client.appApi)
+    }
+    StaggeredIllustContent(viewModel = viewModel)
+}
