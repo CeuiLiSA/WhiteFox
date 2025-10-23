@@ -37,7 +37,7 @@ import com.white.fox.ui.illust.IllustItem
 @Composable
 fun StaggeredIllustContent(viewModel: ListIllustViewModal) {
     val loadState by viewModel.loadState.collectAsState()
-    val valueState by viewModel.combinedFlow.collectAsState()
+    val valueState by viewModel.totalFlow.collectAsState()
     val navViewModel = LocalNavViewModel.current
     val isRefreshing =
         loadState is LoadState.Loading && (loadState as? LoadState.Loading)?.reason == LoadReason.PullRefresh

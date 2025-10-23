@@ -20,7 +20,7 @@ class ListValueContent<ValueT : KListShow<*>>(
     private val coroutineScope: CoroutineScope,
     private val repository: Repository<ValueT>,
     private val appApi: AppApi,
-    private val cls: KClass<ValueT>,
+    private val sum: (ValueT, ValueT) -> ValueT,
     private val onDataPrepared: (ValueT) -> Unit,
 ) : ValueContent<ValueT>(
     coroutineScope,
@@ -28,8 +28,10 @@ class ListValueContent<ValueT : KListShow<*>>(
     onDataPrepared
 ) {
     private var _nextUrl: String? = null
-    private val _nextValueFlow = MutableStateFlow<ValueT?>(null)
-    val nextValueFlow: StateFlow<ValueT?> = _nextValueFlow
+    private val _totalFlow = MutableStateFlow<ValueT?>(null)
+    val totalFlow: StateFlow<ValueT?> = _totalFlow
+
+    private var cls: KClass<out ValueT>? = null
 
     fun loadNextPage() {
         val nextUrl = _nextUrl
@@ -38,16 +40,19 @@ class ListValueContent<ValueT : KListShow<*>>(
                 withLockSuspend {
                     try {
                         _loadStateFlow.value = LoadState.Loading(LoadReason.LoadMore)
-                        val response = withContext(Dispatchers.IO) {
+                        withContext(Dispatchers.IO) {
                             val responseBody = appApi.generalGet(nextUrl)
                             val responseJson = responseBody.string()
-                            gson.fromJson(responseJson, cls.java)
+                            val response = gson.fromJson(responseJson, cls?.java)
+
+                            _nextUrl = response.nextPageUrl
+                            onDataPrepared(response)
+
+                            val lastValue = _totalFlow.value
+                            if (lastValue != null) {
+                                _totalFlow.value = sum(lastValue, response)
+                            }
                         }
-
-                        _nextUrl = response.nextPageUrl
-                        onDataPrepared(response)
-                        _nextValueFlow.value = response
-
                         _loadStateFlow.value = LoadState.Loaded(true)
                     } catch (ex: Exception) {
                         Timber.e(ex)
@@ -64,7 +69,9 @@ class ListValueContent<ValueT : KListShow<*>>(
         coroutineScope.launch {
             repository.valueFlow.collectLatest { value ->
                 if (value != null) {
+                    cls = value::class
                     _nextUrl = value.nextPageUrl
+                    _totalFlow.value = value
                 }
             }
         }

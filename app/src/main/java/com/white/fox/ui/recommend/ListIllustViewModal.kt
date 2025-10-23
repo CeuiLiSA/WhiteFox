@@ -10,10 +10,7 @@ import ceui.lisa.hermes.objectpool.ObjectPool
 import ceui.lisa.models.IllustResponse
 import com.white.fox.client.AppApi
 import com.white.fox.client.ListValueContent
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
 
 class ListIllustViewModal(
     repository: Repository<IllustResponse>,
@@ -21,19 +18,19 @@ class ListIllustViewModal(
 ) : ViewModel(), RefreshOwner {
 
     private val valueContent =
-        ListValueContent(viewModelScope, repository, appApi, IllustResponse::class) { response ->
+        ListValueContent(
+            viewModelScope,
+            repository,
+            appApi,
+            sum = { old, new ->
+                new.copy(illusts = old.illusts + new.illusts)
+            }) { response ->
             response.displayList.forEach { illust ->
                 ObjectPool.update(illust)
             }
         }
     val loadState: StateFlow<LoadState<IllustResponse>> = valueContent.loadState
-    val combinedFlow =
-        combine(valueContent.valueFlow, valueContent.nextValueFlow) { first, next ->
-            first?.copy(
-                illusts = first.illusts + (next?.illusts ?: emptyList()),
-                next_url = next?.next_url ?: first.next_url
-            )
-        }.stateIn(viewModelScope, SharingStarted.Lazily, null)
+    val totalFlow = valueContent.totalFlow
 
 
     override fun refresh(reason: LoadReason) = valueContent.refresh(reason)
