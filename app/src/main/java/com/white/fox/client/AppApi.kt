@@ -2,6 +2,7 @@ package com.white.fox.client
 
 import ceui.lisa.models.IllustResponse
 import ceui.lisa.models.SelfProfile
+import ceui.lisa.models.TrendingTagsResponse
 import okhttp3.ResponseBody
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -52,6 +53,11 @@ interface AppApi {
         @Query("user_id") user_id: Long,
         @Query("restrict") restrict: String,
     ): IllustResponse
+
+    @GET("/v1/trending-tags/{type}?filter=for_ios")
+    suspend fun trendingTags(
+        @Path("type") type: String,
+    ): TrendingTagsResponse
 
     @GET
     suspend fun generalGet(@Url url: String): ResponseBody

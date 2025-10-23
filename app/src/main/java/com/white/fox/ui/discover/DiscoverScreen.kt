@@ -1,72 +1,96 @@
 package com.white.fox.ui.discover
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import ceui.lisa.hermes.loader.HybridRepository
-import ceui.lisa.models.IllustResponse
+import ceui.lisa.hermes.loadstate.LoadState
+import ceui.lisa.models.TrendingTagsResponse
+import com.white.fox.ui.common.LoadingBlock
 import com.white.fox.ui.common.LocalDependency
-import com.white.fox.ui.common.LocalNavViewModel
-import com.white.fox.ui.common.Route
 import com.white.fox.ui.common.constructKeyedVM
-import com.white.fox.ui.recommend.ListIllustViewModal
+import com.white.fox.ui.tags.ListTagViewModal
+import com.white.fox.ui.tags.SquareTagItem
 
 @Composable
 fun DiscoverScreen() {
-
-    Column {
-        IllustRankSection()
-        MangaRankSection()
-    }
-}
-
-@Composable
-fun IllustRankSection() {
     val dependency = LocalDependency.current
-
-    val navViewModel = LocalNavViewModel.current
-
-    val mode = "day"
-    val key = "getRankingData-illust-${mode}"
+    val key = "getTrendingTagData-illust"
     val viewModel = constructKeyedVM({ key }, {
         HybridRepository(
-            loader = { dependency.client.appApi.getRankingIllusts(mode) },
+            loader = { dependency.client.appApi.trendingTags("illust") },
             keyProducer = { key },
-            IllustResponse::class
+            TrendingTagsResponse::class
         )
     }) { repository ->
-        ListIllustViewModal(repository, dependency.client.appApi)
+        ListTagViewModal(repository)
     }
 
-    SectionBlock(
-        DiscoverSection("插画榜单"),
-        viewModel,
-        { illust -> navViewModel.navigate(Route.IllustDetail(illust.id)) },
-        { navViewModel.navigate(Route.RankContainer("illust")) },
-    )
-}
 
-@Composable
-fun MangaRankSection() {
-    val dependency = LocalDependency.current
+    val valueState by viewModel.valueFlow.collectAsState()
+    val loadState by viewModel.loadState.collectAsState()
 
-    val navViewModel = LocalNavViewModel.current
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(3),
+        modifier = Modifier
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(2.dp),
+        horizontalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
 
-    val mode = "day_manga"
-    val key = "getRankingData-illust-${mode}"
-    val viewModel = constructKeyedVM({ key }, {
-        HybridRepository(
-            loader = { dependency.client.appApi.getRankingIllusts(mode) },
-            keyProducer = { key },
-            IllustResponse::class
-        )
-    }) { repository ->
-        ListIllustViewModal(repository, dependency.client.appApi)
+        item(span = { GridItemSpan(3) }) { IllustRankSection() }
+        item(span = { GridItemSpan(3) }) { MangaRankSection() }
+
+
+        item(span = { GridItemSpan(3) }) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "热门标签",
+                        fontSize = 20.sp,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+            }
+
+        }
+
+        val state = loadState
+        if (state is LoadState.Loading) {
+            item(span = { GridItemSpan(3) }) { LoadingBlock() }
+        }
+
+        val value = valueState
+        if (value != null) {
+            items(value.displayList) { item ->
+                SquareTagItem(item)
+            }
+        }
     }
-
-    SectionBlock(
-        DiscoverSection("漫画榜单"),
-        viewModel,
-        { illust -> navViewModel.navigate(Route.IllustDetail(illust.id)) },
-        { navViewModel.navigate(Route.RankContainer("manga")) },
-    )
 }
