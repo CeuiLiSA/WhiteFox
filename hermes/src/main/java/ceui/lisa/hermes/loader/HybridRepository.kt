@@ -17,8 +17,8 @@ class HybridRepository<ValueT : Any>(
     private val prefStore by lazy { PrefStore(TAG) }
     private val cacheDurationMillis = 20.minutes.toLong(DurationUnit.MILLISECONDS)
 
-    private val _valueFlow = MutableStateFlow<ValueT?>(null)
-    override val valueFlow: StateFlow<ValueT?> = _valueFlow
+    private val _valueFlowImpl = MutableStateFlow<ValueT?>(null)
+    override val valueFlow: StateFlow<ValueT?> = _valueFlowImpl
 
     override suspend fun load(reason: LoadReason) {
         val key = keyProducer()
@@ -28,12 +28,12 @@ class HybridRepository<ValueT : Any>(
         val cached = prefStore.get(jsonKey(key), cls.java)
 
         if (reason == LoadReason.InitialLoad && cached != null) {
-            _valueFlow.value = cached
+            _valueFlowImpl.value = cached
         }
 
         if (cached == null || reason != LoadReason.InitialLoad || (now - cachedTime) > cacheDurationMillis) {
             val newData = loader()
-            _valueFlow.value = newData
+            _valueFlowImpl.value = newData
             prefStore.put(jsonKey(key), newData)
             prefStore.putLong(timeKey(key), now)
         }

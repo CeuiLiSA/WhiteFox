@@ -31,6 +31,8 @@ class IllustDetailViewModel(
     private val prefStore = PrefStore("FoxImagesCache")
 
     private val _loadStateMap = hashMapOf<Int, MutableStateFlow<LoadState<File>>>()
+    private val _valueFlowImpl = MutableStateFlow<File?>(null)
+    val valueFlow: StateFlow<File?> = _valueFlowImpl
 
 
     private fun getLoadStateFlow(index: Int): MutableStateFlow<LoadState<File>> {
@@ -70,7 +72,8 @@ class IllustDetailViewModel(
             val cachedFile =
                 prefStore.getString(url)?.takeIf { it.isNotEmpty() }?.let { path -> File(path) }
             if (cachedFile != null && cachedFile.exists()) {
-                loadStateFlow.value = LoadState.Loaded(cachedFile)
+                _valueFlowImpl.value = cachedFile
+                loadStateFlow.value = LoadState.Loaded(true)
                 return
             }
 
@@ -111,7 +114,8 @@ class IllustDetailViewModel(
                 }
             }
 
-            loadStateFlow.value = LoadState.Loaded(outputFile)
+            _valueFlowImpl.value = outputFile
+            loadStateFlow.value = LoadState.Loaded(true)
         } catch (ex: Exception) {
             Timber.e(ex)
             loadStateFlow.value = LoadState.Error(ex)

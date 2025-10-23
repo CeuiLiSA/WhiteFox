@@ -34,7 +34,6 @@ import com.github.panpf.sketch.Sketch
 import com.github.panpf.sketch.request.ImageRequest
 import com.github.panpf.zoomimage.SketchZoomAsyncImage
 import com.white.fox.ui.common.constructKeyedVM
-import java.io.File
 
 @Composable
 fun IllustDetailScreen(
@@ -52,6 +51,7 @@ fun IllustDetailScreen(
     val illust = illustState.value
     val loadState = viewModel.getStateFlow(0).collectAsState()
 
+    val valueState by viewModel.valueFlow.collectAsState()
 
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -62,10 +62,8 @@ fun IllustDetailScreen(
             return@Box
         }
 
-        val imageUri = when (val state = loadState.value) {
-            is LoadState.Loaded<*> -> (state.data as File).toUri().toString()
-            else -> illust.image_urls?.large
-        }
+        val value = valueState
+        val imageUri = value?.toUri()?.toString() ?: illust.image_urls?.large
 
         SketchZoomAsyncImage(
             request = ImageRequest.Builder(context, imageUri).withHeader().build(),
@@ -75,12 +73,11 @@ fun IllustDetailScreen(
             modifier = Modifier.fillMaxSize()
         )
 
-        if (loadState.value is LoadState.Loaded<File>) {
-            val imgFile = (loadState.value as LoadState.Loaded<File>).data
+        if (value != null) {
             Button(
                 onClick = {
                     saveImageToGallery(
-                        context, imgFile, imgFile.name
+                        context, value, value.name
                     )
                 },
                 modifier = Modifier

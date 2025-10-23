@@ -22,6 +22,8 @@ class ListIllustViewModal(
     }
     val loadState: StateFlow<LoadState<IllustResponse>> = valueContent.loadState
 
+    val valueFlow: StateFlow<IllustResponse?> = valueContent.valueFlow
+
     override fun refresh(reason: LoadReason) = valueContent.refresh(reason)
     fun loadNextPage() {
         valueContent.loadNextPage()

@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -20,6 +21,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ceui.lisa.hermes.loadstate.LoadReason
@@ -35,6 +37,7 @@ import com.white.fox.ui.illust.IllustItem
 @Composable
 fun StaggeredIllustContent(viewModel: ListIllustViewModal) {
     val loadState by viewModel.loadState.collectAsState()
+    val valueState by viewModel.valueFlow.collectAsState()
     val navViewModel = LocalNavViewModel.current
     val isRefreshing =
         loadState is LoadState.Loading && (loadState as? LoadState.Loading)?.reason != LoadReason.InitialLoad
@@ -60,19 +63,11 @@ fun StaggeredIllustContent(viewModel: ListIllustViewModal) {
         isRefreshing = isRefreshing,
         onRefresh = { viewModel.refresh(LoadReason.PullRefresh) }
     ) {
-        when (val state = loadState) {
-            is LoadState.Loading -> LoadingBlock()
 
-            is LoadState.Error -> ErrorBlock(viewModel)
+        val value = valueState
 
-            is LoadState.Loaded,
-            is LoadState.LoadNext -> {
-                val data = when (state) {
-                    is LoadState.Loaded -> state.data
-                    is LoadState.LoadNext -> state.data
-                    else -> return@RefreshTemplate
-                }
-
+        Box(modifier = Modifier.fillMaxSize()) {
+            if (value != null) {
                 LazyVerticalStaggeredGrid(
                     columns = Fixed(2),
                     modifier = Modifier.fillMaxSize(),
@@ -81,7 +76,7 @@ fun StaggeredIllustContent(viewModel: ListIllustViewModal) {
                     state = listState,
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    items(data.displayList, key = { "illust-${it.id}" }) { illust ->
+                    items(value.displayList, key = { "illust-${it.id}" }) { illust ->
                         IllustItem(
                             illust = illust,
                             onClick = { navViewModel.navigate(IllustDetail(illust.id)) },
@@ -89,19 +84,40 @@ fun StaggeredIllustContent(viewModel: ListIllustViewModal) {
                     }
 
                     item(span = StaggeredGridItemSpan.FullLine) {
-                        AnimatedVisibility(
-                            visible = state is LoadState.LoadNext,
+                        this@RefreshTemplate.AnimatedVisibility(
+                            visible = loadState is LoadState.LoadNext,
                             enter = fadeIn() + expandVertically(),
                             exit = fadeOut() + shrinkVertically()
                         ) {
-                            LoadingBlock()
+                            LoadingBlock(100.dp)
                         }
                     }
                 }
             }
 
-            is LoadState.Processing -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .align(Alignment.Center),
+                contentAlignment = Alignment.Center
+            ) {
+                when (val state = loadState) {
+                    is LoadState.Loading -> {
+                        if (state.reason == LoadReason.InitialLoad) {
+                            LoadingBlock()
+                        }
+                    }
 
+                    is LoadState.Error -> {
+                        if (value == null) {
+                            ErrorBlock(viewModel)
+                        }
+                    }
+
+                    is LoadState.Processing,
+                    is LoadState.Loaded,
+                    is LoadState.LoadNext -> Unit
+                }
             }
         }
     }

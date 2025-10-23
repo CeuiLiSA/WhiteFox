@@ -15,13 +15,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.models.Illust
-import ceui.lisa.models.IllustResponse
 import com.white.fox.ui.common.ErrorBlock
 import com.white.fox.ui.common.LoadingBlock
 import com.white.fox.ui.illust.SquareIllustItem
@@ -34,7 +34,8 @@ fun SectionBlock(
     onItemClick: (Illust) -> Unit,
     onMoreClick: () -> Unit
 ) {
-    val loadState = viewModel.loadState.collectAsState()
+    val loadState by viewModel.loadState.collectAsState()
+    val valueState by viewModel.valueFlow.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -60,30 +61,29 @@ fun SectionBlock(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        when (val state = loadState.value) {
+        val value = valueState
+        if (value != null) {
+            LazyRow(
+                contentPadding = PaddingValues(horizontal = 6.dp),
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
+                items(value.displayList) { item ->
+                    SquareIllustItem(
+                        illust = item,
+                        sizeDp = 120.dp,
+                        onClick = { onItemClick(item) },
+                    )
+                }
+            }
+        }
+
+        when (loadState) {
             is LoadState.Loading -> LoadingBlock()
 
             is LoadState.Error -> ErrorBlock(viewModel)
 
-            is LoadState.Loaded<IllustResponse> -> {
-                LazyRow(
-                    contentPadding = PaddingValues(horizontal = 6.dp),
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    items(state.data.displayList) { item ->
-                        SquareIllustItem(
-                            illust = item,
-                            sizeDp = 120.dp,
-                            onClick = { },
-                        )
-                    }
-                }
-            }
-
-            is LoadState.Processing -> {
-
-            }
-
+            is LoadState.Processing,
+            is LoadState.Loaded,
             is LoadState.LoadNext -> {
 
             }

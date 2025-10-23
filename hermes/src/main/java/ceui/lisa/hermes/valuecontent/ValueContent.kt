@@ -26,6 +26,7 @@ class ValueContent<ValueT>(
     private val _loadStateFlow =
         MutableStateFlow<LoadState<ValueT>>(LoadState.Loading(LoadReason.InitialLoad))
     val loadState: StateFlow<LoadState<ValueT>> = _loadStateFlow.asStateFlow()
+    val valueFlow: StateFlow<ValueT?> = repository.valueFlow
 
     override fun refresh(reason: LoadReason) {
         coroutineScope.launch {
@@ -36,6 +37,7 @@ class ValueContent<ValueT>(
                 withContext(Dispatchers.IO) {
                     repository.load(reason)
                 }
+                _loadStateFlow.value = LoadState.Loaded(true)
             } catch (ex: Exception) {
                 Timber.e(ex)
                 if (repository.valueFlow.value == null) {
@@ -49,16 +51,14 @@ class ValueContent<ValueT>(
 
     fun loadNextPage() {
         coroutineScope.launch {
-            val lastData = (_loadStateFlow.value as? LoadState.Loaded)?.data ?: return@launch
-
             if (!_taskMutex.tryLock()) return@launch
 
             try {
-                _loadStateFlow.value = LoadState.LoadNext(lastData)
+                _loadStateFlow.value = LoadState.LoadNext
                 withContext(Dispatchers.IO) {
                     delay(2000L)
-                    _loadStateFlow.value = LoadState.Loaded(lastData)
                 }
+                _loadStateFlow.value = LoadState.Loaded(true)
             } catch (ex: Exception) {
                 Timber.e(ex)
                 if (repository.valueFlow.value == null) {
@@ -74,7 +74,6 @@ class ValueContent<ValueT>(
         coroutineScope.launch {
             repository.valueFlow.collectLatest { value ->
                 if (value != null) {
-                    _loadStateFlow.value = LoadState.Loaded(value)
                     onDataPrepared(value)
                 }
             }
