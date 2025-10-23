@@ -78,7 +78,11 @@ fun SectionBlock(
         }
 
         when (loadState) {
-            is LoadState.Loading -> LoadingBlock()
+            is LoadState.Loading -> {
+                if (valueState == null) {
+                    LoadingBlock()
+                }
+            }
 
             is LoadState.Error -> ErrorBlock(viewModel)
 

@@ -40,7 +40,7 @@ fun StaggeredIllustContent(viewModel: ListIllustViewModal) {
     val valueState by viewModel.combinedFlow.collectAsState()
     val navViewModel = LocalNavViewModel.current
     val isRefreshing =
-        loadState is LoadState.Loading && (loadState as? LoadState.Loading)?.reason != LoadReason.InitialLoad
+        loadState is LoadState.Loading && (loadState as? LoadState.Loading)?.reason == LoadReason.PullRefresh
 
     val listState = rememberLazyStaggeredGridState()
 
@@ -103,7 +103,7 @@ fun StaggeredIllustContent(viewModel: ListIllustViewModal) {
             ) {
                 when (val state = loadState) {
                     is LoadState.Loading -> {
-                        if (state.reason == LoadReason.InitialLoad) {
+                        if (state.reason == LoadReason.InitialLoad && valueState == null) {
                             LoadingBlock()
                         }
                     }
