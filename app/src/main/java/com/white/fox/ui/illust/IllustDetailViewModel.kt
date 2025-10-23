@@ -13,6 +13,7 @@ import ceui.lisa.models.Illust
 import com.blankj.utilcode.util.PathUtils
 import com.white.fox.client.buildReferer
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -30,6 +31,11 @@ class IllustDetailViewModel(
 
     private val prefStore = PrefStore("FoxImagesCache")
 
+    private val parentFile = File(PathUtils.getInternalAppCachePath(), "FoxImagesCache").apply {
+        if (!exists()) {
+            mkdir()
+        }
+    }
     private val _loadStateMap = hashMapOf<Int, MutableStateFlow<LoadState<File>>>()
     private val _valueFlowImpl = MutableStateFlow<File?>(null)
     val valueFlow: StateFlow<File?> = _valueFlowImpl
@@ -48,8 +54,24 @@ class IllustDetailViewModel(
 
     override fun refresh(reason: LoadReason) {
         viewModelScope.launch {
+            async { deleteOldCacheFiles() }
             withContext(Dispatchers.IO) {
                 launchImgLoadTask(reason, 0)
+            }
+        }
+    }
+
+    private fun deleteOldCacheFiles() {
+        val files = parentFile.listFiles()?.map { file ->
+            file to file.lastModified()
+        }?.sortedByDescending { it.second } ?: emptyList()
+
+        if (files.size > MAX_CACHE_FILE_SIZE) {
+            val toDelete = files.takeLast(files.size - MAX_CACHE_FILE_SIZE)
+            toDelete.forEach { (file, _) ->
+                if (file.exists() && file.delete()) {
+                    Timber.d("sdsdadsw2 已删除最旧文件: ${file.name}")
+                }
             }
         }
     }
@@ -77,11 +99,6 @@ class IllustDetailViewModel(
                 return
             }
 
-            val parentFile = File(PathUtils.getInternalAppCachePath(), "FoxImagesCache").apply {
-                if (!exists()) {
-                    mkdir()
-                }
-            }
             val outputFile = File(parentFile, "illust_${illustId}_p${index}.png")
 
             val client = OkHttpClient.Builder()
@@ -120,5 +137,9 @@ class IllustDetailViewModel(
             Timber.e(ex)
             loadStateFlow.value = LoadState.Error(ex)
         }
+    }
+
+    companion object {
+        private const val MAX_CACHE_FILE_SIZE = 36
     }
 }

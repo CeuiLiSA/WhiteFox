@@ -1,5 +1,6 @@
 package ceui.lisa.hermes.loader
 
+import ceui.lisa.hermes.BuildConfig
 import ceui.lisa.hermes.PrefStore
 import ceui.lisa.hermes.loadstate.LoadReason
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +16,11 @@ class HybridRepository<ValueT : Any>(
 ) : Repository<ValueT> {
 
     private val prefStore by lazy { PrefStore(TAG) }
-    private val cacheDurationMillis = 20.minutes.toLong(DurationUnit.MILLISECONDS)
+    private val cacheDurationMillis = if (BuildConfig.DEBUG) {
+        20.minutes.toLong(DurationUnit.MILLISECONDS)
+    } else {
+        2.minutes.toLong(DurationUnit.MILLISECONDS)
+    }
 
     private val _valueFlowImpl = MutableStateFlow<ValueT?>(null)
     override val valueFlow: StateFlow<ValueT?> = _valueFlowImpl
