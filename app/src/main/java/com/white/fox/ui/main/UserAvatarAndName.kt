@@ -5,10 +5,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,10 +27,13 @@ import androidx.compose.ui.unit.sp
 import ceui.lisa.models.User
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.request.ImageRequest
+import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.illust.withHeader
 
 @Composable
 fun UserAvatarAndName(user: User, onMenuClick: () -> Unit) {
+    val dependency = LocalDependency.current
+    val sessionUid = dependency.sessionManager.loggedInUid()
     Row(
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -65,8 +72,25 @@ fun UserAvatarAndName(user: User, onMenuClick: () -> Unit) {
             Text(
                 text = "@${user.account ?: ""}",
                 fontSize = 13.sp,
+                fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+        }
+
+        if (sessionUid != user.id) {
+            Button(
+                onClick = { },
+                modifier = Modifier.height(32.dp),
+                shape = RoundedCornerShape(16.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+            ) {
+                Text(
+                    text = "关注",
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    fontSize = 14.sp
+                )
+            }
+
         }
     }
 }

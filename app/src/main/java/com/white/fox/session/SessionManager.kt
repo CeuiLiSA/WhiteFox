@@ -35,6 +35,10 @@ class SessionManager(
         return _session.value != null
     }
 
+    fun loggedInUid(): Long {
+        return _session.value?.user?.id ?: 0L
+    }
+
     override fun getAccessToken(): String? = _session.value?.access_token
 
     override fun getRefreshToken(): String? = _session.value?.refresh_token

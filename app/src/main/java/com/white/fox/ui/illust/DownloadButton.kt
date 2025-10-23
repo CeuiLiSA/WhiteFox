@@ -1,0 +1,45 @@
+package com.white.fox.ui.illust
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Download
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import ceui.lisa.hermes.common.saveImageToGallery
+import java.io.File
+
+@Composable
+fun DownloadButton(value: File) {
+    val context = LocalContext.current
+    Box(
+        modifier = Modifier
+            .size(44.dp)
+            .background(Color.Black.copy(alpha = 0.4f), CircleShape),
+        contentAlignment = Alignment.Center
+    ) {
+        IconButton(
+            onClick = {
+                saveImageToGallery(
+                    context, value, value.name
+                )
+            },
+            modifier = Modifier.size(44.dp),
+            content = {
+                Icon(
+                    imageVector = Icons.Default.Download,
+                    contentDescription = "下载",
+                    tint = Color.White,
+                )
+            }
+        )
+    }
+}
