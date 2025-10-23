@@ -3,6 +3,7 @@ package com.white.fox.ui.main
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -86,12 +87,13 @@ fun UserAvatarAndName(
         }
 
         if (sessionUid != user.id) {
-            Spacer(modifier = Modifier.width(8.dp)) // 避免紧贴文字
+            Spacer(modifier = Modifier.width(8.dp))
             Button(
                 onClick = { /* TODO */ },
                 modifier = Modifier.height(32.dp),
                 shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                contentPadding = PaddingValues(horizontal = 4.dp)
             ) {
                 Text(
                     text = "关注",

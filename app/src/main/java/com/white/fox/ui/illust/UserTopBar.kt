@@ -29,8 +29,6 @@ fun UserTopBar(user: User) {
             .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.8f))
             .padding(
                 top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding() + 8.dp,
-                start = 16.dp,
-                end = 16.dp,
                 bottom = 8.dp
             ),
         verticalAlignment = Alignment.CenterVertically
