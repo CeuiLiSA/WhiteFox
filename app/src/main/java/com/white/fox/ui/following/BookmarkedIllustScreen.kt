@@ -20,7 +20,7 @@ fun BookmarkedIllustScreen(userId: Long) = PageScreen("收藏的插画") {
             IllustResponse::class
         )
     }) { repository ->
-        ListIllustViewModal(repository)
+        ListIllustViewModal(repository, dependency.client.appApi)
     }
     StaggeredIllustContent(viewModel)
 }

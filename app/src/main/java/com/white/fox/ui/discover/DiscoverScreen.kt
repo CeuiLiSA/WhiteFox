@@ -21,7 +21,7 @@ fun DiscoverScreen() {
             IllustResponse::class
         )
     }) { repository ->
-        ListIllustViewModal(repository)
+        ListIllustViewModal(repository, dependency.client.appApi)
     }
     val navViewModel = LocalNavViewModel.current
 

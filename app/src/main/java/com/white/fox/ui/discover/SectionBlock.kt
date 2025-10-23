@@ -35,7 +35,7 @@ fun SectionBlock(
     onMoreClick: () -> Unit
 ) {
     val loadState by viewModel.loadState.collectAsState()
-    val valueState by viewModel.valueFlow.collectAsState()
+    val valueState by viewModel.combinedFlow.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -84,7 +84,7 @@ fun SectionBlock(
 
             is LoadState.Processing,
             is LoadState.Loaded,
-            is LoadState.LoadNext -> {
+                -> {
 
             }
         }

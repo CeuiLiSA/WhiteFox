@@ -6,7 +6,6 @@ import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.hermes.loadstate.RefreshOwner
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -36,27 +35,6 @@ class ValueContent<ValueT>(
                 _loadStateFlow.value = LoadState.Loading(reason)
                 withContext(Dispatchers.IO) {
                     repository.load(reason)
-                }
-                _loadStateFlow.value = LoadState.Loaded(true)
-            } catch (ex: Exception) {
-                Timber.e(ex)
-                if (repository.valueFlow.value == null) {
-                    _loadStateFlow.value = LoadState.Error(ex)
-                }
-            } finally {
-                _taskMutex.unlock()
-            }
-        }
-    }
-
-    fun loadNextPage() {
-        coroutineScope.launch {
-            if (!_taskMutex.tryLock()) return@launch
-
-            try {
-                _loadStateFlow.value = LoadState.LoadNext
-                withContext(Dispatchers.IO) {
-                    delay(2000L)
                 }
                 _loadStateFlow.value = LoadState.Loaded(true)
             } catch (ex: Exception) {

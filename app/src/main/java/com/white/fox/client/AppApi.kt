@@ -2,12 +2,14 @@ package com.white.fox.client
 
 import ceui.lisa.models.IllustResponse
 import ceui.lisa.models.SelfProfile
+import okhttp3.ResponseBody
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 interface AppApi {
 
@@ -50,6 +52,9 @@ interface AppApi {
         @Query("user_id") user_id: Long,
         @Query("restrict") restrict: String,
     ): IllustResponse
+
+    @GET
+    suspend fun generalGet(@Url url: String): ResponseBody
 }
 
 fun Long.buildReferer(): String {

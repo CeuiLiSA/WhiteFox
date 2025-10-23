@@ -37,7 +37,7 @@ import com.white.fox.ui.illust.IllustItem
 @Composable
 fun StaggeredIllustContent(viewModel: ListIllustViewModal) {
     val loadState by viewModel.loadState.collectAsState()
-    val valueState by viewModel.valueFlow.collectAsState()
+    val valueState by viewModel.combinedFlow.collectAsState()
     val navViewModel = LocalNavViewModel.current
     val isRefreshing =
         loadState is LoadState.Loading && (loadState as? LoadState.Loading)?.reason != LoadReason.InitialLoad
@@ -85,7 +85,7 @@ fun StaggeredIllustContent(viewModel: ListIllustViewModal) {
 
                     item(span = StaggeredGridItemSpan.FullLine) {
                         this@RefreshTemplate.AnimatedVisibility(
-                            visible = loadState is LoadState.LoadNext,
+                            visible = loadState is LoadState.Loading && (loadState as LoadState.Loading).reason == LoadReason.LoadMore,
                             enter = fadeIn() + expandVertically(),
                             exit = fadeOut() + shrinkVertically()
                         ) {
@@ -115,8 +115,7 @@ fun StaggeredIllustContent(viewModel: ListIllustViewModal) {
                     }
 
                     is LoadState.Processing,
-                    is LoadState.Loaded,
-                    is LoadState.LoadNext -> Unit
+                    is LoadState.Loaded -> Unit
                 }
             }
         }

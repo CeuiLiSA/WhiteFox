@@ -4,6 +4,7 @@ sealed class LoadReason {
 
     object InitialLoad : LoadReason()
     object PullRefresh : LoadReason()
+    object LoadMore : LoadReason()
     object ErrorRetry : LoadReason()
     object EmptyRetry : LoadReason()
 }

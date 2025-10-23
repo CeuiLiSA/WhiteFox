@@ -71,7 +71,7 @@ fun FollowingScreen() {
                             IllustResponse::class
                         )
                     }) { repository ->
-                        ListIllustViewModal(repository)
+                        ListIllustViewModal(repository, dependency.client.appApi)
                     }
                     StaggeredIllustContent(viewModel = viewModel)
                 }
