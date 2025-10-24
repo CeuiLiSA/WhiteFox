@@ -65,6 +65,12 @@ interface AppApi {
         @Query("include_ranking_illusts") include_ranking_illusts: Boolean = false,
     ): NovelResponse
 
+    @GET("/v1/user/bookmarks/novel?filter=for_ios")
+    suspend fun getUserBookmarkedNovels(
+        @Query("user_id") user_id: Long,
+        @Query("restrict") restrict: String,
+    ): NovelResponse
+
     @GET
     suspend fun generalGet(@Url url: String): ResponseBody
 }

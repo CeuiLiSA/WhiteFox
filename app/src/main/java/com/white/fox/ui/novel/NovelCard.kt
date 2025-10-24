@@ -5,9 +5,11 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -42,6 +45,8 @@ fun NovelCard(novel: Novel, onClick: (() -> Unit)? = null) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp, vertical = 8.dp)
+            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f))
+            .blur(4.dp)
             .clickable(enabled = onClick != null) { onClick?.invoke() },
         shape = RoundedCornerShape(16.dp),
     ) {
@@ -50,64 +55,72 @@ fun NovelCard(novel: Novel, onClick: (() -> Unit)? = null) {
                 .background(colorScheme.surface)
                 .padding(12.dp)
         ) {
-            // 封面图
-            if (novel.image_urls?.large != null) {
-                AsyncImage(
-                    request = ImageRequest.Builder(context, novel.image_urls?.large)
-                        .withHeader()
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = "novel cover",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(16f / 9f)
-                        .clip(RoundedCornerShape(12.dp))
-                        .border(1.dp, colorScheme.outlineVariant, RoundedCornerShape(12.dp)),
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-            }
-
-            // 标题
-            Text(
-                text = novel.title ?: "无标题",
-                style = typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
-                color = colorScheme.onSurface,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-            )
-
-            // 作者信息
-            novel.user?.let { user ->
-                Spacer(modifier = Modifier.height(8.dp))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min),
+            ) {
+                if (novel.image_urls?.large != null) {
                     AsyncImage(
-                        request = ImageRequest.Builder(
-                            context,
-                            user.profile_image_urls?.findMaxSizeUrl()
-                        )
+                        request = ImageRequest.Builder(context, novel.image_urls?.large)
                             .withHeader()
                             .crossfade(true)
                             .build(),
-                        contentDescription = "avatar",
+                        contentDescription = "novel cover",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
-                            .size(36.dp)
-                            .clip(CircleShape)
-                            .border(1.dp, colorScheme.outlineVariant, CircleShape)
+                            .width(100.dp)
+                            .aspectRatio(240f / 338f)
+                            .clip(RoundedCornerShape(6.dp))
+                            .border(1.dp, colorScheme.outlineVariant, RoundedCornerShape(6.dp)),
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight() // 让 Column 撑满父容器高度
+                        .weight(1f),     // 占据剩余宽度
+                    verticalArrangement = Arrangement.SpaceBetween, // 顶部和底部分布
+                ) {
                     Text(
-                        text = user.name ?: "未知作者",
-                        style = typography.bodyMedium,
-                        color = colorScheme.onSurfaceVariant,
+                        text = novel.title ?: "无标题",
+                        style = typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+                        color = colorScheme.onSurface,
+                        maxLines = 3,
+                        overflow = TextOverflow.Ellipsis,
                     )
+
+                    novel.user?.let { user ->
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            AsyncImage(
+                                request = ImageRequest.Builder(
+                                    context,
+                                    user.profile_image_urls?.findMaxSizeUrl()
+                                )
+                                    .withHeader()
+                                    .crossfade(true)
+                                    .build(),
+                                contentDescription = "avatar",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .size(36.dp)
+                                    .clip(CircleShape)
+                                    .border(1.dp, colorScheme.outlineVariant, CircleShape)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = user.name ?: "未知作者",
+                                style = typography.bodyMedium,
+                                color = colorScheme.onSurfaceVariant,
+                            )
+                        }
+                    }
                 }
             }
 
-            // 简介
+
             novel.caption?.takeIf { it.isNotBlank() }?.let {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(

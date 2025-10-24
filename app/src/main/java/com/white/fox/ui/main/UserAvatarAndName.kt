@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ceui.lisa.hermes.common.formatRelativeTime
 import ceui.lisa.models.User
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.request.ImageRequest
@@ -35,6 +36,7 @@ import com.white.fox.ui.illust.withHeader
 fun UserAvatarAndName(
     user: User,
     modifier: Modifier,
+    artworksCreatedTime: Long? = null,
     onMenuClick: () -> Unit
 ) {
     val dependency = LocalDependency.current
@@ -76,14 +78,26 @@ fun UserAvatarAndName(
                 overflow = TextOverflow.Ellipsis
             )
 
-            Text(
-                text = "@${user.account ?: ""}",
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            if (artworksCreatedTime == null) {
+                Text(
+                    text = "@${user.account ?: ""}",
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            } else {
+                Text(
+                    text = "发布于 ${formatRelativeTime(artworksCreatedTime)}",
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+
         }
 
         if (sessionUid != user.id) {

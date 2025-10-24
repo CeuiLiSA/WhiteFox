@@ -22,6 +22,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
+import ceui.lisa.hermes.common.parseIsoToMillis
 import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.hermes.objectpool.ObjectPool
 import ceui.lisa.models.Illust
@@ -58,7 +59,7 @@ fun IllustDetailScreen(
         modifier = Modifier.fillMaxSize(), topBar = {
             val author = illust.user
             if (author != null) {
-                UserTopBar(author)
+                UserTopBar(author, parseIsoToMillis(illust.create_date ?: ""))
             }
         }) { innerPadding ->
         Box(

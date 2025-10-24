@@ -15,8 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import ceui.lisa.hermes.loader.HybridRepository
 import ceui.lisa.models.IllustResponse
+import ceui.lisa.models.NovelResponse
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.constructKeyedVM
+import com.white.fox.ui.novel.ListNovelContent
+import com.white.fox.ui.novel.ListNovelViewModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -87,7 +90,21 @@ fun RecommendScreen() {
                     StaggeredIllustContent(viewModel = viewModel)
                 }
 
-                2 -> NovelTabContent()
+                2 -> {
+                    val dependency = LocalDependency.current
+                    val key = "getHomeData-novel"
+                    val viewModel = constructKeyedVM({ key }, {
+                        HybridRepository(
+                            loader = { dependency.client.appApi.getRecmdNovels() },
+                            keyProducer = { key },
+                            NovelResponse::class
+                        )
+                    }) { repository ->
+                        ListNovelViewModel(repository, dependency.client.appApi)
+                    }
+
+                    ListNovelContent(viewModel)
+                }
             }
         }
     }

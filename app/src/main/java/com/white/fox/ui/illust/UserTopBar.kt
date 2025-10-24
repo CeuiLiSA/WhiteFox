@@ -22,7 +22,7 @@ import ceui.lisa.models.User
 import com.white.fox.ui.main.UserAvatarAndName
 
 @Composable
-fun UserTopBar(user: User) {
+fun UserTopBar(user: User, artworksCreatedTime: Long? = null) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -46,8 +46,9 @@ fun UserTopBar(user: User) {
 
         UserAvatarAndName(
             user = user,
+            modifier = Modifier.weight(1f),
+            artworksCreatedTime = artworksCreatedTime,
             onMenuClick = {},
-            modifier = Modifier.weight(1f)
         )
 
         IconButton(

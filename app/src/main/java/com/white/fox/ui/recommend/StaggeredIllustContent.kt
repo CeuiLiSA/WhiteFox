@@ -69,7 +69,7 @@ fun StaggeredIllustContent(viewModel: ListIllustViewModal) {
 
             item(span = StaggeredGridItemSpan.FullLine) {
                 AnimatedVisibility(
-                    visible = loadState is LoadState.Loading && (loadState as LoadState.Loading).reason == LoadReason.LoadMore,
+                    visible = loadState is LoadState.Loading && loadState.reason == LoadReason.LoadMore,
                     enter = fadeIn() + expandVertically(),
                     exit = fadeOut() + shrinkVertically()
                 ) {

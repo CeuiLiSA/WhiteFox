@@ -38,7 +38,7 @@ fun MainTopBar(onMenuClick: () -> Unit) {
     var showConfirmDialog by remember { mutableStateOf(false) }
 
     TopAppBar(
-        title = { user?.let { UserAvatarAndName(it, Modifier.fillMaxWidth(), onMenuClick) } },
+        title = { user?.let { UserAvatarAndName(it, Modifier.fillMaxWidth(), null, onMenuClick) } },
         actions = {
             IconButton(onClick = { navViewModel.navigate(Route.Search) }) {
                 Icon(

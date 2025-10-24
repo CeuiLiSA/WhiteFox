@@ -15,10 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import ceui.lisa.hermes.loader.HybridRepository
 import ceui.lisa.models.IllustResponse
+import ceui.lisa.models.NovelResponse
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.constructKeyedVM
+import com.white.fox.ui.novel.ListNovelContent
+import com.white.fox.ui.novel.ListNovelViewModel
 import com.white.fox.ui.recommend.ListIllustViewModal
-import com.white.fox.ui.recommend.NovelTabContent
 import com.white.fox.ui.recommend.StaggeredIllustContent
 import kotlinx.coroutines.launch
 
@@ -77,7 +79,25 @@ fun FollowingScreen() {
                 }
 
                 1 -> {
-                    NovelTabContent()
+                    val dependency = LocalDependency.current
+                    val uid = dependency.sessionManager.loggedInUid()
+                    val key = "getBookmarkedData-novel-${uid}"
+                    val viewModel = constructKeyedVM({ key }, {
+                        HybridRepository(
+                            loader = {
+                                dependency.client.appApi.getUserBookmarkedNovels(
+                                    uid,
+                                    "public"
+                                )
+                            },
+                            keyProducer = { key },
+                            NovelResponse::class
+                        )
+                    }) { repository ->
+                        ListNovelViewModel(repository, dependency.client.appApi)
+                    }
+
+                    ListNovelContent(viewModel)
                 }
             }
         }
