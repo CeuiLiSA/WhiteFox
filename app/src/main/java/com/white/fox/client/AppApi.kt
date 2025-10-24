@@ -1,6 +1,7 @@
 package com.white.fox.client
 
 import ceui.lisa.models.IllustResponse
+import ceui.lisa.models.NovelResponse
 import ceui.lisa.models.SelfProfile
 import ceui.lisa.models.TrendingTagsResponse
 import okhttp3.ResponseBody
@@ -58,6 +59,11 @@ interface AppApi {
     suspend fun trendingTags(
         @Path("type") type: String,
     ): TrendingTagsResponse
+
+    @GET("/v1/novel/recommended")
+    suspend fun getRecmdNovels(
+        @Query("include_ranking_illusts") include_ranking_illusts: Boolean = false,
+    ): NovelResponse
 
     @GET
     suspend fun generalGet(@Url url: String): ResponseBody

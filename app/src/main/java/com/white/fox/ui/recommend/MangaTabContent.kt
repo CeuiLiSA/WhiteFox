@@ -1,16 +1,27 @@
 package com.white.fox.ui.recommend
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import ceui.lisa.hermes.loader.HybridRepository
+import ceui.lisa.models.NovelResponse
+import com.white.fox.ui.common.LocalDependency
+import com.white.fox.ui.common.constructKeyedVM
+import com.white.fox.ui.novel.ListNovelContent
+import com.white.fox.ui.novel.ListNovelViewModel
 
 
 @Composable
 fun NovelTabContent() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("小说页面内容")
+    val dependency = LocalDependency.current
+    val key = "getHomeData-novel"
+    val viewModel = constructKeyedVM({ key }, {
+        HybridRepository(
+            loader = { dependency.client.appApi.getRecmdNovels() },
+            keyProducer = { key },
+            NovelResponse::class
+        )
+    }) { repository ->
+        ListNovelViewModel(repository, dependency.client.appApi)
     }
+
+    ListNovelContent(viewModel)
 }

@@ -1,4 +1,4 @@
-package com.white.fox.ui.recommend
+package com.white.fox.ui.novel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,13 +7,13 @@ import ceui.lisa.hermes.loadstate.LoadReason
 import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.hermes.loadstate.RefreshOwner
 import ceui.lisa.hermes.objectpool.ObjectPool
-import ceui.lisa.models.IllustResponse
+import ceui.lisa.models.NovelResponse
 import com.white.fox.client.AppApi
 import com.white.fox.client.ListValueContent
 import kotlinx.coroutines.flow.StateFlow
 
-class ListIllustViewModal(
-    repository: Repository<IllustResponse>,
+class ListNovelViewModel(
+    repository: Repository<NovelResponse>,
     private val appApi: AppApi,
 ) : ViewModel(), RefreshOwner {
 
@@ -23,13 +23,13 @@ class ListIllustViewModal(
             repository,
             appApi,
             sum = { old, new ->
-                new.copy(illusts = old.illusts + new.illusts)
+                new.copy(novels = old.novels + new.novels)
             }) { response ->
-            response.displayList.forEach { illust ->
-                ObjectPool.update(illust)
+            response.displayList.forEach { novel ->
+                ObjectPool.update(novel)
             }
         }
-    override val loadState: StateFlow<LoadState<IllustResponse>> = valueContent.loadState
+    override val loadState: StateFlow<LoadState<NovelResponse>> = valueContent.loadState
     val totalFlow = valueContent.totalFlow
 
 

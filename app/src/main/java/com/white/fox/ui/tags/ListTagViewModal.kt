@@ -25,7 +25,7 @@ class ListTagViewModal(
                 ObjectPool.update(illust)
             }
         }
-    val loadState: StateFlow<LoadState<TrendingTagsResponse>> = valueContent.loadState
+    override val loadState: StateFlow<LoadState<TrendingTagsResponse>> = valueContent.loadState
     val valueFlow: StateFlow<TrendingTagsResponse?> = valueContent.valueFlow
 
 

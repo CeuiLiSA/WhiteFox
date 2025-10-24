@@ -58,6 +58,9 @@ class IllustDetailViewModel(
         }
     }
 
+    override val loadState: StateFlow<LoadState<*>>
+        get() = getStateFlow(0)
+
     init {
         refresh(LoadReason.InitialLoad)
     }
