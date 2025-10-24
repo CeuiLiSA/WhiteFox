@@ -1,4 +1,4 @@
-package ceui.lisa.hermes
+package ceui.lisa.hermes.cache
 
 import ceui.lisa.hermes.db.gson
 import com.tencent.mmkv.MMKV

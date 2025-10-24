@@ -2,18 +2,16 @@ package com.white.fox.ui.illust
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ceui.lisa.hermes.PrefStore
+import ceui.lisa.hermes.cache.FileCache
 import ceui.lisa.hermes.loader.KProgressListener
-import ceui.lisa.hermes.loader.ProgressInterceptor
 import ceui.lisa.hermes.loadstate.LoadReason
 import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.hermes.loadstate.RefreshOwner
 import ceui.lisa.hermes.objectpool.ObjectPool
 import ceui.lisa.models.Illust
-import com.blankj.utilcode.util.PathUtils
 import com.white.fox.client.buildReferer
+import com.white.fox.ui.setting.SettingsManager
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,15 +25,15 @@ import java.io.File
 
 class IllustDetailViewModel(
     private val illustId: Long,
+    private val client: OkHttpClient,
+    private val settingsManager: SettingsManager,
 ) : ViewModel(), RefreshOwner {
 
-    private val prefStore = PrefStore("FoxImagesCache")
+    private val fileCache = FileCache(
+        "FoxImagesCache",
+        settingsManager.ensure().maxOriginalImageCacheSize,
+    )
 
-    private val parentFile = File(PathUtils.getInternalAppCachePath(), "FoxImagesCache").apply {
-        if (!exists()) {
-            mkdir()
-        }
-    }
     private val _loadStateMap = hashMapOf<Int, MutableStateFlow<LoadState<File>>>()
     private val _valueFlowImpl = MutableStateFlow<File?>(null)
     val valueFlow: StateFlow<File?> = _valueFlowImpl
@@ -54,24 +52,8 @@ class IllustDetailViewModel(
 
     override fun refresh(reason: LoadReason) {
         viewModelScope.launch {
-            async { deleteOldCacheFiles() }
             withContext(Dispatchers.IO) {
                 launchImgLoadTask(reason, 0)
-            }
-        }
-    }
-
-    private fun deleteOldCacheFiles() {
-        val files = parentFile.listFiles()?.map { file ->
-            file to file.lastModified()
-        }?.sortedByDescending { it.second } ?: emptyList()
-
-        if (files.size > MAX_CACHE_FILE_SIZE) {
-            val toDelete = files.takeLast(files.size - MAX_CACHE_FILE_SIZE)
-            toDelete.forEach { (file, _) ->
-                if (file.exists() && file.delete()) {
-                    Timber.d("sdsdadsw2 已删除最旧文件: ${file.name}")
-                }
             }
         }
     }
@@ -91,19 +73,14 @@ class IllustDetailViewModel(
                 illust.meta_pages?.getOrNull(index)?.image_urls?.original
             } ?: return
 
-            val cachedFile =
-                prefStore.getString(url)?.takeIf { it.isNotEmpty() }?.let { path -> File(path) }
-            if (cachedFile != null && cachedFile.exists()) {
-                _valueFlowImpl.value = cachedFile
+            val targetFileName = "illust_${illustId}_p${index}.png"
+
+            val cached = fileCache.getCachedFile(targetFileName)
+            if (cached != null) {
+                _valueFlowImpl.value = cached
                 loadStateFlow.value = LoadState.Loaded(true)
                 return
             }
-
-            val outputFile = File(parentFile, "illust_${illustId}_p${index}.png")
-
-            val client = OkHttpClient.Builder()
-                .addInterceptor(ProgressInterceptor())
-                .build()
 
             val listener = object : KProgressListener {
                 override fun update(bytesRead: Long, contentLength: Long, done: Boolean) {
@@ -112,34 +89,25 @@ class IllustDetailViewModel(
                 }
             }
 
-            val request = Request.Builder()
-                .url(url)
-                .tag(KProgressListener::class.java, listener)
-                .addHeader("Referer", illustId.buildReferer())
-                .build()
+            val request = Request.Builder().url(url).tag(KProgressListener::class.java, listener)
+                .addHeader("Referer", illustId.buildReferer()).build()
 
             client.newCall(request).execute().use { response ->
                 if (!response.isSuccessful) {
-                    throw Exception("Failed to download image: ${response.code}")
+                    val ex = Exception("Failed to download image: ${response.code}")
+                    loadStateFlow.value = LoadState.Error(ex)
+                    throw ex
                 }
 
                 response.body.byteStream().use { input ->
-                    outputFile.outputStream().use { output ->
-                        input.copyTo(output)
-                        prefStore.putString(url, outputFile.path)
-                    }
+                    val cachedFile = fileCache.putFile(targetFileName, input)
+                    _valueFlowImpl.value = cachedFile
+                    loadStateFlow.value = LoadState.Loaded(true)
                 }
             }
-
-            _valueFlowImpl.value = outputFile
-            loadStateFlow.value = LoadState.Loaded(true)
         } catch (ex: Exception) {
             Timber.e(ex)
             loadStateFlow.value = LoadState.Error(ex)
         }
-    }
-
-    companion object {
-        private const val MAX_CACHE_FILE_SIZE = 36
     }
 }

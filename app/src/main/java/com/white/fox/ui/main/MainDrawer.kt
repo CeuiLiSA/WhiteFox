@@ -49,7 +49,7 @@ import kotlinx.coroutines.launch
 fun MainDrawer(scope: CoroutineScope, drawerState: DrawerState) {
     val navViewModel = LocalNavViewModel.current
     val dependency = LocalDependency.current
-    val sessionState = dependency.sessionManager.session.collectAsState()
+    val sessionState = dependency.sessionManager.stateFlow.collectAsState()
     val user = sessionState.value?.user
     ModalDrawerSheet(
         modifier = Modifier.fillMaxWidth(0.75f)

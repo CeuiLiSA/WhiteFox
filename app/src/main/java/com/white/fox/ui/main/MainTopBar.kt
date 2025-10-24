@@ -19,7 +19,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import ceui.lisa.hermes.PrefStore
+import ceui.lisa.hermes.cache.PrefStore
 import com.blankj.utilcode.util.AppUtils
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.LocalNavViewModel
@@ -32,7 +32,7 @@ fun MainTopBar(onMenuClick: () -> Unit) {
     val navViewModel = LocalNavViewModel.current
     var expanded by remember { mutableStateOf(false) }
     val dependency = LocalDependency.current
-    val sessionState = dependency.sessionManager.session.collectAsState()
+    val sessionState = dependency.sessionManager.stateFlow.collectAsState()
     val user = sessionState.value?.user
 
     var showConfirmDialog by remember { mutableStateOf(false) }

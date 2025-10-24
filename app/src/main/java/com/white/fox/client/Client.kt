@@ -1,5 +1,6 @@
 package com.white.fox.client
 
+import ceui.lisa.hermes.loader.ProgressInterceptor
 import ceui.lisa.models.AccountResponse
 import com.white.fox.session.ISessionManager
 import kotlinx.coroutines.CoroutineScope
@@ -26,6 +27,12 @@ class Client(
 
     val authApi: AccountTokenApi by lazy {
         createOAuthAPI(AccountTokenApi::class.java)
+    }
+
+    val downloadApi: OkHttpClient by lazy {
+        OkHttpClient.Builder()
+            .addInterceptor(ProgressInterceptor())
+            .build()
     }
 
     fun <T> createAPPAPI(service: Class<T>): T {

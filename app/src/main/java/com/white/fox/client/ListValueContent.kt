@@ -10,6 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -29,7 +30,7 @@ class ListValueContent<ValueT : KListShow<*>>(
 ) {
     private var _nextUrl: String? = null
     private val _totalFlow = MutableStateFlow<ValueT?>(null)
-    val totalFlow: StateFlow<ValueT?> = _totalFlow
+    val totalFlow: StateFlow<ValueT?> = _totalFlow.asStateFlow()
 
     private var cls: KClass<out ValueT>? = null
 

@@ -1,10 +1,11 @@
 package ceui.lisa.hermes.loader
 
 import ceui.lisa.hermes.BuildConfig
-import ceui.lisa.hermes.PrefStore
+import ceui.lisa.hermes.cache.PrefStore
 import ceui.lisa.hermes.loadstate.LoadReason
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlin.reflect.KClass
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.DurationUnit
@@ -23,7 +24,7 @@ class HybridRepository<ValueT : Any>(
     }
 
     private val _valueFlowImpl = MutableStateFlow<ValueT?>(null)
-    override val valueFlow: StateFlow<ValueT?> = _valueFlowImpl
+    override val valueFlow: StateFlow<ValueT?> = _valueFlowImpl.asStateFlow()
 
     override suspend fun load(reason: LoadReason) {
         val key = keyProducer()

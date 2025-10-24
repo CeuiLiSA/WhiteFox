@@ -2,12 +2,13 @@ package com.white.fox
 
 import android.app.Application
 import androidx.room.Room
-import ceui.lisa.hermes.PrefStore
+import ceui.lisa.hermes.cache.PrefStore
 import ceui.lisa.hermes.db.AppDatabase
 import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
 import com.white.fox.client.Client
 import com.white.fox.session.SessionManager
+import com.white.fox.ui.setting.SettingsManager
 import timber.log.Timber
 
 class WhiteFox : Application(), ServiceProvider {
@@ -20,8 +21,6 @@ class WhiteFox : Application(), ServiceProvider {
         val mmkvDir = MMKV.initialize(this)
         Timber.d("WhiteFox mmkvDir: ${mmkvDir}")
 
-
-        sessionManager.initialize()
     }
 
     override val database: AppDatabase by lazy {
@@ -36,7 +35,10 @@ class WhiteFox : Application(), ServiceProvider {
     override val gson: Gson by lazy { Gson() }
 
     override val sessionManager: SessionManager by lazy {
-        SessionManager(prefStore, gson)
+        SessionManager()
+    }
+    override val settingsManager: SettingsManager by lazy {
+        SettingsManager()
     }
 
     override val client: Client by lazy { Client(sessionManager) }

@@ -28,6 +28,7 @@ class MainActivity : ComponentActivity() {
             database = serviceProvider.database,
             client = serviceProvider.client,
             sessionManager = serviceProvider.sessionManager,
+            settingsManager = serviceProvider.settingsManager,
             prefStore = serviceProvider.prefStore,
             gson = serviceProvider.gson,
         )

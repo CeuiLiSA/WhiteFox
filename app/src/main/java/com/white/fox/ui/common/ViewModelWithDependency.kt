@@ -23,7 +23,7 @@ inline fun <reified VM : ViewModel, ArgsT> constructVM(
 @Composable
 inline fun <reified VM : ViewModel, ArgsT> constructKeyedVM(
     crossinline keyProducer: () -> String,
-    crossinline argsProducer: () -> ArgsT,
+    crossinline argsProducer: @Composable () -> ArgsT,
     crossinline factory: (ArgsT) -> VM
 ): VM {
     return viewModel(

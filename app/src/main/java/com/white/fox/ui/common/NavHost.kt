@@ -27,7 +27,7 @@ import timber.log.Timber
 fun NavHost() {
     val dependency = LocalDependency.current
     val navViewModel = LocalNavViewModel.current
-    val sessionState = dependency.sessionManager.session.collectAsState()
+    val sessionState = dependency.sessionManager.stateFlow.collectAsState()
     LaunchedEffect(sessionState.value) {
         if (sessionState.value != null) {
             navViewModel.reset()

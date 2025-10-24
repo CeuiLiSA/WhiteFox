@@ -29,6 +29,7 @@ import com.github.panpf.sketch.Sketch
 import com.github.panpf.sketch.request.ImageRequest
 import com.github.panpf.zoomimage.SketchZoomAsyncImage
 import com.github.panpf.zoomimage.rememberSketchZoomState
+import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.constructKeyedVM
 
 @Composable
@@ -36,8 +37,12 @@ fun IllustDetailScreen(
     illustId: Long,
     viewModel: IllustDetailViewModel = constructKeyedVM(
         { "illust-detail-model-${illustId}" },
-        { illustId }) { illustId ->
-        IllustDetailViewModel(illustId)
+        { illustId to LocalDependency.current }) { (illustId, dep) ->
+        IllustDetailViewModel(
+            illustId,
+            dep.client.downloadApi,
+            dep.settingsManager,
+        )
     }
 ) {
     val context = LocalContext.current
@@ -50,14 +55,12 @@ fun IllustDetailScreen(
     val valueState by viewModel.valueFlow.collectAsState()
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
+        modifier = Modifier.fillMaxSize(), topBar = {
             val author = illust.user
             if (author != null) {
                 UserTopBar(author)
             }
-        }
-    ) { innerPadding ->
+        }) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -71,8 +74,7 @@ fun IllustDetailScreen(
                 contentScale = ContentScale.Fit,
                 sketch = sketch,
                 zoomState = zoomState,
-                modifier = Modifier
-                    .fillMaxSize()
+                modifier = Modifier.fillMaxSize()
             )
 
             Box(
