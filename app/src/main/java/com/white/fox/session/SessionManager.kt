@@ -5,9 +5,8 @@ import ceui.lisa.hermes.db.gson
 import ceui.lisa.models.AccountResponse
 import timber.log.Timber
 
-class SessionManager : PersistState<AccountResponse>(
-    "Session", AccountResponse::class
-), ISessionManager<AccountResponse> {
+class SessionManager : PersistState<AccountResponse>("Session", AccountResponse()),
+    ISessionManager<AccountResponse> {
 
     fun logIn(json: String) {
         if (json.isNotEmpty()) {

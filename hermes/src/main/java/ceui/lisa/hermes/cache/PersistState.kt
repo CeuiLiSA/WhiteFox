@@ -4,21 +4,19 @@ import ceui.lisa.hermes.db.gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlin.reflect.KClass
 
 open class PersistState<ValueT : Any>(
     key: String,
-    cls: KClass<ValueT>,
-    private val defaultValue: ValueT? = null,
+    private val defaultValue: ValueT,
 ) {
 
     private val prefStore = PrefStore(key)
 
-    private val _stateFlow = MutableStateFlow<ValueT?>(null)
+    private val _stateFlow = MutableStateFlow<ValueT?>(defaultValue)
     val stateFlow: StateFlow<ValueT?> = _stateFlow.asStateFlow()
 
     init {
-        val obj = prefStore.get(PERSIST_STATE_JSON, cls.java)
+        val obj = prefStore.get(PERSIST_STATE_JSON, defaultValue::class.java)
         if (obj != null) {
             _stateFlow.value = obj
         } else {
@@ -43,7 +41,7 @@ open class PersistState<ValueT : Any>(
     }
 
     fun ensure(): ValueT {
-        return _stateFlow.value ?: defaultValue ?: throw RuntimeException("Not initialized")
+        return _stateFlow.value ?: defaultValue
     }
 
     companion object {
