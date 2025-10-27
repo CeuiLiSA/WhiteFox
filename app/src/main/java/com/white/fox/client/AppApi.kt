@@ -49,6 +49,11 @@ interface AppApi {
         @Query("date") date: String? = null,
     ): IllustResponse
 
+    @GET("/v1/illust/new?filter=for_ios")
+    suspend fun getLatestIllustManga(
+        @Query("content_type") content_type: String,
+    ): IllustResponse
+
     @GET("/v1/user/bookmarks/illust?filter=for_ios")
     suspend fun getUserBookmarkedIllusts(
         @Query("user_id") user_id: Long,

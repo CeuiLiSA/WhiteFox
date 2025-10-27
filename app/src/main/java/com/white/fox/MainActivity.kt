@@ -16,7 +16,6 @@ import com.white.fox.ui.common.NavHost
 import com.white.fox.ui.common.NavViewModel
 import com.white.fox.ui.setting.LocalAppLocaleContext
 import com.white.fox.ui.theme.WhiteFoxTheme
-import timber.log.Timber
 import java.util.Locale
 
 class MainActivity : ComponentActivity() {
@@ -47,8 +46,6 @@ class MainActivity : ComponentActivity() {
                 config.setLocale(currentLocale)
                 createConfigurationContext(config)
             }
-
-            Timber.d("dsadasdasw2 ${currentLocale}")
 
             WhiteFoxTheme {
                 CompositionLocalProvider(

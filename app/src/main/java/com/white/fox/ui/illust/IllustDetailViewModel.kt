@@ -121,7 +121,6 @@ class IllustDetailViewModel(
     }
 
     fun insertViewHistory(illust: Illust) {
-        Timber.d("dsadasdasw2 insertViewHistory: ${illustId}")
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 try {

@@ -45,4 +45,5 @@
     <string name="language_chinese">中文</string>
     <string name="language_japanese">日本語</string>
     <string name="language_korean">한국어</string>
+    <string name="latest_list_for_illust">新作公開</string>
 </resources>

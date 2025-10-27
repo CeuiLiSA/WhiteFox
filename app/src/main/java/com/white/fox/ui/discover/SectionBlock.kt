@@ -49,9 +49,7 @@ fun SectionBlock(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = section.title,
-                fontSize = 20.sp,
-                style = MaterialTheme.typography.titleMedium
+                text = section.title, fontSize = 20.sp, style = MaterialTheme.typography.titleMedium
             )
 
             TextButton(onClick = onMoreClick) {
@@ -68,7 +66,8 @@ fun SectionBlock(
                 items(value.displayList) { item ->
                     SquareIllustItem(
                         illust = item,
-                        sizeDp = 120.dp,
+                        widthDp = 120.dp,
+                        ratio = 2F / 3F,
                         onClick = { onItemClick(item) },
                     )
                 }

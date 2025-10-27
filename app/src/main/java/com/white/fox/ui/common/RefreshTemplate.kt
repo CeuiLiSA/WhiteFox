@@ -22,7 +22,12 @@ fun <T> RefreshTemplate(
 ) {
     val loadState by viewModel.loadState.collectAsState()
     val isRefreshing =
-        loadState is LoadState.Loading && ((loadState as? LoadState.Loading)?.reason == LoadReason.PullRefresh || (loadState as? LoadState.Loading)?.reason == LoadReason.InitialLoad)
+        loadState is LoadState.Loading && ((loadState as? LoadState.Loading)?.reason == LoadReason.PullRefresh ||
+                (if (valueState != null) {
+                    (loadState as? LoadState.Loading)?.reason == LoadReason.InitialLoad
+                } else {
+                    false
+                }))
 
     PullToRefreshBox(
         isRefreshing = isRefreshing,
@@ -45,7 +50,7 @@ fun <T> RefreshTemplate(
             ) {
                 when (val state = loadState) {
                     is LoadState.Loading -> {
-                        if (state.reason == LoadReason.InitialLoad && valueState == null) {
+                        if (state.reason == LoadReason.InitialLoad || valueState == null) {
                             LoadingBlock()
                         }
                     }

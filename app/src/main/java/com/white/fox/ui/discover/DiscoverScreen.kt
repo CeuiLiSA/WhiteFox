@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -58,13 +59,14 @@ fun DiscoverScreen() {
 
         item(span = { GridItemSpan(3) }) { IllustRankSection() }
         item(span = { GridItemSpan(3) }) { MangaRankSection() }
+        item(span = { GridItemSpan(3) }) { LatestIllustSection() }
 
 
         item(span = { GridItemSpan(3) }) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp)
+                    .padding(0.dp, 8.dp, 0.dp, 0.dp)
             ) {
                 Row(
                     modifier = Modifier
@@ -78,7 +80,12 @@ fun DiscoverScreen() {
                         fontSize = 20.sp,
                         style = MaterialTheme.typography.titleMedium
                     )
+
+                    TextButton(onClick = { }) {
+                        Text(text = localizedString(R.string.button_see_more_details))
+                    }
                 }
+
             }
 
         }
