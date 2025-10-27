@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -41,6 +42,7 @@ fun IllustDetailScreen(
         { illustId to LocalDependency.current }) { (illustId, dep) ->
         IllustDetailViewModel(
             illustId,
+            dep.database,
             dep.client.downloadApi,
             dep.settingsManager,
         )
@@ -52,6 +54,11 @@ fun IllustDetailScreen(
 
     val illustState = ObjectPool.get<Illust>(illustId).collectAsState()
     val illust = illustState.value ?: return
+
+    LaunchedEffect(Unit) {
+        viewModel.insertViewHistory(illust)
+    }
+
     val loadState = viewModel.getStateFlow(0).collectAsState()
     val valueState by viewModel.valueFlow.collectAsState()
 

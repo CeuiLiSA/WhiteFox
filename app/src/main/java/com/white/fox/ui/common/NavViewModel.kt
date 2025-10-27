@@ -23,7 +23,7 @@ class NavViewModel(private val sessionManager: SessionManager) : ViewModel() {
     }
 
     private fun defaultRoute(): Route {
-        return if (sessionManager.isLoggedIn()) {
+        return if (sessionManager.loggedInUid() > 0L) {
             Route.Main
         } else {
             Route.Landing

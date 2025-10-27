@@ -3,6 +3,11 @@ package com.white.fox.ui.illust
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ceui.lisa.hermes.cache.FileCache
+import ceui.lisa.hermes.db.AppDatabase
+import ceui.lisa.hermes.db.EntityType
+import ceui.lisa.hermes.db.GeneralEntity
+import ceui.lisa.hermes.db.RecordType
+import ceui.lisa.hermes.db.gson
 import ceui.lisa.hermes.loader.KProgressListener
 import ceui.lisa.hermes.loadstate.LoadReason
 import ceui.lisa.hermes.loadstate.LoadState
@@ -25,6 +30,7 @@ import java.io.File
 
 class IllustDetailViewModel(
     private val illustId: Long,
+    private val db: AppDatabase,
     private val client: OkHttpClient,
     private val settingsManager: SettingsManager,
 ) : ViewModel(), RefreshOwner {
@@ -111,6 +117,26 @@ class IllustDetailViewModel(
         } catch (ex: Exception) {
             Timber.e(ex)
             loadStateFlow.value = LoadState.Error(ex)
+        }
+    }
+
+    fun insertViewHistory(illust: Illust) {
+        Timber.d("dsadasdasw2 insertViewHistory: ${illustId}")
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                try {
+                    db.generalDao().insert(
+                        GeneralEntity(
+                            illustId,
+                            gson.toJson(illust),
+                            EntityType.ILLUST_MANGA,
+                            RecordType.VIEW_ILLUST_MANGA_HISTORY
+                        )
+                    )
+                } catch (ex: Exception) {
+                    Timber.e(ex)
+                }
+            }
         }
     }
 }

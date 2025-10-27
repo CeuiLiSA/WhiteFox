@@ -19,10 +19,6 @@ class SessionManager : PersistState<AccountResponse>("Session", AccountResponse(
         }
     }
 
-    override fun isLoggedIn(): Boolean {
-        return stateFlow.value != null
-    }
-
     override fun loggedInUid(): Long {
         return stateFlow.value?.user?.id ?: 0L
     }
