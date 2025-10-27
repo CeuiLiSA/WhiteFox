@@ -19,6 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ceui.lisa.hermes.loadstate.LoadReason
 import ceui.lisa.hermes.loadstate.RefreshOwner
+import com.white.fox.R
+import com.white.fox.ui.setting.localizedString
 
 @Composable
 fun ErrorBlock(refreshOwner: RefreshOwner) {
@@ -34,7 +36,7 @@ fun ErrorBlock(refreshOwner: RefreshOwner) {
         ) {
 
             Text(
-                text = "加载失败",
+                text = localizedString(R.string.content_load_failed),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.bodyMedium
             )
@@ -50,7 +52,7 @@ fun ErrorBlock(refreshOwner: RefreshOwner) {
                     modifier = Modifier.size(18.dp)
                 )
                 Spacer(Modifier.width(6.dp))
-                Text("重试")
+                Text(localizedString(R.string.button_retry))
             }
         }
     }

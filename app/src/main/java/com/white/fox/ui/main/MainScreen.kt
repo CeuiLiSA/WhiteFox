@@ -60,36 +60,21 @@ fun MainScreen(viewModel: MainScreenViewModel = viewModel()) {
             AnimatedContent(
                 targetState = selectedTabState,
                 transitionSpec = {
-                    // MaterialSharedAxis.Z 模拟：Z轴缩放 + 淡入淡出
                     val duration = 300
-                    if (targetState > initialState) {
-                        // 前进方向：当前页面下沉（缩小淡出），新页面上浮（放大淡入）
-                        fadeIn(tween(duration)) + scaleIn(
-                            initialScale = 0.96f,
-                            animationSpec = tween(duration)
-                        ) togetherWith
-                                fadeOut(tween(duration)) + scaleOut(
-                            targetScale = 1.04f,
-                            animationSpec = tween(duration)
-                        )
-                    } else {
-                        // 回退方向：相反动画
-                        fadeIn(tween(duration)) + scaleIn(
-                            initialScale = 1.04f,
-                            animationSpec = tween(duration)
-                        ) togetherWith
-                                fadeOut(tween(duration)) + scaleOut(
-                            targetScale = 0.96f,
-                            animationSpec = tween(duration)
-                        )
-                    }
+                    fadeIn(tween(duration)) + scaleIn(
+                        initialScale = 0.96f,
+                        animationSpec = tween(duration)
+                    ) togetherWith
+                            fadeOut(tween(duration)) + scaleOut(
+                        targetScale = 1.04f,
+                        animationSpec = tween(duration)
+                    )
                 },
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding),
                 label = "sharedAxisZ"
             ) { targetTab ->
-                // ✅ 保存每个 tab 的状态
                 saveableStateHolder.SaveableStateProvider(key = targetTab) {
                     when (targetTab) {
                         0 -> RecommendScreen()

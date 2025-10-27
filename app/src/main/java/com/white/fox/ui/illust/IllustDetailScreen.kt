@@ -93,7 +93,6 @@ fun IllustDetailScreen(
                 }
             }
 
-            // 中心加载指示器
             when (val state = loadState.value) {
                 is LoadState.Loading -> {
                     CircularProgressIndicator(

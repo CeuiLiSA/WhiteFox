@@ -24,8 +24,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ceui.lisa.hermes.objectpool.ObjectPool
 import ceui.lisa.models.Illust
+import com.white.fox.R
 import com.white.fox.client.AppApi
 import com.white.fox.ui.common.LocalDependency
+import com.white.fox.ui.setting.localizedString
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -101,7 +103,7 @@ fun BookmarkButton(
                 content = {
                     Icon(
                         imageVector = if (isBookmarked) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                        contentDescription = "收藏",
+                        contentDescription = localizedString(R.string.button_bookmark),
                         tint = if (isBookmarked) Color.Red else Color.White
                     )
                 }

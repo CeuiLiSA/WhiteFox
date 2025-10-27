@@ -15,6 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import ceui.lisa.hermes.common.saveImageToGallery
+import com.white.fox.R
+import com.white.fox.ui.setting.localizedString
 import java.io.File
 
 @Composable
@@ -36,7 +38,7 @@ fun DownloadButton(value: File) {
             content = {
                 Icon(
                     imageVector = Icons.Default.Download,
-                    contentDescription = "下载",
+                    contentDescription = localizedString(R.string.button_download),
                     tint = Color.White,
                 )
             }

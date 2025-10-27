@@ -22,9 +22,11 @@ import androidx.compose.ui.unit.sp
 import ceui.lisa.hermes.loader.HybridRepository
 import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.models.TrendingTagsResponse
+import com.white.fox.R
 import com.white.fox.ui.common.LoadingBlock
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.constructKeyedVM
+import com.white.fox.ui.setting.localizedString
 import com.white.fox.ui.tags.ListTagViewModal
 import com.white.fox.ui.tags.SquareTagItem
 
@@ -72,7 +74,7 @@ fun DiscoverScreen() {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "热门标签",
+                        text = localizedString(R.string.treding_tags),
                         fontSize = 20.sp,
                         style = MaterialTheme.typography.titleMedium
                     )

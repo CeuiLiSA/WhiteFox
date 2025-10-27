@@ -12,6 +12,8 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
+import com.white.fox.R
+import com.white.fox.ui.setting.localizedString
 
 @Composable
 fun MainBottomBar(selectedTab: Int, onTabSelected: (Int) -> Unit) {
@@ -19,9 +21,13 @@ fun MainBottomBar(selectedTab: Int, onTabSelected: (Int) -> Unit) {
         tonalElevation = 8.dp,
     ) {
         val items = listOf(
-            Triple("推荐", Icons.Default.Home, 0),
-            Triple("发现", Icons.Default.Search, 1),
-            Triple("动态", Icons.Default.Person, 2),
+            Triple(localizedString(R.string.home_tab_recommend), Icons.Default.Home, 0),
+            Triple(localizedString(R.string.home_tab_discover), Icons.Default.Search, 1),
+            Triple(
+                localizedString(R.string.home_tab_following_latest_post),
+                Icons.Default.Person,
+                2
+            ),
         )
         items.forEach { (label, icon, index) ->
             NavigationBarItem(

@@ -14,32 +14,38 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.white.fox.R
 import com.white.fox.ui.common.PageScreen
+import com.white.fox.ui.setting.localizedString
 import kotlinx.coroutines.launch
 
 
 @Composable
 fun RankContainerScreen(objectType: String) =
-    PageScreen(if (objectType == "illust") "插画榜单" else "漫画榜单") {
+    PageScreen(
+        if (objectType == "illust") localizedString(R.string.rank_list_for_illust) else localizedString(
+            R.string.rank_list_for_manga
+        )
+    ) {
         val coroutineScope = rememberCoroutineScope()
 
         val tabTitles = if (objectType == "illust") {
             listOf(
-                NamedMode("日榜", "day"),
-                NamedMode("周榜", "week"),
-                NamedMode("月榜", "month"),
-                NamedMode("AI", "day_ai"),
-                NamedMode("男性向", "day_male"),
-                NamedMode("女性向", "day_female"),
-                NamedMode("原创", "week_original"),
-                NamedMode("新人", "week_rookie"),
+                NamedMode(localizedString(R.string.rank_mode_day), "day"),
+                NamedMode(localizedString(R.string.rank_mode_week), "week"),
+                NamedMode(localizedString(R.string.rank_mode_month), "month"),
+                NamedMode(localizedString(R.string.rank_mode_ai_created), "day_ai"),
+                NamedMode(localizedString(R.string.rank_mode_for_male), "day_male"),
+                NamedMode(localizedString(R.string.rank_mode_for_female), "day_female"),
+                NamedMode(localizedString(R.string.rank_mode_original), "week_original"),
+                NamedMode(localizedString(R.string.rank_mode_new_creator), "week_rookie"),
             )
         } else if (objectType == "manga") {
             listOf(
-                NamedMode("日榜", "day_manga"),
-                NamedMode("周榜", "week_manga"),
-                NamedMode("月榜", "month_manga"),
-                NamedMode("新人", "week_rookie_manga"),
+                NamedMode(localizedString(R.string.rank_mode_day), "day_manga"),
+                NamedMode(localizedString(R.string.rank_mode_week), "week_manga"),
+                NamedMode(localizedString(R.string.rank_mode_month), "month_manga"),
+                NamedMode(localizedString(R.string.rank_mode_new_creator), "week_rookie_manga"),
             )
         } else {
             listOf()

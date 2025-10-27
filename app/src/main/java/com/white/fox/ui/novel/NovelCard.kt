@@ -80,12 +80,12 @@ fun NovelCard(novel: Novel, onClick: (() -> Unit)? = null) {
 
                 Column(
                     modifier = Modifier
-                        .fillMaxHeight() // 让 Column 撑满父容器高度
-                        .weight(1f),     // 占据剩余宽度
-                    verticalArrangement = Arrangement.SpaceBetween, // 顶部和底部分布
+                        .fillMaxHeight()
+                        .weight(1f),
+                    verticalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
-                        text = novel.title ?: "无标题",
+                        text = novel.title ?: "",
                         style = typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
                         color = colorScheme.onSurface,
                         maxLines = 3,
@@ -111,7 +111,7 @@ fun NovelCard(novel: Novel, onClick: (() -> Unit)? = null) {
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = user.name ?: "未知作者",
+                                text = user.name ?: "",
                                 style = typography.bodyMedium,
                                 color = colorScheme.onSurfaceVariant,
                             )
@@ -132,7 +132,6 @@ fun NovelCard(novel: Novel, onClick: (() -> Unit)? = null) {
                 )
             }
 
-            // 底部信息：时间 + 浏览量
             Spacer(modifier = Modifier.height(8.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),

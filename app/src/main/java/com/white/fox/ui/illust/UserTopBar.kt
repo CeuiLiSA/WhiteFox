@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,11 +34,11 @@ fun UserTopBar(user: User, artworksCreatedTime: Long? = null) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(
-            onClick = { /* TODO: 返回 */ },
+            onClick = { },
             modifier = Modifier.size(40.dp)
         ) {
             Icon(
-                imageVector = Icons.Default.ArrowBack,
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = "Back",
                 tint = MaterialTheme.colorScheme.onSurface
             )
@@ -52,7 +52,7 @@ fun UserTopBar(user: User, artworksCreatedTime: Long? = null) {
         )
 
         IconButton(
-            onClick = { /* TODO: 更多 */ },
+            onClick = { },
             modifier = Modifier.size(40.dp)
         ) {
             Icon(

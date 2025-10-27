@@ -21,10 +21,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import ceui.lisa.hermes.cache.PrefStore
 import com.blankj.utilcode.util.AppUtils
+import com.white.fox.R
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.LocalNavViewModel
 import com.white.fox.ui.common.Route
 import com.white.fox.ui.setting.LogoutConfirmDialog
+import com.white.fox.ui.setting.localizedString
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,21 +63,21 @@ fun MainTopBar(onMenuClick: () -> Unit) {
                 onDismissRequest = { expanded = false }
             ) {
                 DropdownMenuItem(
-                    text = { Text("设置") },
+                    text = { Text(localizedString(R.string.settings)) },
                     onClick = {
                         expanded = false
                         navViewModel.navigate(Route.Setting)
                     }
                 )
                 DropdownMenuItem(
-                    text = { Text("帮助") },
+                    text = { Text(localizedString(R.string.help)) },
                     onClick = {
                         expanded = false
                         navViewModel.navigate(Route.Help)
                     }
                 )
                 DropdownMenuItem(
-                    text = { Text("退出登录") },
+                    text = { Text(localizedString(R.string.button_log_out)) },
                     onClick = {
                         expanded = false
                         showConfirmDialog = true

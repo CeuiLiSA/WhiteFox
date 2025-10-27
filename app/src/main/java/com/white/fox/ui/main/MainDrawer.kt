@@ -38,10 +38,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.request.ImageRequest
+import com.white.fox.R
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.LocalNavViewModel
 import com.white.fox.ui.common.Route
 import com.white.fox.ui.illust.withHeader
+import com.white.fox.ui.setting.localizedString
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -99,46 +101,52 @@ fun MainDrawer(scope: CoroutineScope, drawerState: DrawerState) {
         HorizontalDivider()
 
         Text(
-            text = "主要",
+            text = localizedString(R.string.drawer_main_content),
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(start = 16.dp, top = 12.dp, bottom = 8.dp)
         )
-        DrawerItem("首页", Icons.Default.Home) { /* ... */ }
-        DrawerItem("发现", Icons.Default.Search) { /* ... */ }
-        DrawerItem("关注", Icons.Default.Favorite) { /* ... */ }
+        DrawerItem(localizedString(R.string.home_tab_home), Icons.Default.Home) { /* ... */ }
+        DrawerItem(localizedString(R.string.home_tab_discover), Icons.Default.Search) { /* ... */ }
+        DrawerItem(
+            localizedString(R.string.home_tab_following),
+            Icons.Default.Favorite
+        ) { /* ... */ }
 
         HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
         Text(
-            text = "收藏与历史",
+            text = localizedString(R.string.drawer_view_history),
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
         )
-        DrawerItem("收藏的插画", Icons.Default.Bookmark) {
+        DrawerItem(localizedString(R.string.drawer_bookmarked_illust), Icons.Default.Bookmark) {
             scope.launch {
                 drawerState.close()
                 navViewModel.navigate(Route.BookmarkedIllust(user?.id ?: 0L))
             }
         }
-        DrawerItem("浏览历史", Icons.Default.History) { /* ... */ }
+        DrawerItem(
+            localizedString(R.string.drawer_view_history),
+            Icons.Default.History
+        ) { /* ... */ }
 
         HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
         Text(
-            text = "设置",
+            text = localizedString(R.string.settings),
             style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
         )
-        DrawerItem("设置", Icons.Default.Settings) {
+        DrawerItem(localizedString(R.string.settings), Icons.Default.Settings) {
             scope.launch {
                 drawerState.close()
                 navViewModel.navigate(Route.Setting)
             }
         }
-        DrawerItem("关于", Icons.Default.Info) {
+        DrawerItem(localizedString(R.string.about_app), Icons.Default.Info) {
             scope.launch {
                 drawerState.close()
                 navViewModel.navigate(Route.About)

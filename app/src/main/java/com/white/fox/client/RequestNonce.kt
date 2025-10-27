@@ -39,10 +39,7 @@ fun md5(plainText: String): String {
                 buf.append("0")
             buf.append(Integer.toHexString(i))
         }
-        // 32位加密
         return buf.toString()
-        // 16位的加密
-        // return buf.toString().substring(8, 24);
     } catch (e: NoSuchAlgorithmException) {
         e.printStackTrace()
         return ""

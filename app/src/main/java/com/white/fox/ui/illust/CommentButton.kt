@@ -13,6 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.white.fox.R
+import com.white.fox.ui.setting.localizedString
 
 @Composable
 fun CommentButton() {
@@ -30,7 +32,7 @@ fun CommentButton() {
             content = {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.Comment,
-                    contentDescription = "下载",
+                    contentDescription = localizedString(R.string.button_download),
                     tint = Color.White,
                 )
             }

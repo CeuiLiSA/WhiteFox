@@ -20,10 +20,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.models.Illust
+import com.white.fox.R
 import com.white.fox.ui.common.ErrorBlock
 import com.white.fox.ui.common.LoadingBlock
 import com.white.fox.ui.illust.SquareIllustItem
 import com.white.fox.ui.recommend.ListIllustViewModal
+import com.white.fox.ui.setting.localizedString
 
 @Composable
 fun SectionBlock(
@@ -53,7 +55,7 @@ fun SectionBlock(
             )
 
             TextButton(onClick = onMoreClick) {
-                Text(text = "查看更多")
+                Text(text = localizedString(R.string.button_see_more_details))
             }
         }
 

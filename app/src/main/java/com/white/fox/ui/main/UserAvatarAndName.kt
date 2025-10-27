@@ -29,8 +29,10 @@ import ceui.lisa.hermes.common.formatRelativeTime
 import ceui.lisa.models.User
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.request.ImageRequest
+import com.white.fox.R
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.illust.withHeader
+import com.white.fox.ui.setting.localizedString
 
 @Composable
 fun UserAvatarAndName(
@@ -46,7 +48,6 @@ fun UserAvatarAndName(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
     ) {
-        // 头像
         AsyncImage(
             request = ImageRequest.Builder(
                 LocalContext.current,
@@ -63,10 +64,9 @@ fun UserAvatarAndName(
 
         Spacer(modifier = Modifier.width(8.dp))
 
-        // 名字 + 账号, 占用剩余空间
         Column(
             modifier = Modifier
-                .weight(1f) // 文字占满剩余空间
+                .weight(1f)
                 .clickable { onMenuClick() }
         ) {
             Text(
@@ -89,7 +89,10 @@ fun UserAvatarAndName(
                 )
             } else {
                 Text(
-                    text = "发布于 ${formatRelativeTime(artworksCreatedTime)}",
+                    text = localizedString(
+                        R.string.created_on,
+                        formatRelativeTime(artworksCreatedTime)
+                    ),
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -110,7 +113,7 @@ fun UserAvatarAndName(
                 contentPadding = PaddingValues(horizontal = 4.dp)
             ) {
                 Text(
-                    text = "关注",
+                    text = localizedString(R.string.button_follow),
                     color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 14.sp
                 )

@@ -4,6 +4,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import com.white.fox.R
 
 @Composable
 fun LogoutConfirmDialog(
@@ -12,13 +13,13 @@ fun LogoutConfirmDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("确认退出") },
-        text = { Text("你确定要退出登录吗？") },
+        title = { Text(localizedString(R.string.log_out_confirm)) },
+        text = { Text(localizedString(R.string.you_sure_log_out)) },
         confirmButton = {
-            TextButton(onClick = onConfirm) { Text("确认") }
+            TextButton(onClick = onConfirm) { Text(localizedString(R.string.button_sure)) }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("取消") }
+            TextButton(onClick = onDismiss) { Text(localizedString(R.string.button_cancel)) }
         }
     )
 }

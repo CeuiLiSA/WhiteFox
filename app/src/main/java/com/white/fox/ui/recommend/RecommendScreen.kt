@@ -16,10 +16,12 @@ import androidx.compose.ui.graphics.Color
 import ceui.lisa.hermes.loader.HybridRepository
 import ceui.lisa.models.IllustResponse
 import ceui.lisa.models.NovelResponse
+import com.white.fox.R
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.constructKeyedVM
 import com.white.fox.ui.novel.ListNovelContent
 import com.white.fox.ui.novel.ListNovelViewModel
+import com.white.fox.ui.setting.localizedString
 import kotlinx.coroutines.launch
 
 @Composable
@@ -27,7 +29,11 @@ fun RecommendScreen() {
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { 3 })
     val coroutineScope = rememberCoroutineScope()
 
-    val tabTitles = listOf("插画", "漫画", "小说")
+    val tabTitles = listOf(
+        localizedString(R.string.object_type_illust),
+        localizedString(R.string.object_type_manga),
+        localizedString(R.string.object_type_novel)
+    )
     val dependency = LocalDependency.current
 
     Column(modifier = Modifier.fillMaxSize()) {

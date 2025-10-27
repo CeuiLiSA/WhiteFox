@@ -6,6 +6,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
+import com.white.fox.R
+import com.white.fox.ui.setting.localizedString
 
 
 @Composable
@@ -18,27 +20,27 @@ fun ExampleDialog(
 
         title = {
             Text(
-                text = "删除确认",
+                text = localizedString(R.string.delete_confirm),
                 style = MaterialTheme.typography.titleLarge
             )
         },
 
         text = {
             Text(
-                text = "确定要删除这条记录吗？此操作无法撤销。",
+                text = localizedString(R.string.you_sure_delete_this_record),
                 style = MaterialTheme.typography.bodyMedium
             )
         },
 
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text("确定")
+                Text(localizedString(R.string.button_sure))
             }
         },
 
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("取消")
+                Text(localizedString(R.string.button_cancel))
             }
         },
 

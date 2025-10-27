@@ -15,6 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.white.fox.R
+import com.white.fox.ui.setting.localizedString
 
 @Composable
 fun LoadingBlock(blockHeight: Dp = 160.dp) {
@@ -37,7 +39,7 @@ fun LoadingBlock(blockHeight: Dp = 160.dp) {
             Spacer(Modifier.height(12.dp))
 
             Text(
-                text = "加载中",
+                text = localizedString(R.string.content_loading),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.bodyMedium
             )
