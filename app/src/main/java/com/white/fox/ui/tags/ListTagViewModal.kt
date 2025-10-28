@@ -21,11 +21,16 @@ class ListTagViewModal(
             viewModelScope,
             repository
         ) { response ->
-            response.displayList.forEach { illust ->
-                ObjectPool.update(illust)
+            response.displayList.forEach { tredingTag ->
+                tredingTag.illust?.let { illust ->
+                    ObjectPool.update(illust)
+                    illust.user?.let { user ->
+                        ObjectPool.update(user)
+                    }
+                }
             }
         }
-    override val loadState: StateFlow<LoadState<TrendingTagsResponse>> = valueContent.loadState
+    override val loadState: StateFlow<LoadState> = valueContent.loadState
     val valueFlow: StateFlow<TrendingTagsResponse?> = valueContent.valueFlow
 
 

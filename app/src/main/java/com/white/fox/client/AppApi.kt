@@ -4,6 +4,7 @@ import ceui.lisa.models.IllustResponse
 import ceui.lisa.models.NovelResponse
 import ceui.lisa.models.SelfProfile
 import ceui.lisa.models.TrendingTagsResponse
+import ceui.lisa.models.UserResponse
 import okhttp3.ResponseBody
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -48,6 +49,17 @@ interface AppApi {
         @Query("mode") mode: String,
         @Query("date") date: String? = null,
     ): IllustResponse
+
+    @GET("/v1/user/illusts?filter=for_ios")
+    suspend fun getUserCreatedIllusts(
+        @Query("user_id") user_id: Long,
+        @Query("type") type: String,
+    ): IllustResponse
+
+    @GET("/v2/user/detail?filter=for_ios")
+    suspend fun getUserProfile(
+        @Query("user_id") user_id: Long,
+    ): UserResponse
 
     @GET("/v1/illust/new?filter=for_ios")
     suspend fun getLatestIllustManga(

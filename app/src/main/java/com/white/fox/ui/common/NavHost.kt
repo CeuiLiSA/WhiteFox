@@ -21,6 +21,7 @@ import com.white.fox.ui.main.MainScreen
 import com.white.fox.ui.rank.RankContainerScreen
 import com.white.fox.ui.search.SearchScreen
 import com.white.fox.ui.setting.SettingScreen
+import com.white.fox.ui.user.UserProfileScreen
 import timber.log.Timber
 
 @Composable
@@ -55,6 +56,7 @@ fun NavHost() {
                     is Route.RankContainer -> RankContainerScreen(key.objectType)
                     is Route.BookmarkedIllust -> BookmarkedIllustScreen(key.userId)
                     is Route.IllustDetail -> IllustDetailScreen(key.illustId)
+                    is Route.UserProfile -> UserProfileScreen(key.userId)
                 }
             }
         },

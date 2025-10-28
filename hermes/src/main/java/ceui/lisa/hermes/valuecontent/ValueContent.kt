@@ -23,8 +23,8 @@ open class ValueContent<ValueT>(
 
     private val _taskMutex = Mutex()
     protected val _loadStateFlow =
-        MutableStateFlow<LoadState<ValueT>>(LoadState.Loading(LoadReason.InitialLoad))
-    override val loadState: StateFlow<LoadState<ValueT>> = _loadStateFlow.asStateFlow()
+        MutableStateFlow<LoadState>(LoadState.Loading(LoadReason.InitialLoad))
+    override val loadState: StateFlow<LoadState> = _loadStateFlow.asStateFlow()
     val valueFlow: StateFlow<ValueT?> = repository.valueFlow
 
     override fun refresh(reason: LoadReason) {

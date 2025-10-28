@@ -4,5 +4,5 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface RefreshOwner {
     fun refresh(reason: LoadReason)
-    val loadState: StateFlow<LoadState<*>>
+    val loadState: StateFlow<LoadState>
 }

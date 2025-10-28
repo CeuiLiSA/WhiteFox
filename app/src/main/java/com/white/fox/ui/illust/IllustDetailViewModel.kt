@@ -40,18 +40,18 @@ class IllustDetailViewModel(
         settingsManager.ensure().maxOriginalImageCacheSize,
     )
 
-    private val _loadStateMap = hashMapOf<Int, MutableStateFlow<LoadState<File>>>()
+    private val _loadStateMap = hashMapOf<Int, MutableStateFlow<LoadState>>()
     private val _valueFlowImpl = MutableStateFlow<File?>(null)
     val valueFlow: StateFlow<File?> = _valueFlowImpl
 
 
-    private fun getLoadStateFlow(index: Int): MutableStateFlow<LoadState<File>> {
+    private fun getLoadStateFlow(index: Int): MutableStateFlow<LoadState> {
         return _loadStateMap.getOrPut(index) {
             MutableStateFlow(LoadState.Loading(LoadReason.InitialLoad))
         }
     }
 
-    fun getStateFlow(index: Int): StateFlow<LoadState<File>> {
+    fun getStateFlow(index: Int): StateFlow<LoadState> {
         return getLoadStateFlow(index).asStateFlow()
     }
 
@@ -64,7 +64,7 @@ class IllustDetailViewModel(
         }
     }
 
-    override val loadState: StateFlow<LoadState<*>>
+    override val loadState: StateFlow<LoadState>
         get() = getStateFlow(0)
 
     init {

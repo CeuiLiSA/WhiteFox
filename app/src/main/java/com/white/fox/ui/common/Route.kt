@@ -22,5 +22,7 @@ sealed class Route(
 
     data class BookmarkedIllust(val userId: Long) : Route("BookmarkedIllust-userId-${userId}")
 
+    data class UserProfile(val userId: Long) : Route("UserProfile-userId-${userId}")
+
     data class IllustDetail(val illustId: Long) : Route("IllustDetailScreen-illustId-${illustId}")
 }

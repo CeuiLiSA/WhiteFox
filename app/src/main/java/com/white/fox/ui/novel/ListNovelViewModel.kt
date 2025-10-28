@@ -27,9 +27,12 @@ class ListNovelViewModel(
             }) { response ->
             response.displayList.forEach { novel ->
                 ObjectPool.update(novel)
+                novel.user?.let { user ->
+                    ObjectPool.update(user)
+                }
             }
         }
-    override val loadState: StateFlow<LoadState<NovelResponse>> = valueContent.loadState
+    override val loadState: StateFlow<LoadState> = valueContent.loadState
     val totalFlow = valueContent.totalFlow
 
 

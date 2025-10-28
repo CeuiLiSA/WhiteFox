@@ -19,10 +19,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ceui.lisa.models.User
+import com.white.fox.ui.common.LocalNavViewModel
+import com.white.fox.ui.common.Route
 import com.white.fox.ui.main.UserAvatarAndName
 
 @Composable
 fun UserTopBar(user: User, artworksCreatedTime: Long? = null) {
+    val navViewModal = LocalNavViewModel.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -48,7 +51,9 @@ fun UserTopBar(user: User, artworksCreatedTime: Long? = null) {
             user = user,
             modifier = Modifier.weight(1f),
             artworksCreatedTime = artworksCreatedTime,
-            onMenuClick = {},
+            onMenuClick = {
+                navViewModal.navigate(Route.UserProfile(user.id))
+            },
         )
 
         IconButton(

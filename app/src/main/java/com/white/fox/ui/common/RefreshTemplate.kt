@@ -18,7 +18,7 @@ import ceui.lisa.hermes.loadstate.RefreshOwner
 fun <T> RefreshTemplate(
     viewModel: RefreshOwner,
     valueState: T?,
-    listContent: @Composable BoxScope.(value: T, loadState: LoadState<*>) -> Unit
+    listContent: @Composable BoxScope.(value: T, loadState: LoadState) -> Unit
 ) {
     val loadState by viewModel.loadState.collectAsState()
     val isRefreshing =

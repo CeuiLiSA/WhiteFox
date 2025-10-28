@@ -46,4 +46,6 @@
     <string name="language_japanese">日本語</string>
     <string name="language_korean">한국어</string>
     <string name="latest_list_for_illust">Latest</string>
+    <string name="user_created_illust">创建的插画</string>
+    <string name="user_created_manga">创建的漫画</string>
 </resources>
