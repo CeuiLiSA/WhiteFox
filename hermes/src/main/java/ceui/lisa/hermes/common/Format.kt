@@ -1,5 +1,6 @@
 package ceui.lisa.hermes.common
 
+import android.annotation.SuppressLint
 import android.os.Build
 import java.text.DateFormat
 import java.time.ZonedDateTime
@@ -8,13 +9,26 @@ import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 
+@SuppressLint("SimpleDateFormat")
 fun parseIsoToMillis(isoString: String): Long {
-    val zdt = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        ZonedDateTime.parse(isoString, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val zdt = ZonedDateTime.parse(isoString, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+        zdt.toInstant().toEpochMilli()
     } else {
-        TODO("VERSION.SDK_INT < O")
+        try {
+            val pattern = if (isoString.endsWith("Z")) {
+                "yyyy-MM-dd'T'HH:mm:ss'Z'"
+            } else {
+                "yyyy-MM-dd'T'HH:mm:ssXXX"
+            }
+            val sdf = java.text.SimpleDateFormat(pattern)
+            sdf.timeZone = java.util.TimeZone.getTimeZone("UTC")
+            sdf.parse(isoString)?.time ?: 0L
+        } catch (e: Exception) {
+            e.printStackTrace()
+            0L
+        }
     }
-    return zdt.toInstant().toEpochMilli()
 }
 
 fun formatRelativeTime(timestamp: Long): String {
@@ -33,9 +47,12 @@ fun formatRelativeTime(timestamp: Long): String {
         days < 1 -> "${hours} 小时前"
         days < 30 -> "${days} 天前"
         else -> {
-            // 超过一个月，按本地化日期格式展示
             val date = Date(timestamp)
-            val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault())
+            val dateFormat = DateFormat.getDateTimeInstance(
+                DateFormat.MEDIUM, // 日期风格
+                DateFormat.SHORT,  // 时间风格
+                Locale.getDefault()
+            )
             dateFormat.format(date)
         }
     }

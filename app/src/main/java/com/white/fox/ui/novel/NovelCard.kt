@@ -17,19 +17,25 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.core.text.HtmlCompat
+import ceui.lisa.hermes.common.formatRelativeTime
+import ceui.lisa.hermes.common.parseIsoToMillis
 import ceui.lisa.models.Novel
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.request.ImageRequest
@@ -45,10 +51,11 @@ fun NovelCard(novel: Novel, onClick: (() -> Unit)? = null) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp, vertical = 8.dp)
-            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.5f))
-            .blur(4.dp)
             .clickable(enabled = onClick != null) { onClick?.invoke() },
         shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp)
+        )
     ) {
         Column(
             modifier = Modifier
@@ -121,10 +128,20 @@ fun NovelCard(novel: Novel, onClick: (() -> Unit)? = null) {
             }
 
 
-            novel.caption?.takeIf { it.isNotBlank() }?.let {
+            novel.caption?.takeIf { it.isNotBlank() }?.let { htmlText ->
+                val annotatedString = remember(htmlText) {
+                    buildAnnotatedString {
+                        val spanned = HtmlCompat.fromHtml(
+                            htmlText,
+                            HtmlCompat.FROM_HTML_MODE_COMPACT
+                        )
+                        append(spanned.toString())
+                    }
+                }
+
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = it,
+                    text = annotatedString,
                     style = typography.bodySmall,
                     color = colorScheme.onSurfaceVariant,
                     maxLines = 3,
@@ -138,7 +155,7 @@ fun NovelCard(novel: Novel, onClick: (() -> Unit)? = null) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = novel.create_date ?: "",
+                    text = formatRelativeTime(parseIsoToMillis(novel.create_date ?: "")),
                     style = typography.labelSmall,
                     color = colorScheme.outline,
                 )
