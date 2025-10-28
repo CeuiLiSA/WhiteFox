@@ -50,7 +50,7 @@ fun <T> RefreshTemplate(
             ) {
                 when (val state = loadState) {
                     is LoadState.Loading -> {
-                        if (state.reason == LoadReason.InitialLoad || valueState == null) {
+                        if (state.reason == LoadReason.InitialLoad || value == null) {
                             LoadingBlock()
                         }
                     }

@@ -134,6 +134,13 @@ fun UserProfileScreen(userId: Long) {
                     UserCreatedIllustSection(userId, "manga")
                 }
 
+                Spacer(modifier = Modifier.height(20.dp))
+
+                val workspace = profile.workspace
+                if (workspace != null) {
+                    WorkspaceInfoCard(workspace)
+                }
+
                 Spacer(modifier = Modifier.height(80.dp))
             }
         }
