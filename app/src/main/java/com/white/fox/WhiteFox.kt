@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.room.Room
 import ceui.lisa.hermes.cache.PrefStore
 import ceui.lisa.hermes.db.AppDatabase
-import com.google.gson.Gson
 import com.tencent.mmkv.MMKV
 import com.white.fox.client.Client
 import com.white.fox.session.SessionManager
@@ -32,7 +31,6 @@ class WhiteFox : Application(), ServiceProvider {
     override val prefStore: PrefStore by lazy {
         PrefStore("Default")
     }
-    override val gson: Gson by lazy { Gson() }
 
     override val sessionManager: SessionManager by lazy {
         SessionManager()

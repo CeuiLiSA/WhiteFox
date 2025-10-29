@@ -35,7 +35,6 @@ class MainActivity : ComponentActivity() {
             sessionManager = serviceProvider.sessionManager,
             settingsManager = serviceProvider.settingsManager,
             prefStore = serviceProvider.prefStore,
-            gson = serviceProvider.gson,
         )
         setContent {
 

@@ -17,4 +17,8 @@ data class User(
 ) : ModelObject {
     override val objectUniqueId: Long
         get() = id
+
+    fun exist(): Boolean {
+        return name?.isNotEmpty() == true || account?.isNotEmpty() == true
+    }
 }

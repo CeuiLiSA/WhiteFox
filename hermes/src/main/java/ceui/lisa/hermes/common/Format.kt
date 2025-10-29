@@ -31,7 +31,7 @@ fun parseIsoToMillis(isoString: String): Long {
     }
 }
 
-fun formatRelativeTime(timestamp: Long): String {
+fun formatRelativeTime(timestamp: Long, fullTime: Boolean): String {
     val now = System.currentTimeMillis()
     val diff = now - timestamp
 
@@ -48,12 +48,17 @@ fun formatRelativeTime(timestamp: Long): String {
         days < 30 -> "${days} 天前"
         else -> {
             val date = Date(timestamp)
-            val dateFormat = DateFormat.getDateTimeInstance(
-                DateFormat.MEDIUM, // 日期风格
-                DateFormat.SHORT,  // 时间风格
-                Locale.getDefault()
-            )
-            dateFormat.format(date)
+            if (fullTime) {
+                val dateFormat = DateFormat.getDateTimeInstance(
+                    DateFormat.MEDIUM, // 日期风格
+                    DateFormat.SHORT,  // 时间风格
+                    Locale.getDefault()
+                )
+                dateFormat.format(date)
+            } else {
+                val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault())
+                dateFormat.format(date)
+            }
         }
     }
 }

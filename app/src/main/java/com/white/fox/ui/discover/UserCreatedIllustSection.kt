@@ -11,7 +11,7 @@ import com.white.fox.ui.recommend.ListIllustViewModal
 import com.white.fox.ui.setting.localizedString
 
 @Composable
-fun UserCreatedIllustSection(userId: Long, objectType: String) {
+fun UserCreatedIllustSection(userId: Long, objectType: String, total: Int) {
     val dependency = LocalDependency.current
 
     val navViewModel = LocalNavViewModel.current
@@ -27,13 +27,15 @@ fun UserCreatedIllustSection(userId: Long, objectType: String) {
 
     SectionBlock(
         DiscoverSection(
-            if (objectType == "illust")
-                localizedString(R.string.user_created_illust)
-            else
-                localizedString(R.string.user_created_manga)
+            title = "${
+                if (objectType == "illust")
+                    localizedString(R.string.user_created_illust)
+                else
+                    localizedString(R.string.user_created_manga)
+            }(${total})"
         ),
         viewModel,
         { illust -> navViewModel.navigate(Route.IllustDetail(illust.id)) },
-        { navViewModel.navigate(Route.RankContainer("illust")) },
+        { navViewModel.navigate(Route.UserCreatedIllust(userId, objectType)) },
     )
 }

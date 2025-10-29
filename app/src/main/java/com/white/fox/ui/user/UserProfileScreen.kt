@@ -2,10 +2,13 @@ package com.white.fox.ui.user
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -21,6 +24,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -37,12 +41,14 @@ import ceui.lisa.hermes.objectpool.ObjectPool
 import ceui.lisa.models.User
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.request.ImageRequest
+import com.white.fox.R
 import com.white.fox.ui.common.LoadingBlock
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.LocalNavViewModel
 import com.white.fox.ui.common.constructKeyedVM
 import com.white.fox.ui.discover.UserCreatedIllustSection
 import com.white.fox.ui.illust.withHeader
+import com.white.fox.ui.setting.localizedString
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,8 +56,8 @@ import com.white.fox.ui.illust.withHeader
 fun UserProfileScreen(userId: Long) {
     val viewModel: UserViewModel = constructKeyedVM(
         { "UserViewModel-${userId}" },
-        { LocalDependency.current.client.appApi }) { api ->
-        UserViewModel(userId, api)
+        { LocalDependency.current }) { dep ->
+        UserViewModel(userId, dep.client.appApi, dep.database)
     }
 
     val profileState = viewModel.profileFlow.collectAsState()
@@ -128,18 +134,43 @@ fun UserProfileScreen(userId: Long) {
                 }
             } else {
                 if (profile.profile?.total_illusts?.takeIf { it > 0 } != null) {
-                    UserCreatedIllustSection(userId, "illust")
+                    UserCreatedIllustSection(userId, "illust", profile.profile?.total_illusts ?: 0)
                 }
                 if (profile.profile?.total_manga?.takeIf { it > 0 } != null) {
-                    UserCreatedIllustSection(userId, "manga")
+                    UserCreatedIllustSection(userId, "manga", profile.profile?.total_manga ?: 0)
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                val workspace = profile.workspace
-                if (workspace != null) {
-                    WorkspaceInfoCard(workspace)
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Workspace Info",
+                            fontSize = 20.sp,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+
+                        TextButton(onClick = {}) {
+                            Text(text = localizedString(R.string.button_see_more_details))
+                        }
+                    }
+
+                    val workspace = profile.workspace
+                    if (workspace != null) {
+                        WorkspaceInfoCard(workspace)
+                    }
                 }
+
 
                 Spacer(modifier = Modifier.height(80.dp))
             }

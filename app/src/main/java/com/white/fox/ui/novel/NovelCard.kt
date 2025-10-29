@@ -155,7 +155,7 @@ fun NovelCard(novel: Novel, onClick: (() -> Unit)? = null) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = formatRelativeTime(parseIsoToMillis(novel.create_date ?: "")),
+                    text = formatRelativeTime(parseIsoToMillis(novel.create_date ?: ""), true),
                     style = typography.labelSmall,
                     color = colorScheme.outline,
                 )

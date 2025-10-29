@@ -60,7 +60,9 @@ fun StaggeredIllustContent(viewModel: ListIllustViewModal) {
             state = listState,
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            items(value.displayList, key = { "illust-${it.id}" }) { illust ->
+            items(
+                value.displayList.distinctBy { it.id }.filter { it.isAuthurExist() },
+                key = { "illust-${it.id}" }) { illust ->
                 IllustItem(
                     illust = illust,
                     onClick = { navViewModel.navigate(IllustDetail(illust.id)) },

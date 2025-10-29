@@ -91,7 +91,7 @@ fun UserAvatarAndName(
                 Text(
                     text = localizedString(
                         R.string.created_on,
-                        formatRelativeTime(artworksCreatedTime)
+                        formatRelativeTime(artworksCreatedTime, false)
                     ),
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Medium,

@@ -1,5 +1,6 @@
 package ceui.lisa.models
 
+
 data class Illust(
     val caption: String? = null,
     val create_date: String? = null,
@@ -28,4 +29,29 @@ data class Illust(
 ) : ModelObject {
     override val objectUniqueId: Long
         get() = id
+
+    fun isAuthurExist(): Boolean {
+        return user?.exist() == true
+    }
+
+
+    fun isGif(): Boolean {
+        return type == "ugora"
+    }
+
+    fun isManga(): Boolean {
+        return type == "manga"
+    }
+
+    fun maxUrl(): String? {
+        if (page_count > 0) {
+            if (page_count == 1) {
+                return meta_single_page?.original_image_url
+            } else {
+                return meta_pages?.getOrNull(0)?.image_urls?.original
+            }
+        } else {
+            return null
+        }
+    }
 }

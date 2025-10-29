@@ -33,6 +33,7 @@ navigationCompose = "2.9.5"
 jetbrainsKotlinJvm = "2.2.20"
 runtimeLivedata = "1.9.2"
 zoomimageComposeSketch4Core = "1.4.0"
+firebaseCrashlyticsBuildtools = "3.0.6"
 
 [libraries]
 androidx-compose-material-icons-core = { module = "androidx.compose.material:material-icons-core", version.ref = "materialIconsCore" }
@@ -77,6 +78,7 @@ androidx-material3-adaptive-navigation3 = { group = "androidx.compose.material3.
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 androidx-compose-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 zoomimage-compose-sketch4-core = { module = "io.github.panpf.zoomimage:zoomimage-compose-sketch4-core", version.ref = "zoomimageComposeSketch4Core" }
+firebase-crashlytics-buildtools = { group = "com.google.firebase", name = "firebase-crashlytics-buildtools", version.ref = "firebaseCrashlyticsBuildtools" }
 
 
 [plugins]
