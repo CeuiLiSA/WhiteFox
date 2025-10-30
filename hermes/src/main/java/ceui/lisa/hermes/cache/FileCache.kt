@@ -1,5 +1,6 @@
 package ceui.lisa.hermes.cache
 
+import ceui.lisa.hermes.common.md5
 import com.blankj.utilcode.util.PathUtils
 import timber.log.Timber
 import java.io.File
@@ -16,11 +17,14 @@ class FileCache(
         if (!exists()) mkdirs()
     }
 
+    private val prefStore = PrefStore("FileCache")
+
     fun getCachedFile(fileName: String): File? {
         val safeName = fileName.toSafeFileName()
         val file = File(parentDir, safeName)
-        Timber.d("FileCache: getCachedFile ${file.name}")
-        return if (file.exists()) file else null
+        val storedMD5 = prefStore.getString(file.name)
+        Timber.d("FileCache: getCachedFile ${file.name}, storedMD5: ${storedMD5}")
+        return if (file.exists() && file.md5() == storedMD5) file else null
     }
 
     fun putFile(fileName: String, source: InputStream): File {
@@ -31,7 +35,9 @@ class FileCache(
             file.outputStream().use { output ->
                 source.copyTo(output)
             }
-            Timber.d("FileCache: putFile ${file.name}")
+            val md5 = file.md5()
+            Timber.d("FileCache: putFile ${file.name}, md5: ${md5}")
+            prefStore.putString(file.name, md5)
             cleanupOldFilesIfNeeded()
         }
 

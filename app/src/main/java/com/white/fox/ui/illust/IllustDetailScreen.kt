@@ -46,7 +46,6 @@ fun IllustDetailScreen(
             illustId,
             dep.database,
             dep.client.downloadApi,
-            dep.settingsManager,
         )
     }
 ) {
@@ -61,7 +60,7 @@ fun IllustDetailScreen(
         viewModel.insertViewHistory(illust)
     }
 
-    val loadState = viewModel.getStateFlow(0).collectAsState()
+    val loadState = viewModel.loadState.collectAsState()
     val valueState by viewModel.valueFlow.collectAsState()
 
     Scaffold(
