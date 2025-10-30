@@ -48,4 +48,6 @@
     <string name="latest_list_for_illust">Latest</string>
     <string name="user_created_illust">创建的插画</string>
     <string name="user_created_manga">创建的漫画</string>
+    <string name="object_type_user">用户</string>
+    <string name="view_history">浏览历史</string>
 </resources>

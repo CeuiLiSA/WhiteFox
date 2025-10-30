@@ -25,6 +25,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
+import ceui.lisa.hermes.common.getFileSize
+import ceui.lisa.hermes.common.getImageDimensions
 import ceui.lisa.hermes.common.parseIsoToMillis
 import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.hermes.objectpool.ObjectPool
@@ -35,6 +37,7 @@ import com.github.panpf.zoomimage.SketchZoomAsyncImage
 import com.github.panpf.zoomimage.rememberSketchZoomState
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.constructKeyedVM
+import timber.log.Timber
 
 @Composable
 fun IllustDetailScreen(
@@ -62,6 +65,14 @@ fun IllustDetailScreen(
 
     val loadState = viewModel.loadState.collectAsState()
     val valueState by viewModel.valueFlow.collectAsState()
+
+    LaunchedEffect(valueState) {
+        val v = valueState
+        if (v != null) {
+            Timber.d("sadasdsww2 size: ${getFileSize(v)}")
+            Timber.d("sadasdsww2 dimen: ${getImageDimensions(v)}")
+        }
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(), topBar = {

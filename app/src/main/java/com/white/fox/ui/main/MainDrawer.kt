@@ -130,7 +130,12 @@ fun MainDrawer(scope: CoroutineScope, drawerState: DrawerState) {
         DrawerItem(
             localizedString(R.string.drawer_view_history),
             Icons.Default.History
-        ) { /* ... */ }
+        ) {
+            scope.launch {
+                drawerState.close()
+                navViewModel.navigate(Route.History)
+            }
+        }
 
         HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 

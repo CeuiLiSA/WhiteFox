@@ -19,7 +19,11 @@ data class GeneralEntity(
     val updatedTime: Long = System.currentTimeMillis()
 ) {
     inline fun <reified T> typedObject(): T {
-        val obj = gson.fromJson(json, T::class.java)
+        return typedObject(T::class.java)
+    }
+
+    fun <T> typedObject(cls: Class<T>): T {
+        val obj = gson.fromJson(json, cls)
         if (obj is ModelObject) {
             ObjectPool.update(obj)
         }

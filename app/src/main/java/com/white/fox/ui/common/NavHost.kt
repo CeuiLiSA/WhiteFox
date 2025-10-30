@@ -15,6 +15,7 @@ import androidx.navigation3.ui.NavDisplay
 import com.white.fox.ui.following.BookmarkedIllustScreen
 import com.white.fox.ui.help.AboutScreen
 import com.white.fox.ui.help.HelpScreen
+import com.white.fox.ui.history.ViewHistoryScreen
 import com.white.fox.ui.illust.IllustDetailScreen
 import com.white.fox.ui.landing.LandingScreen
 import com.white.fox.ui.main.MainScreen
@@ -54,6 +55,7 @@ fun NavHost() {
                     is Route.Setting -> SettingScreen()
                     is Route.About -> AboutScreen()
                     is Route.Help -> HelpScreen()
+                    is Route.History -> ViewHistoryScreen()
                     is Route.RankContainer -> RankContainerScreen(key.objectType)
                     is Route.BookmarkedIllust -> BookmarkedIllustScreen(key.userId)
                     is Route.UserCreatedIllust -> UserCreatedIllustScreen(

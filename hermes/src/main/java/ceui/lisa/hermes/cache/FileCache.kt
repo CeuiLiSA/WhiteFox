@@ -17,13 +17,13 @@ class FileCache(
         if (!exists()) mkdirs()
     }
 
-    private val prefStore = PrefStore("FileCache")
+    private val prefStore = PrefStore(TAG)
 
     fun getCachedFile(fileName: String): File? {
         val safeName = fileName.toSafeFileName()
         val file = File(parentDir, safeName)
         val storedMD5 = prefStore.getString(file.name)
-        Timber.d("FileCache: getCachedFile ${file.name}, storedMD5: ${storedMD5}")
+        Timber.d("$TAG: getCachedFile ${file.name}, storedMD5: ${storedMD5}")
         return if (file.exists() && file.md5() == storedMD5) file else null
     }
 
@@ -36,7 +36,7 @@ class FileCache(
                 source.copyTo(output)
             }
             val md5 = file.md5()
-            Timber.d("FileCache: putFile ${file.name}, md5: ${md5}")
+            Timber.d("$TAG: putFile ${file.name}, md5: ${md5}")
             prefStore.putString(file.name, md5)
             cleanupOldFilesIfNeeded()
         }
@@ -48,14 +48,14 @@ class FileCache(
         val safeName = fileName.toSafeFileName()
         val file = File(parentDir, safeName)
         if (file.exists() && file.delete()) {
-            Timber.d("FileCache: deleted cache file ${file.name}")
+            Timber.d("$TAG: deleted cache file ${file.name}")
         }
     }
 
     private fun cleanupOldFilesIfNeeded() {
         val files = parentDir.listFiles()?.map { it to it.lastModified() }
             ?.sortedByDescending { it.second } ?: return
-        Timber.d("FileCache: cleanupOldFilesIfNeeded, total: ${files.size}")
+        Timber.d("$TAG: cleanupOldFilesIfNeeded, total: ${files.size}")
 
         if (files.size > maxCacheFileSize) {
             val toDelete = files.takeLast(files.size - maxCacheFileSize)
@@ -75,7 +75,7 @@ class FileCache(
                         else -> "${seconds}秒前"
                     }
 
-                    Timber.d("FileCache: deleted old file ${file.name}, modified: $humanReadable")
+                    Timber.d("$TAG: deleted old file ${file.name}, modified: $humanReadable")
                 }
             }
         }
@@ -84,11 +84,15 @@ class FileCache(
     fun clearAll() {
         lock.withLock {
             parentDir.listFiles()?.forEach { it.delete() }
-            Timber.d("FileCache: cleared all cache files in ${parentDir.name}")
+            Timber.d("$TAG: cleared all cache files in ${parentDir.name}")
         }
     }
 
     private fun String.toSafeFileName(): String {
         return this.replace(Regex("[^a-zA-Z0-9._-]"), "_")
+    }
+
+    companion object {
+        private const val TAG = "FileCache"
     }
 }

@@ -5,4 +5,5 @@ object ObjectType {
     const val MANGA = "manga"
     const val UGORA = "ugora"
     const val NOVEL = "novel"
+    const val USER = "user"
 }

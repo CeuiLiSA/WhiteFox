@@ -17,6 +17,7 @@ sealed class Route(
     object About : Route("About")
 
     object Help : Route("Help")
+    object History : Route("History")
 
     data class RankContainer(val objectType: String) : Route("RankContainer-${objectType}")
 
