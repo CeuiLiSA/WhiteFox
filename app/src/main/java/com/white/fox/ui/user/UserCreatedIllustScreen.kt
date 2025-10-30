@@ -2,6 +2,7 @@ package com.white.fox.ui.user
 
 import androidx.compose.runtime.Composable
 import ceui.lisa.hermes.loader.APIRepository
+import ceui.lisa.models.ObjectType
 import com.white.fox.R
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.PageScreen
@@ -12,7 +13,7 @@ import com.white.fox.ui.setting.localizedString
 
 @Composable
 fun UserCreatedIllustScreen(userId: Long, objectType: String) = PageScreen(
-    if (objectType == "illust")
+    if (objectType == ObjectType.ILLUST)
         localizedString(R.string.user_created_illust)
     else
         localizedString(R.string.user_created_manga)

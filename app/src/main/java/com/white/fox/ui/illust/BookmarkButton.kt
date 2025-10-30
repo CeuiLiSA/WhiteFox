@@ -26,6 +26,7 @@ import ceui.lisa.hermes.objectpool.ObjectPool
 import ceui.lisa.models.Illust
 import com.white.fox.R
 import com.white.fox.client.AppApi
+import com.white.fox.client.RestrictType
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.setting.localizedString
 import kotlinx.coroutines.CoroutineScope
@@ -54,7 +55,7 @@ class BookmarkTask(
                         appApi.removeBookmark(illustId)
                         ObjectPool.update(illust.copy(is_bookmarked = false))
                     } else {
-                        appApi.postBookmark(illustId)
+                        appApi.postBookmark(illustId, RestrictType.PUBLIC)
                         ObjectPool.update(illust.copy(is_bookmarked = true))
                     }
                 }

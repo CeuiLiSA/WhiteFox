@@ -26,7 +26,7 @@ interface AppApi {
     @POST("/v2/illust/bookmark/add")
     suspend fun postBookmark(
         @Field("illust_id") illust_id: Long,
-        @Field("restrict") restrict: String = "public"
+        @Field("restrict") restrict: String
     )
 
     @FormUrlEncoded

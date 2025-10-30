@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import ceui.lisa.hermes.loader.HybridRepository
 import ceui.lisa.models.IllustResponse
 import com.white.fox.R
+import com.white.fox.client.RestrictType
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.PageScreen
 import com.white.fox.ui.common.constructKeyedVM
@@ -18,7 +19,12 @@ fun BookmarkedIllustScreen(userId: Long) =
         val key = "getBookmarkedData-illust-${userId}"
         val viewModel = constructKeyedVM({ key }, {
             HybridRepository(
-                loader = { dependency.client.appApi.getUserBookmarkedIllusts(userId, "public") },
+                loader = {
+                    dependency.client.appApi.getUserBookmarkedIllusts(
+                        userId,
+                        RestrictType.PUBLIC
+                    )
+                },
                 keyProducer = { key },
                 IllustResponse::class
             )

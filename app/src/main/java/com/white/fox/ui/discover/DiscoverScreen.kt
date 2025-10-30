@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ceui.lisa.hermes.loader.HybridRepository
 import ceui.lisa.hermes.loadstate.LoadState
+import ceui.lisa.models.ObjectType
 import ceui.lisa.models.TrendingTagsResponse
 import com.white.fox.R
 import com.white.fox.ui.common.LoadingBlock
@@ -37,7 +38,7 @@ fun DiscoverScreen() {
     val key = "getTrendingTagData-illust"
     val viewModel = constructKeyedVM({ key }, {
         HybridRepository(
-            loader = { dependency.client.appApi.trendingTags("illust") },
+            loader = { dependency.client.appApi.trendingTags(ObjectType.ILLUST) },
             keyProducer = { key },
             TrendingTagsResponse::class
         )

@@ -16,7 +16,9 @@ import androidx.compose.ui.graphics.Color
 import ceui.lisa.hermes.loader.HybridRepository
 import ceui.lisa.models.IllustResponse
 import ceui.lisa.models.NovelResponse
+import ceui.lisa.models.ObjectType
 import com.white.fox.R
+import com.white.fox.client.RestrictType
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.constructKeyedVM
 import com.white.fox.ui.novel.ListNovelContent
@@ -75,7 +77,12 @@ fun FollowingScreen() {
                     val key = "getFollowingData-illust"
                     val viewModel = constructKeyedVM({ key }, {
                         HybridRepository(
-                            loader = { dependency.client.appApi.followUserPosts("illust", "all") },
+                            loader = {
+                                dependency.client.appApi.followUserPosts(
+                                    ObjectType.ILLUST,
+                                    "all"
+                                )
+                            },
                             keyProducer = { key },
                             IllustResponse::class
                         )
@@ -94,7 +101,7 @@ fun FollowingScreen() {
                             loader = {
                                 dependency.client.appApi.getUserBookmarkedNovels(
                                     uid,
-                                    "public"
+                                    RestrictType.PUBLIC
                                 )
                             },
                             keyProducer = { key },

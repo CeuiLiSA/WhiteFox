@@ -14,6 +14,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import ceui.lisa.models.ObjectType
 import com.white.fox.R
 import com.white.fox.ui.common.PageScreen
 import com.white.fox.ui.setting.localizedString
@@ -23,13 +24,13 @@ import kotlinx.coroutines.launch
 @Composable
 fun RankContainerScreen(objectType: String) =
     PageScreen(
-        if (objectType == "illust") localizedString(R.string.rank_list_for_illust) else localizedString(
+        if (objectType == ObjectType.ILLUST) localizedString(R.string.rank_list_for_illust) else localizedString(
             R.string.rank_list_for_manga
         )
     ) {
         val coroutineScope = rememberCoroutineScope()
 
-        val tabTitles = if (objectType == "illust") {
+        val tabTitles = if (objectType == ObjectType.ILLUST) {
             listOf(
                 NamedMode(localizedString(R.string.rank_mode_day), "day"),
                 NamedMode(localizedString(R.string.rank_mode_week), "week"),
@@ -40,7 +41,7 @@ fun RankContainerScreen(objectType: String) =
                 NamedMode(localizedString(R.string.rank_mode_original), "week_original"),
                 NamedMode(localizedString(R.string.rank_mode_new_creator), "week_rookie"),
             )
-        } else if (objectType == "manga") {
+        } else if (objectType == ObjectType.MANGA) {
             listOf(
                 NamedMode(localizedString(R.string.rank_mode_day), "day_manga"),
                 NamedMode(localizedString(R.string.rank_mode_week), "week_manga"),

@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import ceui.lisa.hermes.loader.HybridRepository
 import ceui.lisa.models.IllustResponse
 import ceui.lisa.models.NovelResponse
+import ceui.lisa.models.ObjectType
 import com.white.fox.R
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.constructKeyedVM
@@ -72,7 +73,7 @@ fun RecommendScreen() {
                     val key = "getHomeData-illust"
                     val viewModel = constructKeyedVM({ key }, {
                         HybridRepository(
-                            loader = { dependency.client.appApi.getHomeData("illust") },
+                            loader = { dependency.client.appApi.getHomeData(ObjectType.ILLUST) },
                             keyProducer = { key },
                             IllustResponse::class
                         )
@@ -86,7 +87,7 @@ fun RecommendScreen() {
                     val key = "getHomeData-manga"
                     val viewModel = constructKeyedVM({ key }, {
                         HybridRepository(
-                            loader = { dependency.client.appApi.getHomeData("manga") },
+                            loader = { dependency.client.appApi.getHomeData(ObjectType.MANGA) },
                             keyProducer = { key },
                             IllustResponse::class
                         )

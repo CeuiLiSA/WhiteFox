@@ -40,7 +40,7 @@ class ListValueContent<ValueT : KListShow<*>>(
             coroutineScope.launch {
                 withLockSuspend {
                     try {
-                        _loadStateFlow.value = LoadState.Loading(LoadReason.LoadMore)
+                        loadStateFlow.value = LoadState.Loading(LoadReason.LoadMore)
                         withContext(Dispatchers.IO) {
                             val responseBody = appApi.generalGet(nextUrl)
                             val responseJson = responseBody.string()
@@ -54,11 +54,11 @@ class ListValueContent<ValueT : KListShow<*>>(
                                 _totalFlow.value = sum(lastValue, response)
                             }
                         }
-                        _loadStateFlow.value = LoadState.Loaded(true)
+                        loadStateFlow.value = LoadState.Loaded(true)
                     } catch (ex: Exception) {
                         Timber.e(ex)
                         if (repository.valueFlow.value == null) {
-                            _loadStateFlow.value = LoadState.Error(ex)
+                            loadStateFlow.value = LoadState.Error(ex)
                         }
                     }
                 }

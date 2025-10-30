@@ -22,24 +22,26 @@ open class ValueContent<ValueT>(
 ) : RefreshOwner {
 
     private val _taskMutex = Mutex()
-    protected val _loadStateFlow =
+    protected val loadStateFlow =
         MutableStateFlow<LoadState>(LoadState.Loading(LoadReason.InitialLoad))
-    override val loadState: StateFlow<LoadState> = _loadStateFlow.asStateFlow()
+    override val loadState: StateFlow<LoadState> = loadStateFlow.asStateFlow()
     val valueFlow: StateFlow<ValueT?> = repository.valueFlow
 
     override fun refresh(reason: LoadReason) {
         coroutineScope.launch {
             withLockSuspend {
                 try {
-                    _loadStateFlow.value = LoadState.Loading(reason)
+                    loadStateFlow.value = LoadState.Loading(reason)
                     withContext(Dispatchers.IO) {
                         repository.load(reason)
                     }
-                    _loadStateFlow.value = LoadState.Loaded(true)
+                    loadStateFlow.value = LoadState.Loaded(true)
                 } catch (ex: Exception) {
                     Timber.e(ex)
                     if (repository.valueFlow.value == null) {
-                        _loadStateFlow.value = LoadState.Error(ex)
+                        loadStateFlow.value = LoadState.Error(ex)
+                    } else {
+                        loadStateFlow.value = LoadState.Loaded(true)
                     }
                 }
             }

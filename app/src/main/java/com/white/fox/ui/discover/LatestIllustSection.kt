@@ -3,6 +3,7 @@ package com.white.fox.ui.discover
 import androidx.compose.runtime.Composable
 import ceui.lisa.hermes.loader.HybridRepository
 import ceui.lisa.models.IllustResponse
+import ceui.lisa.models.ObjectType
 import com.white.fox.R
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.LocalNavViewModel
@@ -17,7 +18,7 @@ fun LatestIllustSection() {
 
     val navViewModel = LocalNavViewModel.current
 
-    val objectType = "illust"
+    val objectType = ObjectType.ILLUST
     val key = "getLatestData-${objectType}"
     val viewModel = constructKeyedVM({ key }, {
         HybridRepository(
@@ -33,6 +34,6 @@ fun LatestIllustSection() {
         DiscoverSection(localizedString(R.string.latest_list_for_illust)),
         viewModel,
         { illust -> navViewModel.navigate(Route.IllustDetail(illust.id)) },
-        { navViewModel.navigate(Route.RankContainer("illust")) },
+        { navViewModel.navigate(Route.RankContainer(ObjectType.ILLUST)) },
     )
 }

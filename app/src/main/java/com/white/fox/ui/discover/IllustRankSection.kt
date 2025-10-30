@@ -3,6 +3,7 @@ package com.white.fox.ui.discover
 import androidx.compose.runtime.Composable
 import ceui.lisa.hermes.loader.HybridRepository
 import ceui.lisa.models.IllustResponse
+import ceui.lisa.models.ObjectType
 import com.white.fox.R
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.LocalNavViewModel
@@ -33,6 +34,6 @@ fun IllustRankSection() {
         DiscoverSection(localizedString(R.string.rank_list_for_illust)),
         viewModel,
         { illust -> navViewModel.navigate(Route.IllustDetail(illust.id)) },
-        { navViewModel.navigate(Route.RankContainer("illust")) },
+        { navViewModel.navigate(Route.RankContainer(ObjectType.ILLUST)) },
     )
 }

@@ -38,6 +38,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ceui.lisa.hermes.objectpool.ObjectPool
+import ceui.lisa.models.ObjectType
 import ceui.lisa.models.User
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.request.ImageRequest
@@ -134,10 +135,18 @@ fun UserProfileScreen(userId: Long) {
                 }
             } else {
                 if (profile.profile?.total_illusts?.takeIf { it > 0 } != null) {
-                    UserCreatedIllustSection(userId, "illust", profile.profile?.total_illusts ?: 0)
+                    UserCreatedIllustSection(
+                        userId,
+                        ObjectType.ILLUST,
+                        profile.profile?.total_illusts ?: 0
+                    )
                 }
                 if (profile.profile?.total_manga?.takeIf { it > 0 } != null) {
-                    UserCreatedIllustSection(userId, "manga", profile.profile?.total_manga ?: 0)
+                    UserCreatedIllustSection(
+                        userId,
+                        ObjectType.MANGA,
+                        profile.profile?.total_manga ?: 0
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))

@@ -36,11 +36,11 @@ data class Illust(
 
 
     fun isGif(): Boolean {
-        return type == "ugora"
+        return type == ObjectType.UGORA
     }
 
     fun isManga(): Boolean {
-        return type == "manga"
+        return type == ObjectType.MANGA
     }
 
     fun maxUrl(): String? {
