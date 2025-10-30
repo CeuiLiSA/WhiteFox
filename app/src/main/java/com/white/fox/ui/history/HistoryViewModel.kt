@@ -7,6 +7,7 @@ import ceui.lisa.hermes.loadstate.LoadReason
 import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.hermes.loadstate.RefreshOwner
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,8 +29,11 @@ class HistoryViewModel<ValueT>(
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 try {
+                    _loadStateFlow.value = LoadState.Loading(reason)
                     val entities = db.generalDao().getAllByRecordType(recordType)
+                    delay(1500L)
                     _totalFlow.value = entities.map { it.typedObject(cls) }
+                    _loadStateFlow.value = LoadState.Loaded(entities.isNotEmpty())
                 } catch (ex: Exception) {
                     _loadStateFlow.value = LoadState.Error(ex)
                 }
