@@ -5,9 +5,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells.Fixed
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ceui.lisa.hermes.db.RecordType
@@ -29,10 +28,9 @@ fun <T : ModelObject> HistoryContent(recordType: Int, cls: Class<T>) {
     }
 
     val navViewModel = LocalNavViewModel.current
-    val valueState by viewModel.totalFlow.collectAsState()
 
     if (recordType == RecordType.VIEW_ILLUST_MANGA_HISTORY) {
-        RefreshTemplate(viewModel, valueState) { value, loadState ->
+        RefreshTemplate(viewModel) { value, loadState ->
             LazyVerticalStaggeredGrid(
                 columns = Fixed(2),
                 modifier = Modifier.fillMaxSize(),
@@ -41,10 +39,11 @@ fun <T : ModelObject> HistoryContent(recordType: Int, cls: Class<T>) {
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 items(
-                    value.size,
-                    key = { index -> "recordType-${recordType}-${value[index].objectUniqueId}" }) { index ->
+                    value,
+                    key = { it.objectUniqueId },
+                ) {
                     IllustItem(
-                        illust = value[index] as Illust,
+                        illust = it as Illust,
                         onClick = { navViewModel.navigate(IllustDetail(0L)) },
                     )
                 }

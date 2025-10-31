@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 class ListTagViewModal(
     repository: Repository<TrendingTagsResponse>,
-) : ViewModel(), RefreshOwner {
+) : ViewModel(), RefreshOwner<TrendingTagsResponse> {
 
     private val valueContent =
         ValueContent(
@@ -31,7 +31,7 @@ class ListTagViewModal(
             }
         }
     override val loadState: StateFlow<LoadState> = valueContent.loadState
-    val valueFlow: StateFlow<TrendingTagsResponse?> = valueContent.valueFlow
+    override val valueFlow: StateFlow<TrendingTagsResponse?> = valueContent.valueFlow
 
 
     override fun refresh(reason: LoadReason) = valueContent.refresh(reason)

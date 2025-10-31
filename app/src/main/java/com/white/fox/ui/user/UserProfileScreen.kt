@@ -61,7 +61,7 @@ fun UserProfileScreen(userId: Long) {
         UserViewModel(userId, dep.client.appApi, dep.database)
     }
 
-    val profileState = viewModel.profileFlow.collectAsState()
+    val profileState = viewModel.valueFlow.collectAsState()
     val profile = profileState.value
 
     val navViewModel = LocalNavViewModel.current

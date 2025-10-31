@@ -28,7 +28,7 @@ class IllustDetailViewModel(
     private val illustId: Long,
     private val db: AppDatabase,
     private val client: OkHttpClient,
-) : ViewModel(), RefreshOwner {
+) : ViewModel(), RefreshOwner<File> {
 
 
     private val loadTask = ImageLoaderTask(
@@ -47,7 +47,7 @@ class IllustDetailViewModel(
     }
 
     override val loadState: StateFlow<LoadState> get() = loadTask.loadState
-    val valueFlow: StateFlow<File?> get() = loadTask.valueFlow
+    override val valueFlow: StateFlow<File?> get() = loadTask.valueFlow
 
     init {
         refresh(LoadReason.InitialLoad)

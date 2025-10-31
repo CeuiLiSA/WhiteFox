@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 class ListIllustViewModal(
     repository: Repository<IllustResponse>,
     private val appApi: AppApi,
-) : ViewModel(), RefreshOwner {
+) : ViewModel(), RefreshOwner<IllustResponse> {
 
     private val valueContent =
         ListValueContent(
@@ -33,8 +33,7 @@ class ListIllustViewModal(
             }
         }
     override val loadState: StateFlow<LoadState> = valueContent.loadState
-    val totalFlow = valueContent.totalFlow
-
+    override val valueFlow: StateFlow<IllustResponse?> = valueContent.totalFlow
 
     override fun refresh(reason: LoadReason) = valueContent.refresh(reason)
 

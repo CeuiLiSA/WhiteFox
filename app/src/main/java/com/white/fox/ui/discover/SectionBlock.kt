@@ -35,7 +35,7 @@ fun SectionBlock(
     onMoreClick: () -> Unit
 ) {
     val loadState by viewModel.loadState.collectAsState()
-    val valueState by viewModel.totalFlow.collectAsState()
+    val valueState by viewModel.valueFlow.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxWidth()

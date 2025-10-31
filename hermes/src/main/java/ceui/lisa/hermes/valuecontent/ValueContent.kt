@@ -19,13 +19,13 @@ open class ValueContent<ValueT>(
     private val coroutineScope: CoroutineScope,
     private val repository: Repository<ValueT>,
     private val onDataPrepared: (ValueT) -> Unit,
-) : RefreshOwner {
+) : RefreshOwner<ValueT> {
 
     private val _taskMutex = Mutex()
     protected val loadStateFlow =
         MutableStateFlow<LoadState>(LoadState.Loading(LoadReason.InitialLoad))
     override val loadState: StateFlow<LoadState> = loadStateFlow.asStateFlow()
-    val valueFlow: StateFlow<ValueT?> = repository.valueFlow
+    override val valueFlow: StateFlow<ValueT?> = repository.valueFlow
 
     override fun refresh(reason: LoadReason) {
         coroutineScope.launch {

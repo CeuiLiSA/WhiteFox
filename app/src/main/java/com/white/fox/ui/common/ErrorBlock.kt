@@ -23,7 +23,7 @@ import com.white.fox.R
 import com.white.fox.ui.setting.localizedString
 
 @Composable
-fun ErrorBlock(refreshOwner: RefreshOwner) {
+fun ErrorBlock(refreshOwner: RefreshOwner<*>) {
     val blockHeight = 160.dp
     Box(
         modifier = Modifier

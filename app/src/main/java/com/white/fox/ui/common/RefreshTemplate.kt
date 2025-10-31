@@ -16,11 +16,11 @@ import ceui.lisa.hermes.loadstate.RefreshOwner
 
 @Composable
 fun <T> RefreshTemplate(
-    viewModel: RefreshOwner,
-    valueState: T?,
-    listContent: @Composable BoxScope.(value: T, loadState: LoadState) -> Unit
+    viewModel: RefreshOwner<T>,
+    contentProducer: @Composable BoxScope.(value: T, loadState: LoadState) -> Unit
 ) {
     val loadState by viewModel.loadState.collectAsState()
+    val valueState by viewModel.valueFlow.collectAsState()
     val isRefreshing =
         loadState is LoadState.Loading && ((loadState as? LoadState.Loading)?.reason == LoadReason.PullRefresh ||
                 (if (valueState != null) {
@@ -39,7 +39,7 @@ fun <T> RefreshTemplate(
 
         Box(modifier = Modifier.fillMaxSize()) {
             if (value != null) {
-                listContent(value, loadState)
+                contentProducer(value, loadState)
             }
 
             Box(

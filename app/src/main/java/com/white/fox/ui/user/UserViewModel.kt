@@ -25,14 +25,13 @@ class UserViewModel(
     private val userId: Long,
     private val api: AppApi,
     private val db: AppDatabase,
-) : ViewModel(), RefreshOwner {
+) : ViewModel(), RefreshOwner<UserResponse> {
 
     private val _profileFlow = MutableStateFlow<UserResponse?>(null)
-    val profileFlow: StateFlow<UserResponse?> = _profileFlow.asStateFlow()
-
     private val _loadStateFlow =
         MutableStateFlow<LoadState>(LoadState.Loading(LoadReason.InitialLoad))
     override val loadState: StateFlow<LoadState> = _loadStateFlow.asStateFlow()
+    override val valueFlow: StateFlow<UserResponse?> = _profileFlow.asStateFlow()
 
 
     override fun refresh(reason: LoadReason) {

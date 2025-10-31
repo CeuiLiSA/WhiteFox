@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 class ListNovelViewModel(
     repository: Repository<NovelResponse>,
     private val appApi: AppApi,
-) : ViewModel(), RefreshOwner {
+) : ViewModel(), RefreshOwner<NovelResponse> {
 
     private val valueContent =
         ListValueContent(
@@ -33,8 +33,7 @@ class ListNovelViewModel(
             }
         }
     override val loadState: StateFlow<LoadState> = valueContent.loadState
-    val totalFlow = valueContent.totalFlow
-
+    override val valueFlow: StateFlow<NovelResponse?> = valueContent.totalFlow
 
     override fun refresh(reason: LoadReason) = valueContent.refresh(reason)
 

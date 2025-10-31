@@ -18,7 +18,7 @@ class HistoryViewModel<ValueT>(
     private val db: AppDatabase,
     private val recordType: Int,
     private val cls: Class<ValueT>,
-) : ViewModel(), RefreshOwner {
+) : ViewModel(), RefreshOwner<List<ValueT>> {
 
     private val _loadStateFlow =
         MutableStateFlow<LoadState>(LoadState.Loading(LoadReason.InitialLoad))
@@ -31,7 +31,7 @@ class HistoryViewModel<ValueT>(
                 try {
                     _loadStateFlow.value = LoadState.Loading(reason)
                     val entities = db.generalDao().getAllByRecordType(recordType)
-                    delay(1500L)
+                    delay(300L)
                     _totalFlow.value = entities.map { it.typedObject(cls) }
                     _loadStateFlow.value = LoadState.Loaded(entities.isNotEmpty())
                 } catch (ex: Exception) {
@@ -42,6 +42,7 @@ class HistoryViewModel<ValueT>(
     }
 
     override val loadState: StateFlow<LoadState> = _loadStateFlow.asStateFlow()
+    override val valueFlow: StateFlow<List<ValueT>?> = _totalFlow
 
     init {
         refresh(LoadReason.InitialLoad)

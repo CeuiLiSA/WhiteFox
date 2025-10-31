@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -33,7 +32,6 @@ import com.white.fox.ui.illust.IllustItem
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun StaggeredIllustContent(viewModel: ListIllustViewModal) {
-    val valueState by viewModel.totalFlow.collectAsState()
     val navViewModel = LocalNavViewModel.current
 
     val listState = rememberLazyStaggeredGridState()
@@ -51,7 +49,7 @@ fun StaggeredIllustContent(viewModel: ListIllustViewModal) {
         }
     }
 
-    RefreshTemplate(viewModel, valueState) { value, loadState ->
+    RefreshTemplate(viewModel) { value, loadState ->
         LazyVerticalStaggeredGrid(
             columns = Fixed(2),
             modifier = Modifier.fillMaxSize(),
