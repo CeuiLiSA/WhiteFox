@@ -1,9 +1,12 @@
 package ceui.lisa.hermes.task
 
 import ceui.lisa.hermes.cache.FileCache
+import ceui.lisa.hermes.common.saveImageToGallery
 import ceui.lisa.hermes.loader.KProgressListener
 import ceui.lisa.hermes.loadstate.LoadReason
 import ceui.lisa.hermes.loadstate.LoadState
+import com.blankj.utilcode.util.AppUtils
+import com.blankj.utilcode.util.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,6 +21,7 @@ class ImageLoaderTask(
     private val namedUrl: NamedUrl,
     private val client: OkHttpClient,
     private val referer: String,
+    private val autoSaveToGallary: Boolean = false,
 ) {
 
     private val fileCache = FileCache(
@@ -67,11 +71,24 @@ class ImageLoaderTask(
                     val cachedFile = fileCache.putFile(targetFileName, input)
                     _valueFlowImpl.value = cachedFile
                     _loadStateFlow.value = LoadState.Loaded(true)
+
+                    if (autoSaveToGallary) {
+                        saveToGallary(cachedFile)
+                    }
                 }
             }
         } catch (ex: Exception) {
             Timber.e(ex)
             _loadStateFlow.value = LoadState.Error(ex)
+        }
+    }
+
+    private fun saveToGallary(file: File) {
+        try {
+            val context = Utils.getApp().applicationContext ?: return
+            saveImageToGallery(context, file, namedUrl.name)
+        } catch (ex: Exception) {
+            Timber.e(ex)
         }
     }
 }

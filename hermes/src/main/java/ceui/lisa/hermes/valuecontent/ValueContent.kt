@@ -52,6 +52,7 @@ open class ValueContent<ValueT>(
         action: suspend () -> Unit
     ) {
         if (!_taskMutex.tryLock()) return
+
         try {
             action()
         } finally {
