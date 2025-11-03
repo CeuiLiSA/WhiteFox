@@ -4,6 +4,7 @@ import ceui.lisa.models.IllustResponse
 import ceui.lisa.models.NovelResponse
 import ceui.lisa.models.SelfProfile
 import ceui.lisa.models.TrendingTagsResponse
+import ceui.lisa.models.UserPreviewResponse
 import ceui.lisa.models.UserResponse
 import okhttp3.ResponseBody
 import retrofit2.http.Field
@@ -87,6 +88,21 @@ interface AppApi {
         @Query("user_id") user_id: Long,
         @Query("restrict") restrict: String,
     ): NovelResponse
+
+    @GET("/v1/search/illust?filter=for_ios&include_translated_tag_results=true&merge_plain_keyword_results=true&search_ai_type=0&search_target=exact_match_for_tags&sort=popular_desc")
+    suspend fun searchIllust(
+        @Query("word") word: String,
+    ): IllustResponse
+
+    @GET("/v1/search/novel?merge_plain_keyword_results=true&search_target=partial_match_for_tags&sort=date_desc&include_translated_tag_results=true&search_ai_type=0")
+    suspend fun searchNovel(
+        @Query("word") word: String,
+    ): NovelResponse
+
+    @GET("/v1/search/user?filter=for_ios")
+    suspend fun searchUser(
+        @Query("word") word: String,
+    ): UserPreviewResponse
 
     @GET
     suspend fun generalGet(@Url url: String): ResponseBody

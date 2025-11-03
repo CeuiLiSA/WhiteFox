@@ -1,4 +1,4 @@
-package com.white.fox.ui.novel
+package com.white.fox.ui.user
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -23,7 +23,7 @@ import com.white.fox.ui.common.LoadingBlock
 import com.white.fox.ui.common.RefreshTemplate
 
 @Composable
-fun ListNovelContent(viewModel: ListNovelViewModel) {
+fun ListUserContent(viewModel: ListUserViewModel) {
     val listState = rememberLazyListState()
     val shouldLoadMore by remember {
         derivedStateOf {
@@ -45,7 +45,7 @@ fun ListNovelContent(viewModel: ListNovelViewModel) {
             state = listState,
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            items(value.displayList, key = { it.id }) { NovelCard(it) }
+            items(value.displayList, key = { it.user?.id ?: 0L }) { UserCard(it) }
 
             item {
                 AnimatedVisibility(

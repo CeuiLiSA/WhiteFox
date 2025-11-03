@@ -28,5 +28,5 @@ fun UserCreatedIllustScreen(userId: Long, objectType: String) = PageScreen(
         ListIllustViewModal(repository, dependency.client.appApi)
     }
 
-    StaggeredIllustContent(viewModel)
+    StaggeredIllustContent(viewModel = viewModel)
 }

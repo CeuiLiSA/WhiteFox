@@ -31,5 +31,5 @@ fun BookmarkedIllustScreen(userId: Long) =
         }) { repository ->
             ListIllustViewModal(repository, dependency.client.appApi)
         }
-        StaggeredIllustContent(viewModel)
+        StaggeredIllustContent(viewModel = viewModel)
     }
