@@ -42,16 +42,17 @@ import timber.log.Timber
 @Composable
 fun IllustDetailScreen(
     illustId: Long,
-    viewModel: IllustDetailViewModel = constructKeyedVM(
+) {
+    val viewModel: IllustDetailViewModel = constructKeyedVM(
         { "illust-detail-model-${illustId}" },
-        { illustId to LocalDependency.current }) { (illustId, dep) ->
+        { LocalDependency.current }) { dep ->
         IllustDetailViewModel(
             illustId,
             dep.database,
             dep.client.downloadApi,
         )
     }
-) {
+
     val context = LocalContext.current
     val sketch = remember { Sketch.Builder(context).build() }
     val zoomState = rememberSketchZoomState()

@@ -22,10 +22,35 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.white.fox.ui.common.LocalDependency
 
+private const val TOKEN = """{
+    "access_token": "KwO18YU41Mshf1aFActQAezYxqWVv2C_VLWEuTE3XWg",
+    "expires_in": 3600,
+    "refresh_token": "fH17zYTOmPMTSRR2T8Mw9EqHtUXvRkQvL7jkNvh0SKw",
+    "scope": "",
+    "token_type": "bearer",
+    "user": {
+        "account": "meppoi",
+        "gender": 1,
+        "id": 31660292,
+        "is_mail_authorized": true,
+        "is_premium": true,
+        "mail_address": "863043461@qq.com",
+        "name": "meppoi",
+        "profile_image_urls": {
+            "px_16x16": "https://i.pximg.net/user-profile/img/2024/08/24/21/58/49/26281341_0352fd361ca1e48a92b11b570ff9ea5f_16.jpg",
+            "px_170x170": "https://i.pximg.net/user-profile/img/2024/08/24/21/58/49/26281341_0352fd361ca1e48a92b11b570ff9ea5f_170.jpg",
+            "px_50x50": "https://i.pximg.net/user-profile/img/2024/08/24/21/58/49/26281341_0352fd361ca1e48a92b11b570ff9ea5f_50.jpg"
+        },
+        "require_policy_agreement": false,
+        "user_id": 0,
+        "x_restrict": 0
+    }
+}"""
+
 @Composable
 fun LandingScreen() {
     val dependency = LocalDependency.current
-    val tokenState = remember { mutableStateOf("") }
+    val tokenState = remember { mutableStateOf(TOKEN) }
 
     Column(
         modifier = Modifier
@@ -43,7 +68,7 @@ fun LandingScreen() {
                 .fillMaxWidth(0.8f)
                 .padding(bottom = 16.dp)
                 .verticalScroll(rememberScrollState())
-                .height(120.dp)
+                .height(300.dp)
         )
 
         Button(

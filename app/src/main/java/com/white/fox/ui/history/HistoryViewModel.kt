@@ -22,8 +22,7 @@ class HistoryViewModel<ValueT>(
 
     private val _loadStateFlow =
         MutableStateFlow<LoadState>(LoadState.Loading(LoadReason.InitialLoad))
-    private val _totalFlow = MutableStateFlow<List<ValueT>>(emptyList())
-    val totalFlow: StateFlow<List<ValueT>> = _totalFlow.asStateFlow()
+    private val _valueFlow = MutableStateFlow<List<ValueT>>(emptyList())
 
     override fun refresh(reason: LoadReason) {
         viewModelScope.launch {
@@ -32,7 +31,7 @@ class HistoryViewModel<ValueT>(
                     _loadStateFlow.value = LoadState.Loading(reason)
                     val entities = db.generalDao().getAllByRecordType(recordType)
                     delay(300L)
-                    _totalFlow.value = entities.map { it.typedObject(cls) }
+                    _valueFlow.value = entities.map { it.typedObject(cls) }
                     _loadStateFlow.value = LoadState.Loaded(entities.isNotEmpty())
                 } catch (ex: Exception) {
                     _loadStateFlow.value = LoadState.Error(ex)
@@ -42,7 +41,7 @@ class HistoryViewModel<ValueT>(
     }
 
     override val loadState: StateFlow<LoadState> = _loadStateFlow.asStateFlow()
-    override val valueFlow: StateFlow<List<ValueT>?> = _totalFlow
+    override val valueFlow: StateFlow<List<ValueT>?> = _valueFlow.asStateFlow()
 
     init {
         refresh(LoadReason.InitialLoad)
