@@ -22,6 +22,7 @@ import com.white.fox.ui.main.MainScreen
 import com.white.fox.ui.rank.RankContainerScreen
 import com.white.fox.ui.search.SearchScreen
 import com.white.fox.ui.setting.SettingScreen
+import com.white.fox.ui.tags.TagDetailScreen
 import com.white.fox.ui.user.UserCreatedIllustScreen
 import com.white.fox.ui.user.UserProfileScreen
 import timber.log.Timber
@@ -65,6 +66,7 @@ fun NavHost() {
 
                     is Route.IllustDetail -> IllustDetailScreen(key.illustId)
                     is Route.UserProfile -> UserProfileScreen(key.userId)
+                    is Route.TagDetail -> TagDetailScreen(listOf(key.tag))
                 }
             }
         },

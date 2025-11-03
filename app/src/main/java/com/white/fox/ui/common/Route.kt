@@ -1,5 +1,6 @@
 package com.white.fox.ui.common
 
+import ceui.lisa.models.Tag
 import kotlinx.serialization.Serializable
 
 
@@ -27,6 +28,8 @@ sealed class Route(
         Route("UserCreatedIllust-userId-${userId}-objectType-${objectType}")
 
     data class UserProfile(val userId: Long) : Route("UserProfile-userId-${userId}")
+
+    data class TagDetail(val tag: Tag) : Route("TagDetail-${tag}")
 
     data class IllustDetail(val illustId: Long) : Route("IllustDetailScreen-illustId-${illustId}")
 }

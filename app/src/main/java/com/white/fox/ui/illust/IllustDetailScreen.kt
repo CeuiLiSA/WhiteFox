@@ -3,15 +3,21 @@ package com.white.fox.ui.illust
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -23,7 +29,9 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import ceui.lisa.hermes.common.getFileSize
 import ceui.lisa.hermes.common.getImageDimensions
@@ -36,6 +44,8 @@ import com.github.panpf.sketch.request.ImageRequest
 import com.github.panpf.zoomimage.SketchZoomAsyncImage
 import com.github.panpf.zoomimage.rememberSketchZoomState
 import com.white.fox.ui.common.LocalDependency
+import com.white.fox.ui.common.LocalNavViewModel
+import com.white.fox.ui.common.Route
 import com.white.fox.ui.common.constructKeyedVM
 import timber.log.Timber
 
@@ -52,6 +62,8 @@ fun IllustDetailScreen(
             dep.client.downloadApi,
         )
     }
+
+    val navViewModel = LocalNavViewModel.current
 
     val context = LocalContext.current
     val sketch = remember { Sketch.Builder(context).build() }
@@ -76,12 +88,14 @@ fun IllustDetailScreen(
     }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(), topBar = {
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
             val author = illust.user
             if (author != null) {
                 UserTopBar(author, parseIsoToMillis(illust.create_date ?: ""))
             }
-        }) { innerPadding ->
+        },
+    ) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -110,6 +124,41 @@ fun IllustDetailScreen(
                     if (value != null) DownloadButton(value)
                     CommentButton()
                     BookmarkButton(illustId, 44.dp)
+                }
+            }
+
+            val tags = illust.tags
+            if (!tags.isNullOrEmpty()) {
+                FlowRow(
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    for (tag in tags) {
+                        Box(
+                            modifier = Modifier
+                                .shadow(2.dp, RoundedCornerShape(16.dp))
+                                .background(
+                                    Color.White.copy(alpha = 0.15f),
+                                    RoundedCornerShape(16.dp)
+                                )
+                                .padding(horizontal = 10.dp, vertical = 6.dp)
+                                .clickable {
+                                    navViewModel.navigate(Route.TagDetail(tag))
+                                },
+
+                            ) {
+                            Text(
+                                text = tag.tagName ?: "",
+                                fontSize = 13.sp,
+                                color = Color.White,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
                 }
             }
 
