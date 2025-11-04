@@ -12,9 +12,7 @@ fun KeywordUserScreen(keyWord: String) {
     val dependency = LocalDependency.current
     val key = "searchUserData-${keyWord}"
     val viewModel = constructKeyedVM({ key }, {
-        APIRepository(
-            loader = { dependency.client.appApi.searchUser(keyWord) },
-        )
+        APIRepository { dependency.client.appApi.searchUser(keyWord) }
     }) { repository ->
         ListUserViewModel(repository, dependency.client.appApi)
     }

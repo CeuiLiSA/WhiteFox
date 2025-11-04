@@ -21,14 +21,12 @@ fun BookmarkedIllustSection(userId: Long) {
 
     val key = "getBookmarkedData-illust-${userId}"
     val viewModel = constructKeyedVM({ key }, {
-        APIRepository(
-            loader = {
-                dependency.client.appApi.getUserBookmarkedIllusts(
-                    userId,
-                    RestrictType.PUBLIC
-                )
-            },
-        )
+        APIRepository {
+            dependency.client.appApi.getUserBookmarkedIllusts(
+                userId,
+                RestrictType.PUBLIC
+            )
+        }
     }) { repository ->
         ListIllustViewModal(repository, dependency.client.appApi)
     }

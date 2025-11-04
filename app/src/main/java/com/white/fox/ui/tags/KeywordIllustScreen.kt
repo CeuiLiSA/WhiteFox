@@ -12,9 +12,7 @@ fun KeywordIllustScreen(keyWord: String) {
     val dependency = LocalDependency.current
     val key = "searchIllustData-${keyWord}"
     val viewModel = constructKeyedVM({ key }, {
-        APIRepository(
-            loader = { dependency.client.appApi.searchIllust(keyWord) },
-        )
+        APIRepository { dependency.client.appApi.searchIllust(keyWord) }
     }) { repository ->
         ListIllustViewModal(repository, dependency.client.appApi)
     }

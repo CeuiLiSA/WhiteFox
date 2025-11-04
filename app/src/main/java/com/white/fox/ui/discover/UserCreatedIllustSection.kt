@@ -19,9 +19,7 @@ fun UserCreatedIllustSection(userId: Long, objectType: String, total: Int) {
 
     val key = "getUserCreatedData-${objectType}-userId-${userId}"
     val viewModel = constructKeyedVM({ key }, {
-        APIRepository(
-            loader = { dependency.client.appApi.getUserCreatedIllusts(userId, objectType) },
-        )
+        APIRepository { dependency.client.appApi.getUserCreatedIllusts(userId, objectType) }
     }) { repository ->
         ListIllustViewModal(repository, dependency.client.appApi)
     }

@@ -21,9 +21,7 @@ fun UserCreatedIllustScreen(userId: Long, objectType: String) = PageScreen(
     val dependency = LocalDependency.current
     val key = "getUserCreatedData-${objectType}-userId-${userId}"
     val viewModel = constructKeyedVM({ key }, {
-        APIRepository(
-            loader = { dependency.client.appApi.getUserCreatedIllusts(userId, objectType) },
-        )
+        APIRepository { dependency.client.appApi.getUserCreatedIllusts(userId, objectType) }
     }) { repository ->
         ListIllustViewModal(repository, dependency.client.appApi)
     }
