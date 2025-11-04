@@ -1,52 +1,35 @@
 package com.white.fox.ui.illust
 
-import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.core.net.toUri
-import ceui.lisa.hermes.common.getFileSize
-import ceui.lisa.hermes.common.getImageDimensions
 import ceui.lisa.hermes.common.parseIsoToMillis
-import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.hermes.objectpool.ObjectPool
+import ceui.lisa.hermes.task.NamedUrl
 import ceui.lisa.models.Illust
-import com.github.panpf.sketch.Sketch
-import com.github.panpf.sketch.request.ImageRequest
-import com.github.panpf.zoomimage.SketchZoomAsyncImage
-import com.github.panpf.zoomimage.rememberSketchZoomState
+import com.white.fox.ui.common.LoadingBlock
 import com.white.fox.ui.common.LocalDependency
-import com.white.fox.ui.common.LocalNavViewModel
-import com.white.fox.ui.common.Route
 import com.white.fox.ui.common.constructKeyedVM
-import timber.log.Timber
+
+private fun getImgUrl(illust: Illust, index: Int): String {
+    val url = if (illust.page_count == 1) {
+        illust.meta_single_page?.original_image_url
+    } else {
+        illust.meta_pages?.getOrNull(index)?.image_urls?.original
+    }
+    return url ?: throw RuntimeException("url not found")
+}
 
 @Composable
 fun IllustDetailScreen(
@@ -62,29 +45,19 @@ fun IllustDetailScreen(
         )
     }
 
-    val navViewModel = LocalNavViewModel.current
-
-    val context = LocalContext.current
-    val sketch = remember { Sketch.Builder(context).build() }
-    val zoomState = rememberSketchZoomState()
-
     val illustState = ObjectPool.get<Illust>(illustId).collectAsState()
-    val illust = illustState.value ?: return
+    val illust = illustState.value
+    if (illust == null) {
+        return LoadingBlock()
+    }
+
 
     LaunchedEffect(Unit) {
         viewModel.insertViewHistory(illust)
     }
 
-    val loadState = viewModel.loadState.collectAsState()
-    val valueState by viewModel.valueFlow.collectAsState()
+    val pagerState = rememberPagerState(initialPage = 0, pageCount = { illust.page_count })
 
-    LaunchedEffect(valueState) {
-        val v = valueState
-        if (v != null) {
-            Timber.d("sadasdsww2 size: ${getFileSize(v)}")
-            Timber.d("sadasdsww2 dimen: ${getImageDimensions(v)}")
-        }
-    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -95,102 +68,37 @@ fun IllustDetailScreen(
             }
         },
     ) { innerPadding ->
-        Box(
+        HorizontalPager(
+            state = pagerState,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-        ) {
-            val value = valueState
-            val imageUri = value?.toUri()?.toString() ?: illust.image_urls?.large
-            SketchZoomAsyncImage(
-                request = ImageRequest.Builder(context, imageUri).withHeader().build(),
-                contentDescription = illust.id.toString(),
-                contentScale = ContentScale.Fit,
-                sketch = sketch,
-                zoomState = zoomState,
-                modifier = Modifier.fillMaxSize()
-            )
-
+        ) { pageIndex ->
             Box(
                 modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(12.dp)
+                    .fillMaxSize()
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    if (value != null) DownloadButton(value)
-                    CommentButton()
-                    BookmarkButton(illustId, 44.dp)
-                }
-            }
+                val namedUrl = NamedUrl(
+                    url = getImgUrl(illust, pageIndex),
+                    name = "illust_${illustId}_p${pageIndex}.png"
+                )
+                DetailPiece(namedUrl, viewModel)
 
-            val tags = illust.tags
-            if (!tags.isNullOrEmpty()) {
-                FlowRow(
+
+                Box(
                     modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                        .align(Alignment.BottomEnd)
+                        .padding(12.dp)
                 ) {
-                    for (tag in tags) {
-                        Box(
-                            modifier = Modifier
-                                .shadow(2.dp, RoundedCornerShape(16.dp))
-                                .background(
-                                    Color.White.copy(alpha = 0.15f),
-                                    RoundedCornerShape(16.dp)
-                                )
-                                .padding(horizontal = 10.dp, vertical = 6.dp)
-                                .clickable {
-                                    navViewModel.navigate(Route.TagDetail(tag))
-                                },
-
-                            ) {
-                            Text(
-                                text = tag.tagName ?: "",
-                                fontSize = 13.sp,
-                                color = Color.White,
-                                textAlign = TextAlign.Center
-                            )
-                        }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+//                        if (value != null) DownloadButton(value)
+                        CommentButton()
+                        BookmarkButton(illustId, 44.dp)
                     }
                 }
-            }
-
-            when (val state = loadState.value) {
-                is LoadState.Loading -> {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .size(28.dp)
-                            .align(Alignment.Center),
-                        color = Color.White,
-                        trackColor = Color.White.copy(alpha = 0.3f),
-                        strokeWidth = 5.dp
-                    )
-                }
-
-                is LoadState.Processing -> {
-                    val animatedProgress by animateFloatAsState(
-                        targetValue = state.progress / 100f,
-                        animationSpec = tween(500, easing = LinearOutSlowInEasing),
-                        label = "animatedProgress"
-                    )
-                    CircularProgressIndicator(
-                        progress = { animatedProgress },
-                        modifier = Modifier
-                            .size(28.dp)
-                            .align(Alignment.Center),
-                        trackColor = Color.White.copy(alpha = 0.3f),
-                        color = Color.White,
-                        strokeWidth = 5.dp
-                    )
-                }
-
-                else -> {}
             }
         }
     }
