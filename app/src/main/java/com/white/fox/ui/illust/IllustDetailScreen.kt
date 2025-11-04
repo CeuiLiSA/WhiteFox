@@ -53,7 +53,7 @@ import timber.log.Timber
 fun IllustDetailScreen(
     illustId: Long,
 ) {
-    val viewModel: IllustDetailViewModel = constructKeyedVM(
+    val viewModel = constructKeyedVM(
         { "illust-detail-model-${illustId}" },
         { LocalDependency.current }) { dep ->
         IllustDetailViewModel(

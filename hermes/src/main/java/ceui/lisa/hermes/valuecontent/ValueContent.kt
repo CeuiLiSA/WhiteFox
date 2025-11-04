@@ -60,7 +60,6 @@ open class ValueContent<ValueT>(
         }
     }
 
-
     init {
         coroutineScope.launch {
             repository.valueFlow.collectLatest { value ->

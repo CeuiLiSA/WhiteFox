@@ -11,6 +11,7 @@ import ceui.lisa.hermes.loadstate.LoadReason
 import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.hermes.loadstate.RefreshOwner
 import ceui.lisa.models.User
+import ceui.lisa.models.UserPreview
 import ceui.lisa.models.UserResponse
 import com.white.fox.client.AppApi
 import kotlinx.coroutines.Dispatchers
@@ -61,7 +62,7 @@ class UserViewModel(
                     db.generalDao().insert(
                         GeneralEntity(
                             userId,
-                            gson.toJson(user),
+                            gson.toJson(UserPreview(illusts = listOf(), user = user)),
                             EntityType.USER,
                             RecordType.VIEW_USER_HISTORY
                         )

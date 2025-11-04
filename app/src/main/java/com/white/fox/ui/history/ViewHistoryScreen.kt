@@ -16,11 +16,15 @@ import androidx.compose.ui.graphics.Color
 import ceui.lisa.hermes.db.RecordType
 import ceui.lisa.models.Illust
 import ceui.lisa.models.Novel
-import ceui.lisa.models.User
+import ceui.lisa.models.UserPreview
 import com.white.fox.R
-import com.white.fox.ui.common.LocalDependency
+import com.white.fox.ui.common.LocalNavViewModel
 import com.white.fox.ui.common.PageScreen
+import com.white.fox.ui.common.Route.IllustDetail
+import com.white.fox.ui.illust.IllustItem
+import com.white.fox.ui.novel.NovelCard
 import com.white.fox.ui.setting.localizedString
+import com.white.fox.ui.user.UserCard
 import kotlinx.coroutines.launch
 
 @Composable
@@ -34,7 +38,7 @@ fun ViewHistoryScreen() = PageScreen(localizedString(R.string.view_history)) {
         localizedString(R.string.object_type_user),
     )
 
-    val dependency = LocalDependency.current
+    val navViewModel = LocalNavViewModel.current
 
     Column(modifier = Modifier.fillMaxSize()) {
         PrimaryTabRow(
@@ -69,15 +73,30 @@ fun ViewHistoryScreen() = PageScreen(localizedString(R.string.view_history)) {
         ) { pageIndex ->
             when (pageIndex) {
                 0 -> {
-                    HistoryContent(RecordType.VIEW_ILLUST_MANGA_HISTORY, Illust::class.java)
+                    HistoryContent(
+                        RecordType.VIEW_ILLUST_MANGA_HISTORY,
+                        Illust::class.java
+                    ) { illust ->
+                        IllustItem(
+                            illust = illust,
+                            onClick = { navViewModel.navigate(IllustDetail(0L)) },
+                        )
+                    }
                 }
 
                 1 -> {
-                    HistoryContent(RecordType.VIEW_NOVEL_HISTORY, Novel::class.java)
+                    HistoryContent(RecordType.VIEW_NOVEL_HISTORY, Novel::class.java) { novel ->
+                        NovelCard(novel)
+                    }
                 }
 
                 2 -> {
-                    HistoryContent(RecordType.VIEW_USER_HISTORY, User::class.java)
+                    HistoryContent(
+                        RecordType.VIEW_USER_HISTORY,
+                        UserPreview::class.java
+                    ) { preview ->
+                        UserCard(preview)
+                    }
                 }
             }
         }

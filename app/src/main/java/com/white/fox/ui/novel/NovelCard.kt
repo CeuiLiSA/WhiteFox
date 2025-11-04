@@ -39,19 +39,24 @@ import ceui.lisa.hermes.common.parseIsoToMillis
 import ceui.lisa.models.Novel
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.request.ImageRequest
+import com.white.fox.ui.common.LocalNavViewModel
+import com.white.fox.ui.common.Route
 import com.white.fox.ui.illust.withHeader
 
 @Composable
-fun NovelCard(novel: Novel, onClick: (() -> Unit)? = null) {
+fun NovelCard(novel: Novel) {
     val context = LocalContext.current
     val typography = MaterialTheme.typography
     val colorScheme = MaterialTheme.colorScheme
+    val navViewModel = LocalNavViewModel.current
 
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp, vertical = 8.dp)
-            .clickable(enabled = onClick != null) { onClick?.invoke() },
+            .clickable {
+                navViewModel.navigate(Route.NovelDetail(novel.id))
+            },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.elevatedCardColors(
             containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp)

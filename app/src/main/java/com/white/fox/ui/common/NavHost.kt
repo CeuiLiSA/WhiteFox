@@ -19,6 +19,7 @@ import com.white.fox.ui.history.ViewHistoryScreen
 import com.white.fox.ui.illust.IllustDetailScreen
 import com.white.fox.ui.landing.LandingScreen
 import com.white.fox.ui.main.MainScreen
+import com.white.fox.ui.novel.NovelDetailScreen
 import com.white.fox.ui.rank.RankContainerScreen
 import com.white.fox.ui.search.SearchScreen
 import com.white.fox.ui.setting.SettingScreen
@@ -50,7 +51,6 @@ fun NavHost() {
                 when (key) {
                     is Route.Main -> MainScreen()
 
-
                     is Route.Landing -> LandingScreen()
                     is Route.Search -> SearchScreen()
                     is Route.Setting -> SettingScreen()
@@ -65,6 +65,7 @@ fun NavHost() {
                     )
 
                     is Route.IllustDetail -> IllustDetailScreen(key.illustId)
+                    is Route.NovelDetail -> NovelDetailScreen(key.novelId)
                     is Route.UserProfile -> UserProfileScreen(key.userId)
                     is Route.TagDetail -> TagDetailScreen(listOf(key.tag))
                 }

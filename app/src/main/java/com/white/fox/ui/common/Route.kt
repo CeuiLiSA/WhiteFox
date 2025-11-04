@@ -32,4 +32,6 @@ sealed class Route(
     data class TagDetail(val tag: Tag) : Route("TagDetail-${tag}")
 
     data class IllustDetail(val illustId: Long) : Route("IllustDetailScreen-illustId-${illustId}")
+
+    data class NovelDetail(val novelId: Long) : Route("NovelDetailScreen-novelId-${novelId}")
 }

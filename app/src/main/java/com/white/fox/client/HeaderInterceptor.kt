@@ -3,7 +3,6 @@ package com.white.fox.client
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
-import timber.log.Timber
 
 class HeaderInterceptor(private val getAccessToken: (() -> String?)? = null) : Interceptor {
 
@@ -23,22 +22,19 @@ class HeaderInterceptor(private val getAccessToken: (() -> String?)? = null) : I
     private fun addHeader(before: Request.Builder): Request.Builder {
         val requestNonce = RequestNonce.build()
         if (getAccessToken != null) {
-            try {
-                before.addHeader(
-                    HEADER_AUTH,
-                    TOKEN_HEAD + getAccessToken()
-                )
-            } catch (ex: Exception) {
-                Timber.e(ex)
-            }
+            before.addHeader(
+                HEADER_AUTH,
+                TOKEN_HEAD + getAccessToken()
+            )
         }
 
-        before.addHeader("accept-language", "zh_CN")
+        before.addHeader("accept-language", "zh-CN,zh-Hans;q=0.9")
             .addHeader("app-os", "ios")
-            .addHeader("app-version", "7.13.4")
+            .addHeader("app-version", "8.2.8")
+            .addHeader("app-os-version", "18.6.2")
             .addHeader("x-client-time", requestNonce.xClientTime)
             .addHeader("x-client-hash", requestNonce.xClientHash)
-        before.addHeader("user-agent", "PixivIOSApp/7.13.4 (iOS 16.0.3; iPhone13,3)")
+        before.addHeader("user-agent", "PixivIOSApp/8.2.8 (iOS 18.6.2; iPhone11,6)")
         return before
     }
 }

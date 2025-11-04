@@ -2,6 +2,7 @@ package com.white.fox.ui.tags
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import ceui.lisa.models.TrendingTag
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.request.ImageRequest
+import com.white.fox.ui.common.LocalNavViewModel
+import com.white.fox.ui.common.Route
 import com.white.fox.ui.illust.withHeader
 
 @SuppressLint("ConfigurationScreenWidthHeight")
@@ -32,11 +35,19 @@ fun SquareTagItem(trendingTag: TrendingTag) {
 
     val biggerStrongName = trendingTag.translated_name
     val miniName = trendingTag.tag
+    val navViewModel = LocalNavViewModel.current
 
     Box(
         modifier = Modifier
             .size(itemSize)
             .background(MaterialTheme.colorScheme.surfaceVariant)
+            .combinedClickable(onClick = {
+                navViewModel.navigate(Route.TagDetail(trendingTag.buildTag()))
+            }, onLongClick = {
+                trendingTag.illust?.let { illust ->
+                    navViewModel.navigate(Route.IllustDetail(illust.id))
+                }
+            })
     ) {
         AsyncImage(
             request = ImageRequest.Builder(
