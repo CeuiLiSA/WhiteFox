@@ -3,7 +3,6 @@ package com.white.fox.ui.user
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -37,9 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ceui.lisa.hermes.objectpool.ObjectPool
 import ceui.lisa.models.ObjectType
-import ceui.lisa.models.User
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.request.ImageRequest
 import com.white.fox.R
@@ -48,8 +45,10 @@ import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.LocalNavViewModel
 import com.white.fox.ui.common.constructKeyedVM
 import com.white.fox.ui.discover.UserCreatedIllustSection
+import com.white.fox.ui.following.BookmarkedIllustSection
 import com.white.fox.ui.illust.withHeader
 import com.white.fox.ui.setting.localizedString
+import kotlinx.coroutines.flow.map
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,8 +64,13 @@ fun UserProfileScreen(userId: Long) {
     val profile = profileState.value
 
     val navViewModel = LocalNavViewModel.current
-    val userState = ObjectPool.get<User>(userId).collectAsState()
-    val user = userState.value ?: return
+    val userState = viewModel.valueFlow.map { it?.user }.collectAsState(null)
+    val user = userState.value
+
+    if (user == null || profile == null) {
+        return LoadingBlock()
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -123,39 +127,58 @@ fun UserProfileScreen(userId: Long) {
             )
             Spacer(modifier = Modifier.height(40.dp))
 
+            if (profile.profile?.total_illusts?.takeIf { it > 0 } != null) {
+                UserCreatedIllustSection(
+                    userId,
+                    ObjectType.ILLUST,
+                    profile.profile?.total_illusts ?: 0
+                )
+            }
+            if (profile.profile?.total_manga?.takeIf { it > 0 } != null) {
+                UserCreatedIllustSection(
+                    userId,
+                    ObjectType.MANGA,
+                    profile.profile?.total_manga ?: 0
+                )
+            }
+            BookmarkedIllustSection(
+                userId,
+            )
 
-            if (profile == null) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .weight(1f),
-                    contentAlignment = Alignment.Center
-                ) {
-                    LoadingBlock()
-                }
-            } else {
-                if (profile.profile?.total_illusts?.takeIf { it > 0 } != null) {
-                    UserCreatedIllustSection(
-                        userId,
-                        ObjectType.ILLUST,
-                        profile.profile?.total_illusts ?: 0
-                    )
-                }
-                if (profile.profile?.total_manga?.takeIf { it > 0 } != null) {
-                    UserCreatedIllustSection(
-                        userId,
-                        ObjectType.MANGA,
-                        profile.profile?.total_manga ?: 0
-                    )
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp)
+            ) {
+
+                val profileValue = profile.profile
+                if (profileValue != null) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Profile Info",
+                            fontSize = 20.sp,
+                            style = MaterialTheme.typography.titleMedium
+                        )
+
+                        TextButton(onClick = {}) {
+                            Text(text = localizedString(R.string.button_see_more_details))
+                        }
+                    }
+                    ProfileCard(profileValue)
                 }
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                ) {
+                val workspace = profile.workspace
+                if (workspace != null) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -173,16 +196,11 @@ fun UserProfileScreen(userId: Long) {
                             Text(text = localizedString(R.string.button_see_more_details))
                         }
                     }
-
-                    val workspace = profile.workspace
-                    if (workspace != null) {
-                        WorkspaceInfoCard(workspace)
-                    }
+                    WorkspaceInfoCard(workspace)
                 }
-
-
-                Spacer(modifier = Modifier.height(80.dp))
             }
+
+            Spacer(modifier = Modifier.height(80.dp))
         }
     }
 }

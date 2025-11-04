@@ -35,7 +35,7 @@ open class ValueContent<ValueT>(
                     withContext(Dispatchers.IO) {
                         repository.load(reason)
                     }
-                    loadStateFlow.value = LoadState.Loaded(true)
+                    loadStateFlow.value = LoadState.Loaded(hasContent(valueFlow.value))
                 } catch (ex: Exception) {
                     Timber.e(ex)
                     if (repository.valueFlow.value == null) {
@@ -46,6 +46,10 @@ open class ValueContent<ValueT>(
                 }
             }
         }
+    }
+
+    open fun hasContent(data: ValueT?): Boolean {
+        return data != null
     }
 
     suspend fun withLockSuspend(

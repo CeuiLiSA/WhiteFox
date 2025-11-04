@@ -58,7 +58,13 @@ fun MainDrawer(scope: CoroutineScope, drawerState: DrawerState) {
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                .padding(16.dp)
+                .clickable {
+                    user?.id?.let { userId ->
+                        navViewModel.navigate(Route.UserProfile(userId))
+                    }
+                }
         ) {
             AsyncImage(
                 request = ImageRequest.Builder(

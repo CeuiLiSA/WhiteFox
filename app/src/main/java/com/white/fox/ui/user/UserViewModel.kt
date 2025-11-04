@@ -10,6 +10,7 @@ import ceui.lisa.hermes.db.gson
 import ceui.lisa.hermes.loadstate.LoadReason
 import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.hermes.loadstate.RefreshOwner
+import ceui.lisa.hermes.objectpool.ObjectPool
 import ceui.lisa.models.User
 import ceui.lisa.models.UserPreview
 import ceui.lisa.models.UserResponse
@@ -41,6 +42,7 @@ class UserViewModel(
                 _loadStateFlow.value = LoadState.Loading(reason)
                 val profile = api.getUserProfile(userId)
                 profile.user?.let { user ->
+                    ObjectPool.update(user)
                     insertViewHistory(user)
                 }
                 _profileFlow.value = profile

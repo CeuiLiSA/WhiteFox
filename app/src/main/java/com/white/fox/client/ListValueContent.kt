@@ -68,6 +68,10 @@ class ListValueContent<ValueT : KListShow<*>>(
         }
     }
 
+    override fun hasContent(data: ValueT?): Boolean {
+        return data != null && data.displayList.isNotEmpty()
+    }
+
     init {
         coroutineScope.launch {
             repository.valueFlow.collectLatest { value ->

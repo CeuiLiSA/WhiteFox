@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
@@ -167,8 +166,7 @@ fun IllustDetailScreen(
                     CircularProgressIndicator(
                         modifier = Modifier
                             .size(28.dp)
-                            .align(Alignment.Center)
-                            .shadow(4.dp, shape = CircleShape, clip = false),
+                            .align(Alignment.Center),
                         color = Color.White,
                         trackColor = Color.White.copy(alpha = 0.3f),
                         strokeWidth = 5.dp
@@ -185,8 +183,7 @@ fun IllustDetailScreen(
                         progress = { animatedProgress },
                         modifier = Modifier
                             .size(28.dp)
-                            .align(Alignment.Center)
-                            .shadow(4.dp, shape = CircleShape, clip = false),
+                            .align(Alignment.Center),
                         trackColor = Color.White.copy(alpha = 0.3f),
                         color = Color.White,
                         strokeWidth = 5.dp

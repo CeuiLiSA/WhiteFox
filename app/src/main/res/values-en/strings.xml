@@ -50,4 +50,5 @@
     <string name="user_created_manga">创建的漫画</string>
     <string name="object_type_user">用户</string>
     <string name="view_history">浏览历史</string>
+    <string name="no_content_here">无内容</string>
 </resources>

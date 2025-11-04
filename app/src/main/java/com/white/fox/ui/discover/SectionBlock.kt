@@ -18,9 +18,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ceui.lisa.hermes.loadstate.LoadReason
 import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.models.Illust
 import com.white.fox.R
+import com.white.fox.ui.common.EmptyBlock
 import com.white.fox.ui.common.ErrorBlock
 import com.white.fox.ui.common.LoadingBlock
 import com.white.fox.ui.illust.SquareIllustItem
@@ -74,19 +76,23 @@ fun SectionBlock(
             }
         }
 
-        when (loadState) {
+        when (val state = loadState) {
             is LoadState.Loading -> {
-                if (valueState == null) {
+                if (valueState == null || state.reason == LoadReason.EmptyRetry) {
                     LoadingBlock()
                 }
             }
 
             is LoadState.Error -> ErrorBlock(viewModel)
 
-            is LoadState.Processing,
-            is LoadState.Loaded,
-                -> {
+            is LoadState.Processing -> {
 
+            }
+
+            is LoadState.Loaded -> {
+                if (!state.hasContent) {
+                    EmptyBlock(viewModel)
+                }
             }
         }
 

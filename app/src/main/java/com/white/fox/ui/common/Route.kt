@@ -27,9 +27,9 @@ sealed class Route(
     data class UserCreatedIllust(val userId: Long, val objectType: String) :
         Route("UserCreatedIllust-userId-${userId}-objectType-${objectType}")
 
-    data class UserProfile(val userId: Long) : Route("UserProfile-userId-${userId}")
+    data class UserProfile(val userId: Long) : Route("UserProfileScreen-userId-${userId}")
 
-    data class TagDetail(val tag: Tag) : Route("TagDetail-${tag}")
+    data class TagDetail(val tag: Tag) : Route("TagDetailScreen-${tag}")
 
     data class IllustDetail(val illustId: Long) : Route("IllustDetailScreen-illustId-${illustId}")
 
