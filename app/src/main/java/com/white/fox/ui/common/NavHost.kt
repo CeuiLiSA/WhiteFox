@@ -13,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
 import com.white.fox.ui.following.BookmarkedIllustScreen
+import com.white.fox.ui.following.FollowingUsersScreen
+import com.white.fox.ui.following.MyPixivFriendsScreen
 import com.white.fox.ui.help.AboutScreen
 import com.white.fox.ui.help.HelpScreen
 import com.white.fox.ui.history.ViewHistoryScreen
@@ -67,6 +69,8 @@ fun NavHost() {
                     is Route.IllustDetail -> IllustDetailScreen(key.illustId)
                     is Route.NovelDetail -> NovelDetailScreen(key.novelId)
                     is Route.UserProfile -> UserProfileScreen(key.userId)
+                    is Route.FollowingUsers -> FollowingUsersScreen(key.userId)
+                    is Route.MyPixivUsers -> MyPixivFriendsScreen(key.userId)
                     is Route.TagDetail -> TagDetailScreen(listOf(key.tag))
                 }
             }

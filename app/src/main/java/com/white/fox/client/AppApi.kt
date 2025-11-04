@@ -104,6 +104,16 @@ interface AppApi {
         @Query("word") word: String,
     ): UserPreviewResponse
 
+    @GET("/v1/user/following?filter=for_ios&restrict=public")
+    suspend fun followingUsers(
+        @Query("user_id") user_id: Long,
+    ): UserPreviewResponse
+
+    @GET("/v1/user/mypixiv?filter=for_ios")
+    suspend fun pixivFriends(
+        @Query("user_id") user_id: Long,
+    ): UserPreviewResponse
+
     @GET
     suspend fun generalGet(@Url url: String): ResponseBody
 }

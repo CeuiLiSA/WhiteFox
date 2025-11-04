@@ -40,6 +40,7 @@ class IllustDetailViewModel(
     fun triggerLoad(namedUrl: NamedUrl) {
         val loadTask = getLoadTask(namedUrl)
         viewModelScope.launch {
+            Timber.d("sadasdsww2 triggerLoad ${namedUrl.name}")
             loadTask.launchImgLoadTask(LoadReason.InitialLoad)
         }
     }

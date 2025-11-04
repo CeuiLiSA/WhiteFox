@@ -20,7 +20,7 @@ fun MangaRankSection() {
     val navViewModel = LocalNavViewModel.current
 
     val mode = "day_manga"
-    val key = "getRankingData-illust-${mode}"
+    val key = "getRankingData-manga-${mode}"
     val viewModel = constructKeyedVM({ key }, {
         HybridRepository(
             loader = { dependency.client.appApi.getRankingIllusts(mode) },

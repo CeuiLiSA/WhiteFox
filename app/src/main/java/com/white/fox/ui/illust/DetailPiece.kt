@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import ceui.lisa.hermes.common.getFileSize
 import ceui.lisa.hermes.common.getImageDimensions
 import ceui.lisa.hermes.loadstate.LoadState
@@ -29,7 +30,11 @@ import com.github.panpf.zoomimage.rememberSketchZoomState
 import timber.log.Timber
 
 @Composable
-fun BoxScope.DetailPiece(namedUrl: NamedUrl, viewModel: IllustDetailViewModel) {
+fun BoxScope.DetailPiece(
+    namedUrl: NamedUrl,
+    viewModel: IllustDetailViewModel,
+    largeImageUrl: String? = null
+) {
     val context = LocalContext.current
     val sketch = remember { Sketch.Builder(context).build() }
     val zoomState = rememberSketchZoomState()
@@ -48,6 +53,17 @@ fun BoxScope.DetailPiece(namedUrl: NamedUrl, viewModel: IllustDetailViewModel) {
             Timber.d("sadasdsww2 dimen: ${getImageDimensions(v)}")
         }
     }
+
+    val value = valueState
+    val imageUri = value?.toUri()?.toString() ?: largeImageUrl
+    SketchZoomAsyncImage(
+        request = ImageRequest.Builder(context, imageUri).withHeader().build(),
+        contentDescription = imageUri,
+        contentScale = ContentScale.Fit,
+        sketch = sketch,
+        zoomState = zoomState,
+        modifier = Modifier.fillMaxSize()
+    )
 
     SketchZoomAsyncImage(
         request = ImageRequest.Builder(context, namedUrl.url).withHeader().build(),

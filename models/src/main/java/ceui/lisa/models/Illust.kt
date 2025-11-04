@@ -54,4 +54,13 @@ data class Illust(
             return null
         }
     }
+
+    fun getImgUrl(index: Int): String {
+        val url = if (page_count == 1) {
+            meta_single_page?.original_image_url
+        } else {
+            meta_pages?.getOrNull(index)?.image_urls?.original
+        }
+        return url ?: throw RuntimeException("url not found")
+    }
 }

@@ -1,8 +1,10 @@
 package com.white.fox.ui.user
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,10 +16,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,6 +47,7 @@ import com.white.fox.R
 import com.white.fox.ui.common.LoadingBlock
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.LocalNavViewModel
+import com.white.fox.ui.common.Route
 import com.white.fox.ui.common.constructKeyedVM
 import com.white.fox.ui.discover.UserCreatedIllustSection
 import com.white.fox.ui.following.BookmarkedIllustSection
@@ -125,7 +130,50 @@ fun UserProfileScreen(userId: Long) {
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
+            Spacer(modifier = Modifier.height(20.dp))
+
+
+            Box(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
+                        shape = RoundedCornerShape(16.dp)
+                    )
+                    .padding(vertical = 20.dp, horizontal = 32.dp)
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(40.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.align(Alignment.Center)
+                ) {
+                    StatBlock(
+                        label = "Following",
+                        value = profile.profile?.total_follow_users ?: 0,
+                        onClick = {
+                            navViewModel.navigate(Route.FollowingUsers(userId))
+                        }
+                    )
+                    StatBlock(
+                        label = "Friends",
+                        value = profile.profile?.total_mypixiv_users ?: 0,
+                        onClick = {
+                            navViewModel.navigate(Route.MyPixivUsers(userId))
+                        }
+                    )
+                }
+            }
+
+
             Spacer(modifier = Modifier.height(40.dp))
+
+            HorizontalDivider(
+                modifier = Modifier
+                    .padding(vertical = 8.dp),
+                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.3f)
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
 
             if (profile.profile?.total_illusts?.takeIf { it > 0 } != null) {
                 UserCreatedIllustSection(
