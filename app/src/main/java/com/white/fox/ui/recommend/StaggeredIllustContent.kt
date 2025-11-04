@@ -7,7 +7,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells.Fixed
@@ -53,10 +52,9 @@ fun StaggeredIllustContent(viewModel: ListIllustViewModal) {
         LazyVerticalStaggeredGrid(
             columns = Fixed(2),
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(4.dp),
-            verticalItemSpacing = 4.dp,
+            verticalItemSpacing = 2.dp,
             state = listState,
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
+            horizontalArrangement = Arrangement.spacedBy(2.dp)
         ) {
             items(
                 value.displayList.distinctBy { it.id }.filter { it.isAuthurExist() },

@@ -51,4 +51,6 @@
     <string name="object_type_user">用户</string>
     <string name="view_history">浏览历史</string>
     <string name="no_content_here">无内容</string>
+    <string name="button_search">搜索</string>
+    <string name="search_keyword">关键字</string>
 </resources>

@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import android.widget.Toast
 import timber.log.Timber
 import java.io.File
 import java.io.FileInputStream
@@ -34,7 +35,7 @@ fun saveImageToGallery(context: Context, imageFile: File, displayName: String) {
                 inputStream.copyTo(outputStream)
             }
         }
-
+        Toast.makeText(context, "保存成功 ✅", Toast.LENGTH_SHORT).show()
         Timber.d("saveImageToGallery success")
     }.onFailure { ex ->
         when (ex) {

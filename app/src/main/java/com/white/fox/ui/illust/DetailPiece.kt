@@ -65,17 +65,6 @@ fun BoxScope.DetailPiece(
         modifier = Modifier.fillMaxSize()
     )
 
-    SketchZoomAsyncImage(
-        request = ImageRequest.Builder(context, namedUrl.url).withHeader().build(),
-        contentDescription = namedUrl.name,
-        contentScale = ContentScale.Fit,
-        sketch = sketch,
-        zoomState = zoomState,
-        modifier = Modifier.fillMaxSize()
-    )
-
-
-
     when (val state = loadState.value) {
         is LoadState.Loading -> {
             CircularProgressIndicator(

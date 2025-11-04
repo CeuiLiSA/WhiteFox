@@ -15,12 +15,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import ceui.lisa.hermes.common.saveImageToGallery
+import ceui.lisa.hermes.task.ImageLoaderTask
+import ceui.lisa.hermes.task.NamedUrl
 import com.white.fox.R
 import com.white.fox.ui.setting.localizedString
-import java.io.File
 
 @Composable
-fun DownloadButton(value: File) {
+fun DownloadButton(namedUrl: NamedUrl, loadTask: ImageLoaderTask) {
     val context = LocalContext.current
     Box(
         modifier = Modifier
@@ -30,9 +31,12 @@ fun DownloadButton(value: File) {
     ) {
         IconButton(
             onClick = {
-                saveImageToGallery(
-                    context, value, value.name
-                )
+                val file = loadTask.valueFlow.value
+                if (file != null) {
+                    saveImageToGallery(
+                        context, file, namedUrl.name
+                    )
+                }
             },
             modifier = Modifier.size(44.dp),
             content = {

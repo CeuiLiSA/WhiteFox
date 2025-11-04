@@ -1,8 +1,7 @@
 package com.white.fox.ui.tags
 
 import androidx.compose.runtime.Composable
-import ceui.lisa.hermes.loader.HybridRepository
-import ceui.lisa.models.NovelResponse
+import ceui.lisa.hermes.loader.APIRepository
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.constructKeyedVM
 import com.white.fox.ui.novel.ListNovelContent
@@ -13,11 +12,7 @@ fun KeywordNovelScreen(keyWord: String) {
     val dependency = LocalDependency.current
     val key = "searchNovelData-${keyWord}"
     val viewModel = constructKeyedVM({ key }, {
-        HybridRepository(
-            loader = { dependency.client.appApi.searchNovel(keyWord) },
-            keyProducer = { key },
-            NovelResponse::class
-        )
+        APIRepository { dependency.client.appApi.searchNovel(keyWord) }
     }) { repository ->
         ListNovelViewModel(repository, dependency.client.appApi)
     }

@@ -46,10 +46,7 @@ fun IllustDetailScreen(
     }
 
     val illustState = ObjectPool.get<Illust>(illustId).collectAsState()
-    val illust = illustState.value
-    if (illust == null) {
-        return LoadingBlock()
-    }
+    val illust = illustState.value ?: return LoadingBlock()
 
 
     LaunchedEffect(Unit) {
@@ -86,6 +83,7 @@ fun IllustDetailScreen(
                         name = "illust_${illustId}_p${pageIndex}.png"
                     )
 
+                    val loadTask = viewModel.getLoadTask(namedUrl = namedUrl)
                     DetailPiece(
                         namedUrl,
                         viewModel,
@@ -101,7 +99,7 @@ fun IllustDetailScreen(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
-//                        if (value != null) DownloadButton(value)
+                            DownloadButton(namedUrl = namedUrl, loadTask = loadTask)
                             CommentButton()
                             BookmarkButton(illustId, 44.dp)
                         }
