@@ -3,12 +3,10 @@ package com.white.fox.ui.user
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -27,7 +25,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import ceui.lisa.models.UserPreview
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.request.ImageRequest
@@ -46,7 +46,6 @@ fun UserCard(userPreview: UserPreview) {
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 8.dp)
             .clickable { navViewModel.navigate(Route.UserProfile(userPreview.objectUniqueId)) },
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.elevatedCardColors(
@@ -58,46 +57,63 @@ fun UserCard(userPreview: UserPreview) {
                 .background(colorScheme.surface)
                 .padding(12.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(IntrinsicSize.Min),
-            ) {
+            userPreview.user?.let { user ->
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    AsyncImage(
+                        request = ImageRequest.Builder(
+                            context,
+                            user.profile_image_urls?.findMaxSizeUrl()
+                        )
+                            .withHeader()
+                            .crossfade(true)
+                            .build(),
+                        contentDescription = "avatar",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(42.dp)
+                            .clip(CircleShape)
+                            .border(1.dp, colorScheme.outlineVariant, CircleShape)
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text(
+                        text = user.name ?: "",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                }
+            }
 
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Column(
+            val illusts = userPreview.illusts?.take(3).orEmpty()
+            if (illusts.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
                     modifier = Modifier
-                        .fillMaxHeight()
-                        .weight(1f),
-                    verticalArrangement = Arrangement.SpaceBetween,
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(8.dp))
                 ) {
-
-
-                    userPreview.user?.let { user ->
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            AsyncImage(
-                                request = ImageRequest.Builder(
-                                    context,
-                                    user.profile_image_urls?.findMaxSizeUrl()
+                    illusts.forEachIndexed { index, illust ->
+                        AsyncImage(
+                            request = ImageRequest.Builder(context, illust.image_urls?.large)
+                                .withHeader()
+                                .build(),
+                            contentDescription = "illust-${illust.id}-preview-${illust.image_urls?.large}",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .weight(1f)
+                                .aspectRatio(1f)
+                                .background(MaterialTheme.colorScheme.surfaceVariant)
+                                .clip(
+                                    RoundedCornerShape(
+                                        topStart = if (index == 0) 8.dp else 0.dp,
+                                        topEnd = if (index == illusts.lastIndex) 8.dp else 0.dp,
+                                        bottomStart = if (index == 0) 8.dp else 0.dp,
+                                        bottomEnd = if (index == illusts.lastIndex) 8.dp else 0.dp
+                                    )
                                 )
-                                    .withHeader()
-                                    .crossfade(true)
-                                    .build(),
-                                contentDescription = "avatar",
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier
-                                    .size(36.dp)
-                                    .clip(CircleShape)
-                                    .border(1.dp, colorScheme.outlineVariant, CircleShape)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = user.name ?: "",
-                                style = typography.bodyMedium,
-                                color = colorScheme.onSurfaceVariant,
-                            )
+                        )
+                        if (index < illusts.lastIndex) {
+                            Spacer(modifier = Modifier.width(2.dp))
                         }
                     }
                 }

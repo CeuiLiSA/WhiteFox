@@ -43,7 +43,7 @@ fun ListUserContent(viewModel: ListUserViewModel) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             state = listState,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             items(value.displayList, key = { it.user?.id ?: 0L }) { UserCard(it) }
 
