@@ -13,7 +13,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,13 +33,17 @@ fun MainTopBar(onMenuClick: () -> Unit) {
     val navViewModel = LocalNavViewModel.current
     var expanded by remember { mutableStateOf(false) }
     val dependency = LocalDependency.current
-    val sessionState = dependency.sessionManager.stateFlow.collectAsState()
-    val user = sessionState.value?.user
-
     var showConfirmDialog by remember { mutableStateOf(false) }
 
     TopAppBar(
-        title = { user?.let { UserAvatarAndName(it, Modifier.fillMaxWidth(), null, onMenuClick) } },
+        title = {
+            UserAvatarAndName(
+                dependency.sessionManager.loggedInUid(),
+                Modifier.fillMaxWidth(),
+                null,
+                onMenuClick
+            )
+        },
         actions = {
             IconButton(onClick = { navViewModel.navigate(Route.Search) }) {
                 Icon(

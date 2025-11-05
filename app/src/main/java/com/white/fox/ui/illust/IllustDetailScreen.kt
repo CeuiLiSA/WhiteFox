@@ -76,10 +76,7 @@ fun IllustDetailScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            val author = illust.user
-            if (author != null) {
-                UserTopBar(author, parseIsoToMillis(illust.create_date ?: ""))
-            }
+            UserTopBar(illust.user?.id ?: 0L, parseIsoToMillis(illust.create_date ?: ""))
         },
     ) { innerPadding ->
         Box(

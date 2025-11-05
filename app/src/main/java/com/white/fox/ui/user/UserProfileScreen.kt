@@ -164,6 +164,8 @@ fun UserProfileScreen(userId: Long) {
                 }
             }
 
+            Spacer(modifier = Modifier.height(20.dp))
+            FollowUserButton(userId, userState)
 
             Spacer(modifier = Modifier.height(40.dp))
 

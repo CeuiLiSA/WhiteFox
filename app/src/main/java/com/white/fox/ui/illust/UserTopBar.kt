@@ -18,13 +18,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import ceui.lisa.models.User
 import com.white.fox.ui.common.LocalNavViewModel
 import com.white.fox.ui.common.Route
 import com.white.fox.ui.main.UserAvatarAndName
 
 @Composable
-fun UserTopBar(user: User, artworksCreatedTime: Long? = null) {
+fun UserTopBar(userId: Long, artworksCreatedTime: Long? = null) {
     val navViewModal = LocalNavViewModel.current
     Row(
         modifier = Modifier
@@ -48,11 +47,11 @@ fun UserTopBar(user: User, artworksCreatedTime: Long? = null) {
         }
 
         UserAvatarAndName(
-            user = user,
+            userId = userId,
             modifier = Modifier.weight(1f),
             artworksCreatedTime = artworksCreatedTime,
             onMenuClick = {
-                navViewModal.navigate(Route.UserProfile(user.id))
+                navViewModal.navigate(Route.UserProfile(userId))
             },
         )
 

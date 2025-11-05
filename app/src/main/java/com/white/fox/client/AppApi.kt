@@ -36,6 +36,20 @@ interface AppApi {
         @Field("illust_id") illust_id: Long
     )
 
+    @FormUrlEncoded
+    @POST("/v1/user/follow/add")
+    suspend fun postFollowUser(
+        @Field("user_id") user_id: Long,
+        @Field("restrict") restrict: String
+    )
+
+    @FormUrlEncoded
+    @POST("/v1/user/follow/delete")
+    suspend fun removeFollowUser(
+        @Field("user_id") user_id: Long
+    )
+
+
     @GET("/v1/user/me/state")
     suspend fun getSelfProfile(): SelfProfile
 
