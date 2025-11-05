@@ -31,7 +31,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ceui.lisa.hermes.common.parseIsoToMillis
-import ceui.lisa.hermes.common.saveImageToGallery
 import ceui.lisa.hermes.objectpool.ObjectPool
 import ceui.lisa.hermes.task.NamedUrl
 import ceui.lisa.models.Illust
@@ -96,9 +95,8 @@ fun IllustDetailScreen(
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
-                    val loadTask = viewModel.getLoadTask(namedUrls[pageIndex])
                     DetailPiece(
-                        loadTask,
+                        viewModel.getLoadTask(namedUrls[pageIndex]),
                         if (pageIndex == 0) illust.image_urls?.large else null
                     )
                 }
@@ -159,14 +157,7 @@ fun IllustDetailScreen(
                             horizontalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
                             DownloadButton {
-                                val namedUrl = namedUrls[pagerState.currentPage]
-                                val loadTask = viewModel.getLoadTask(namedUrl)
-                                val file = loadTask.valueFlow.value
-                                if (file != null) {
-                                    saveImageToGallery(
-                                        context, file, namedUrl.name
-                                    )
-                                }
+                                viewModel.getLoadTask(namedUrls[pagerState.currentPage]).download()
                             }
                             CommentButton()
                             BookmarkButton(illustId, 44.dp)

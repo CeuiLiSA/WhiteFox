@@ -23,7 +23,7 @@ class ImageLoaderTask(
     private val namedUrl: NamedUrl,
     private val client: OkHttpClient,
     private val referer: String,
-    private val autoSaveToGallery: Boolean = false,
+    private var autoSaveToGallery: Boolean = false,
 ) {
 
     private val fileCache = FileCache(
@@ -105,5 +105,15 @@ class ImageLoaderTask(
         } catch (ex: Exception) {
             Timber.e(ex)
         }
+    }
+
+    fun download() {
+        val file = _valueFlowImpl.value
+        if (file != null) {
+            saveToGallery(file = file)
+            return
+        }
+
+        autoSaveToGallery = true
     }
 }
