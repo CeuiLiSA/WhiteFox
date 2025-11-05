@@ -85,7 +85,11 @@ class ImageLoaderTask(
                         _loadStateFlow.value = LoadState.Loaded(true)
 
                         if (autoSaveToGallery) {
-                            saveToGallery(cachedFile)
+                            saveImageToGallery(
+                                Utils.getApp().applicationContext,
+                                cachedFile,
+                                namedUrl.name,
+                            )
                         }
                     }
                 }
@@ -98,22 +102,14 @@ class ImageLoaderTask(
         }
     }
 
-    private fun saveToGallery(file: File) {
-        try {
-            val context = Utils.getApp().applicationContext ?: return
-            saveImageToGallery(context, file, namedUrl.name)
-        } catch (ex: Exception) {
-            Timber.e(ex)
-        }
-    }
-
     fun download() {
-        val file = _valueFlowImpl.value
-        if (file != null) {
-            saveToGallery(file = file)
-            return
+        coroutineScope.launch(Dispatchers.IO) {
+            val file = _valueFlowImpl.value
+            if (file != null) {
+                saveImageToGallery(Utils.getApp().applicationContext, file, namedUrl.name)
+            } else {
+                autoSaveToGallery = true
+            }
         }
-
-        autoSaveToGallery = true
     }
 }

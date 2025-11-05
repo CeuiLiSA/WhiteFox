@@ -7,13 +7,15 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.widget.Toast
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
 
 
-fun saveImageToGallery(context: Context, imageFile: File, displayName: String) {
+suspend fun saveImageToGallery(context: Context, imageFile: File, displayName: String) {
     runCatching {
         val contentValues = ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, displayName)
@@ -35,7 +37,9 @@ fun saveImageToGallery(context: Context, imageFile: File, displayName: String) {
                 inputStream.copyTo(outputStream)
             }
         }
-        Toast.makeText(context, "保存成功 ✅", Toast.LENGTH_SHORT).show()
+        withContext(Dispatchers.Main) {
+            Toast.makeText(context, "保存成功 ✅", Toast.LENGTH_SHORT).show()
+        }
         Timber.d("saveImageToGallery success")
     }.onFailure { ex ->
         when (ex) {
