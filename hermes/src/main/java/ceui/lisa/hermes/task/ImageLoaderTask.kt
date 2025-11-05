@@ -23,7 +23,7 @@ class ImageLoaderTask(
     private val namedUrl: NamedUrl,
     private val client: OkHttpClient,
     private val referer: String,
-    private val autoSaveToGallary: Boolean = false,
+    private val autoSaveToGallery: Boolean = false,
 ) {
 
     private val fileCache = FileCache(
@@ -84,8 +84,8 @@ class ImageLoaderTask(
                         _valueFlowImpl.value = cachedFile
                         _loadStateFlow.value = LoadState.Loaded(true)
 
-                        if (autoSaveToGallary) {
-                            saveToGallary(cachedFile)
+                        if (autoSaveToGallery) {
+                            saveToGallery(cachedFile)
                         }
                     }
                 }
@@ -98,7 +98,7 @@ class ImageLoaderTask(
         }
     }
 
-    private fun saveToGallary(file: File) {
+    private fun saveToGallery(file: File) {
         try {
             val context = Utils.getApp().applicationContext ?: return
             saveImageToGallery(context, file, namedUrl.name)

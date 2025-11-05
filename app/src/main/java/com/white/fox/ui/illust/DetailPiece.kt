@@ -19,8 +19,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import ceui.lisa.hermes.common.getFileSize
-import ceui.lisa.hermes.common.getImageDimensions
 import ceui.lisa.hermes.loadstate.LoadReason
 import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.hermes.task.ImageLoaderTask
@@ -28,7 +26,6 @@ import com.github.panpf.sketch.Sketch
 import com.github.panpf.sketch.request.ImageRequest
 import com.github.panpf.zoomimage.SketchZoomAsyncImage
 import com.github.panpf.zoomimage.rememberSketchZoomState
-import timber.log.Timber
 
 @Composable
 fun BoxScope.DetailPiece(
@@ -43,14 +40,6 @@ fun BoxScope.DetailPiece(
 
     LaunchedEffect(Unit) {
         loadTask.launchImgLoadTask(LoadReason.InitialLoad)
-    }
-
-    LaunchedEffect(valueState) {
-        val v = valueState
-        if (v != null) {
-            Timber.d("sadasdsww2 size: ${getFileSize(v)}")
-            Timber.d("sadasdsww2 dimen: ${getImageDimensions(v)}")
-        }
     }
 
     val value = valueState
