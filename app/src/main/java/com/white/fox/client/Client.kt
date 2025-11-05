@@ -3,12 +3,19 @@ package com.white.fox.client
 import android.net.Uri
 import ceui.lisa.hermes.common.PKCEItem
 import ceui.lisa.hermes.loader.ProgressInterceptor
+import ceui.lisa.hermes.loadstate.LoadReason
+import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.models.AccountResponse
 import com.white.fox.session.ISessionManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
@@ -87,6 +94,9 @@ class Client(
     private val tokenRefreshMutex = Mutex()
     private var refreshingTokenJob: Deferred<String?>? = null
 
+    private val _appLoginFlow = MutableStateFlow<LoadState?>(null)
+    val appLoginFlow = _appLoginFlow.asStateFlow()
+
     suspend fun refreshAccessToken(oldToken: String): String? {
         val freshAccessToken = sessionManager.getAccessToken()
         if (freshAccessToken != null && freshAccessToken != oldToken) {
@@ -108,13 +118,9 @@ class Client(
                             REFRESH_TOKEN,
                             refreshToken,
                             true
-                        ).execute().body()
-                        if (accountResponse != null) {
-                            sessionManager.updateSession(accountResponse)
-                            accountResponse.access_token
-                        } else {
-                            throw RuntimeException("newRefreshToken failed")
-                        }
+                        )
+                        sessionManager.updateSession(accountResponse)
+                        accountResponse.access_token
                     } catch (ex: Exception) {
                         Timber.e(ex)
                         null
@@ -125,19 +131,31 @@ class Client(
         }
     }
 
-    suspend fun loginWithUri(uri: Uri) {
-        val accountResponse = withContext(Dispatchers.IO) {
-            authApi.newLogin(
-                CLIENT_ID,
-                CLIENT_SECRET,
-                AUTH_CODE,
-                uri.getQueryParameter("code"),
-                pkceItem.verify,
-                CALL_BACK,
-                true
-            ).execute().body()
+    fun loginWithUri(uri: Uri) {
+        MainScope().launch {
+            withContext(Dispatchers.IO) {
+                try {
+                    _appLoginFlow.value = LoadState.Loading(LoadReason.InitialLoad)
+                    val accountResponse = authApi.newLogin(
+                        CLIENT_ID,
+                        CLIENT_SECRET,
+                        AUTH_CODE,
+                        uri.getQueryParameter("code"),
+                        pkceItem.verify,
+                        CALL_BACK,
+                        true
+                    )
+                    sessionManager.updateSession(accountResponse)
+                    _appLoginFlow.value = LoadState.Loaded(true)
+                } catch (ex: Exception) {
+                    Timber.e(ex)
+                    _appLoginFlow.value = LoadState.Error(ex)
+                } finally {
+                    delay(2000L)
+                    _appLoginFlow.value = null
+                }
+            }
         }
-        sessionManager.updateSession(accountResponse)
     }
 
     companion object {

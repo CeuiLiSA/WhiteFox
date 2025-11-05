@@ -16,13 +16,8 @@ import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.LocalNavViewModel
 import com.white.fox.ui.common.NavHost
 import com.white.fox.ui.common.NavViewModel
-import com.white.fox.ui.main.MainScreen
 import com.white.fox.ui.setting.LocalAppLocaleContext
 import com.white.fox.ui.theme.WhiteFoxTheme
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.util.Locale
 
@@ -30,6 +25,9 @@ class MainActivity : ComponentActivity() {
 
     private val navViewModel by constructVM({ requireSessionManager() }) { sessionManager ->
         NavViewModel(sessionManager)
+    }
+    private val linkHandler by lazy {
+        LinkHandler(navViewModel, (application as ServiceProvider).client::loginWithUri)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,11 +74,6 @@ class MainActivity : ComponentActivity() {
 
     private fun handleIntent(intent: Intent) {
         val data = intent.data?.toString() ?: return
-        val linkHandler = LinkHandler(navViewModel) { uri ->
-            MainScope().launch {
-                (application as ServiceProvider).client.loginWithUri(uri)
-            }
-        }
 
         if (linkHandler.processLink(data)) {
             Timber.i("handleIntent Handled deep link: $data")

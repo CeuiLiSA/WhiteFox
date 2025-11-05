@@ -22,6 +22,7 @@ import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.discover.DiscoverScreen
 import com.white.fox.ui.following.FollowingScreen
 import com.white.fox.ui.recommend.RecommendScreen
