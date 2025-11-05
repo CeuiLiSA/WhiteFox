@@ -1,6 +1,7 @@
 package com.white.fox.ui.landing
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,16 +33,17 @@ fun LandingScreen() {
 
     val loginState by LocalDependency.current.client.appLoginFlow.collectAsState()
 
-    Column(
+    Box(
         modifier = Modifier
+            .fillMaxSize()
             .imePadding()
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (loginState is LoadState.Loading || loginState is LoadState.Loaded) {
-            LoadingBlock()
-        } else {
+        Column(
+            modifier = Modifier
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Button(
                 onClick = {
                     openCustomTab(
@@ -74,7 +76,17 @@ fun LandingScreen() {
             }
         }
 
+        if (loginState is LoadState.Loading || loginState is LoadState.Loaded) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                LoadingBlock()
+            }
+        }
     }
+
 }
 
 private const val LOGIN_HEAD = "https://app-api.pixiv.net/web/v1/login?code_challenge="

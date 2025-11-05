@@ -3,6 +3,7 @@ package com.white.fox.ui.history
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
@@ -13,6 +14,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import ceui.lisa.hermes.db.RecordType
 import ceui.lisa.models.Illust
 import ceui.lisa.models.Novel
@@ -51,12 +54,14 @@ fun ViewHistoryScreen() = PageScreen(localizedString(R.string.view_history)) {
             tabTitles.forEachIndexed { index, title ->
                 Tab(
                     selected = pagerState.currentPage == index,
+                    modifier = Modifier.height(34.dp),
                     onClick = {
                         coroutineScope.launch { pagerState.animateScrollToPage(index) }
                     },
                     text = {
                         Text(
                             title,
+                            fontSize = 13.sp,
                             color = if (pagerState.currentPage == index)
                                 MaterialTheme.colorScheme.primary
                             else
