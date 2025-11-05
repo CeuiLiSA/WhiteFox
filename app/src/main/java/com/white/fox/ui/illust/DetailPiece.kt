@@ -21,8 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import ceui.lisa.hermes.common.getFileSize
 import ceui.lisa.hermes.common.getImageDimensions
+import ceui.lisa.hermes.loadstate.LoadReason
 import ceui.lisa.hermes.loadstate.LoadState
-import ceui.lisa.hermes.task.NamedUrl
+import ceui.lisa.hermes.task.ImageLoaderTask
 import com.github.panpf.sketch.Sketch
 import com.github.panpf.sketch.request.ImageRequest
 import com.github.panpf.zoomimage.SketchZoomAsyncImage
@@ -31,19 +32,17 @@ import timber.log.Timber
 
 @Composable
 fun BoxScope.DetailPiece(
-    namedUrl: NamedUrl,
-    viewModel: IllustDetailViewModel,
+    loadTask: ImageLoaderTask,
     largeImageUrl: String? = null
 ) {
     val context = LocalContext.current
     val sketch = remember { Sketch.Builder(context).build() }
     val zoomState = rememberSketchZoomState()
-    val loadTask = viewModel.getLoadTask(namedUrl)
     val loadState = loadTask.loadState.collectAsState()
     val valueState by loadTask.valueFlow.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.triggerLoad(namedUrl)
+        loadTask.launchImgLoadTask(LoadReason.InitialLoad)
     }
 
     LaunchedEffect(valueState) {

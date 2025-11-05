@@ -1,10 +1,15 @@
 package com.white.fox.ui.illust
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -20,15 +25,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ceui.lisa.hermes.common.parseIsoToMillis
+import ceui.lisa.hermes.common.saveImageToGallery
 import ceui.lisa.hermes.objectpool.ObjectPool
 import ceui.lisa.hermes.task.NamedUrl
 import ceui.lisa.models.Illust
 import com.white.fox.ui.common.LoadingBlock
 import com.white.fox.ui.common.LocalDependency
+import com.white.fox.ui.common.LocalNavViewModel
+import com.white.fox.ui.common.Route
 import com.white.fox.ui.common.constructKeyedVM
 
 @Composable
@@ -45,6 +55,7 @@ fun IllustDetailScreen(
         )
     }
 
+    val navViewModel = LocalNavViewModel.current
     val illustState = ObjectPool.get<Illust>(illustId).collectAsState()
     val illust = illustState.value ?: return LoadingBlock()
 
@@ -52,9 +63,16 @@ fun IllustDetailScreen(
     LaunchedEffect(Unit) {
         viewModel.insertViewHistory(illust)
     }
+    val context = LocalContext.current
 
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { illust.page_count })
 
+    val namedUrls = List(illust.page_count) { index ->
+        NamedUrl(
+            url = illust.getImgUrl(index),
+            name = "illust_${illustId}_p${index}.png"
+        )
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -78,34 +96,82 @@ fun IllustDetailScreen(
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
-                    val namedUrl = NamedUrl(
-                        url = illust.getImgUrl(pageIndex),
-                        name = "illust_${illustId}_p${pageIndex}.png"
-                    )
-
-                    val loadTask = viewModel.getLoadTask(namedUrl = namedUrl)
+                    val loadTask = viewModel.getLoadTask(namedUrls[pageIndex])
                     DetailPiece(
-                        namedUrl,
-                        viewModel,
+                        loadTask,
                         if (pageIndex == 0) illust.image_urls?.large else null
                     )
+                }
+            }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+            ) {
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                ) {
+                    val tags = illust.tags
+                    if (!tags.isNullOrEmpty()) {
+                        FlowRow(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            verticalArrangement = Arrangement.spacedBy(4.dp),
+                        ) {
+                            for (tag in tags) {
+                                Box(
+                                    modifier = Modifier
+                                        .background(
+                                            Color.White.copy(alpha = 0.15f),
+                                            RoundedCornerShape(4.dp)
+                                        )
+                                        .padding(4.dp)
+                                        .clickable {
+                                            navViewModel.navigate(Route.TagDetail(tag))
+                                        },
+
+                                    ) {
+                                    Text(
+                                        text = if (tag.translated_name?.isNotEmpty() == true) {
+                                            "${tag.tagName}/${tag.translated_name}"
+                                        } else {
+                                            tag.tagName ?: ""
+                                        },
+                                        fontSize = 13.sp,
+                                        color = Color.White,
+                                        textAlign = TextAlign.Center
+                                    )
+                                }
+                            }
+                        }
+                    }
 
                     Box(
                         modifier = Modifier
-                            .align(Alignment.BottomEnd)
                             .padding(12.dp)
+                            .align(Alignment.End)
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
-                            DownloadButton(namedUrl = namedUrl, loadTask = loadTask)
+                            DownloadButton {
+                                val namedUrl = namedUrls[pagerState.currentPage]
+                                val loadTask = viewModel.getLoadTask(namedUrl)
+                                val file = loadTask.valueFlow.value
+                                if (file != null) {
+                                    saveImageToGallery(
+                                        context, file, namedUrl.name
+                                    )
+                                }
+                            }
                             CommentButton()
                             BookmarkButton(illustId, 44.dp)
                         }
                     }
-
-
                 }
             }
 

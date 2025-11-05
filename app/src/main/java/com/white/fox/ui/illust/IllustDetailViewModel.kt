@@ -7,7 +7,6 @@ import ceui.lisa.hermes.db.EntityType
 import ceui.lisa.hermes.db.GeneralEntity
 import ceui.lisa.hermes.db.RecordType
 import ceui.lisa.hermes.db.gson
-import ceui.lisa.hermes.loadstate.LoadReason
 import ceui.lisa.hermes.task.ImageLoaderTask
 import ceui.lisa.hermes.task.NamedUrl
 import ceui.lisa.models.Illust
@@ -30,18 +29,11 @@ class IllustDetailViewModel(
     fun getLoadTask(namedUrl: NamedUrl): ImageLoaderTask {
         return _loadTaskMap.getOrPut(namedUrl.url) {
             ImageLoaderTask(
+                viewModelScope,
                 namedUrl,
                 client,
                 illustId.buildReferer(),
             )
-        }
-    }
-
-    fun triggerLoad(namedUrl: NamedUrl) {
-        val loadTask = getLoadTask(namedUrl)
-        viewModelScope.launch {
-            Timber.d("sadasdsww2 triggerLoad ${namedUrl.name}")
-            loadTask.launchImgLoadTask(LoadReason.InitialLoad)
         }
     }
 

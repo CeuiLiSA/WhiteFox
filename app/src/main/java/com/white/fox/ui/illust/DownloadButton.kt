@@ -12,17 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import ceui.lisa.hermes.common.saveImageToGallery
-import ceui.lisa.hermes.task.ImageLoaderTask
-import ceui.lisa.hermes.task.NamedUrl
 import com.white.fox.R
 import com.white.fox.ui.setting.localizedString
 
 @Composable
-fun DownloadButton(namedUrl: NamedUrl, loadTask: ImageLoaderTask) {
-    val context = LocalContext.current
+fun DownloadButton(onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .size(44.dp)
@@ -30,14 +25,7 @@ fun DownloadButton(namedUrl: NamedUrl, loadTask: ImageLoaderTask) {
         contentAlignment = Alignment.Center
     ) {
         IconButton(
-            onClick = {
-                val file = loadTask.valueFlow.value
-                if (file != null) {
-                    saveImageToGallery(
-                        context, file, namedUrl.name
-                    )
-                }
-            },
+            onClick = onClick,
             modifier = Modifier.size(44.dp),
             content = {
                 Icon(

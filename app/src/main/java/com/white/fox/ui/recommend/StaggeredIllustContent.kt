@@ -9,7 +9,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells.Fixed
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
@@ -50,7 +50,7 @@ fun StaggeredIllustContent(viewModel: ListIllustViewModal) {
 
     RefreshTemplate(viewModel) { value, loadState ->
         LazyVerticalStaggeredGrid(
-            columns = Fixed(2),
+            columns = StaggeredGridCells.Fixed(2),
             modifier = Modifier.fillMaxSize(),
             verticalItemSpacing = 2.dp,
             state = listState,
