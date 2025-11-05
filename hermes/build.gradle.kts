@@ -49,6 +49,7 @@ dependencies {
     api(libs.androidx.compose.material3)
     api(libs.androidx.appcompat)
     api(libs.material)
+    implementation(libs.androidx.browser)
 
     api(libs.androidx.compose.material.icons.core)
     api(libs.androidx.compose.material.icons.extended)
@@ -60,13 +61,14 @@ dependencies {
     api(libs.androidx.material3.adaptive.navigation3)
     api(libs.kotlinx.serialization.core)
     api(libs.androidx.compose.runtime.livedata)
-
+    api(libs.androidx.room.runtime)
+    api(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 
     api(libs.mmkv)
     api(libs.timber)
     api(libs.gson)
-
-    api("com.blankj:utilcodex:1.31.1")
+    api(libs.utilcodex)
 
     api(libs.retrofit)
     api(libs.converter.gson)
@@ -80,10 +82,7 @@ dependencies {
     api(libs.sketch.extensions.compose)
 
 
-    val room_version = "2.8.1"
-    api("androidx.room:room-runtime:$room_version")
-    api("androidx.room:room-ktx:${room_version}")
-    ksp("androidx.room:room-compiler:$room_version")
+
 
     implementation(project(":models"))
 

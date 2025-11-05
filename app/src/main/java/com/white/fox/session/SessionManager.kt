@@ -2,6 +2,7 @@ package com.white.fox.session
 
 import ceui.lisa.hermes.cache.PersistState
 import ceui.lisa.hermes.db.gson
+import ceui.lisa.hermes.objectpool.ObjectPool
 import ceui.lisa.models.AccountResponse
 import timber.log.Timber
 
@@ -28,5 +29,12 @@ class SessionManager : PersistState<AccountResponse>("Session", AccountResponse(
     override fun getRefreshToken(): String? = stateFlow.value?.refresh_token
     override fun updateSession(data: AccountResponse?) {
         update(data)
+    }
+
+    override fun onDataRetrieved(data: AccountResponse) {
+        super.onDataRetrieved(data)
+        data.user?.let { user ->
+            ObjectPool.update(user)
+        }
     }
 }

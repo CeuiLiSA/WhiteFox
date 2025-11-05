@@ -4,6 +4,7 @@ import ceui.lisa.hermes.db.gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import timber.log.Timber
 
 open class PersistState<ValueT : Any>(
     key: String,
@@ -19,6 +20,7 @@ open class PersistState<ValueT : Any>(
         val obj = prefStore.get(PERSIST_STATE_JSON, defaultValue::class.java)
         if (obj != null) {
             _stateFlow.value = obj
+            onDataRetrieved(obj)
         } else {
             _stateFlow.value = defaultValue
         }
@@ -47,5 +49,9 @@ open class PersistState<ValueT : Any>(
     companion object {
         private const val PERSIST_STATE_JSON = "PERSIST_STATE_JSON"
 
+    }
+
+    open fun onDataRetrieved(data: ValueT) {
+        Timber.d("onDataRetrieved: ${data}")
     }
 }

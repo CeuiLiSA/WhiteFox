@@ -1,5 +1,7 @@
 package com.white.fox.client
 
+import android.net.Uri
+import ceui.lisa.hermes.common.PKCEItem
 import ceui.lisa.hermes.loader.ProgressInterceptor
 import ceui.lisa.models.AccountResponse
 import com.white.fox.session.ISessionManager
@@ -9,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
 import okhttp3.logging.HttpLoggingInterceptor
@@ -34,6 +37,8 @@ class Client(
             .addInterceptor(ProgressInterceptor())
             .build()
     }
+
+    val pkceItem by lazy { PKCEItem.build() }
 
     fun <T> createAPPAPI(service: Class<T>): T {
         val okhttpClientBuilder = OkHttpClient.Builder()
@@ -120,10 +125,28 @@ class Client(
         }
     }
 
+    suspend fun loginWithUri(uri: Uri) {
+        val accountResponse = withContext(Dispatchers.IO) {
+            authApi.newLogin(
+                CLIENT_ID,
+                CLIENT_SECRET,
+                AUTH_CODE,
+                uri.getQueryParameter("code"),
+                pkceItem.verify,
+                CALL_BACK,
+                true
+            ).execute().body()
+        }
+        sessionManager.updateSession(accountResponse)
+    }
+
     companion object {
         const val REQUEST_TIME = 10L
         const val APP_API_HOST = "https://app-api.pixiv.net"
         const val OAUTH_HOST = "https://oauth.secure.pixiv.net"
+
+        private const val AUTH_CODE = "authorization_code"
+        private const val CALL_BACK = "https://app-api.pixiv.net/web/v1/users/auth/pixiv/callback"
 
         private const val CLIENT_ID = "MOBrBDS8blbauoSck0ZfDbtuzpyT"
         private const val CLIENT_SECRET = "lsACyCD94FhDUtGTXi3QzcFE2uU1hqtDaKeqrdwj"

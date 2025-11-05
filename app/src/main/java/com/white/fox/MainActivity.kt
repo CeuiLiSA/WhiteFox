@@ -1,5 +1,6 @@
 package com.white.fox
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,12 +11,19 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import ceui.lisa.hermes.viewmodel.constructVM
 import com.white.fox.ui.common.Dependency
+import com.white.fox.ui.common.LinkHandler
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.LocalNavViewModel
 import com.white.fox.ui.common.NavHost
 import com.white.fox.ui.common.NavViewModel
+import com.white.fox.ui.main.MainScreen
 import com.white.fox.ui.setting.LocalAppLocaleContext
 import com.white.fox.ui.theme.WhiteFoxTheme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import timber.log.Timber
 import java.util.Locale
 
 class MainActivity : ComponentActivity() {
@@ -55,6 +63,29 @@ class MainActivity : ComponentActivity() {
                     NavHost()
                 }
             }
+        }
+
+        handleIntent(intent)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+
+        handleIntent(intent)
+    }
+
+    private fun handleIntent(intent: Intent) {
+        val data = intent.data?.toString() ?: return
+        val linkHandler = LinkHandler(navViewModel) { uri ->
+            MainScope().launch {
+                (application as ServiceProvider).client.loginWithUri(uri)
+            }
+        }
+
+        if (linkHandler.processLink(data)) {
+            Timber.i("handleIntent Handled deep link: $data")
+        } else {
+            Timber.w("handleIntent Unhandled deep link: $data")
         }
     }
 }

@@ -20,6 +20,8 @@ sealed class Route(
     object Help : Route("Help")
     object History : Route("History")
 
+    object LoginWithToken : Route("LoginWithToken")
+
     data class RankContainer(val objectType: String) : Route("RankContainer-${objectType}")
 
     data class BookmarkedIllust(val userId: Long) : Route("BookmarkedIllust-userId-${userId}")

@@ -20,6 +20,7 @@ import com.white.fox.ui.help.HelpScreen
 import com.white.fox.ui.history.ViewHistoryScreen
 import com.white.fox.ui.illust.IllustDetailScreen
 import com.white.fox.ui.landing.LandingScreen
+import com.white.fox.ui.landing.LoginWithTokenScreen
 import com.white.fox.ui.main.MainScreen
 import com.white.fox.ui.novel.NovelDetailScreen
 import com.white.fox.ui.rank.RankContainerScreen
@@ -59,6 +60,7 @@ fun NavHost() {
                     is Route.About -> AboutScreen()
                     is Route.Help -> HelpScreen()
                     is Route.History -> ViewHistoryScreen()
+                    is Route.LoginWithToken -> LoginWithTokenScreen()
                     is Route.RankContainer -> RankContainerScreen(key.objectType)
                     is Route.BookmarkedIllust -> BookmarkedIllustScreen(key.userId)
                     is Route.UserCreatedIllust -> UserCreatedIllustScreen(
