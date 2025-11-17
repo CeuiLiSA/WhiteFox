@@ -27,9 +27,12 @@ class PrimeHotViewModel : ViewModel(), RefreshOwner<List<PrimeTagResult>> {
                 _loadStateFlow.value = LoadState.Loading(reason)
                 val list = mutableListOf<PrimeTagResult>()
                 fileCache.parentDir.listFiles()?.forEach { file ->
-                    val primeTagResult = gson.fromJson(file.readText(), PrimeTagResult::class.java)
-                    Timber.d("sadadsasdws2 ${file.path}")
-                    list.add(primeTagResult)
+                    list.add(
+                        gson.fromJson(
+                            file.readText(),
+                            PrimeTagResult::class.java
+                        )
+                    )
                 }
                 _valueFlow.value = list
                 _loadStateFlow.value = LoadState.Loaded(list.isNotEmpty())
