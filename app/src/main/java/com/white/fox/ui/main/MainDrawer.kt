@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Whatshot
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -140,6 +141,15 @@ fun MainDrawer(scope: CoroutineScope, drawerState: DrawerState) {
             scope.launch {
                 drawerState.close()
                 navViewModel.navigate(Route.History)
+            }
+        }
+        DrawerItem(
+            localizedString(R.string.sorted_by_popular),
+            Icons.Default.Whatshot
+        ) {
+            scope.launch {
+                drawerState.close()
+                navViewModel.navigate(Route.PrimeHot)
             }
         }
 

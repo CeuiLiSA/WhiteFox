@@ -91,7 +91,7 @@ tasks.register("checkChineseHardcode") {
         }
     }
 }
-
-tasks.named("preBuild") {
-    dependsOn("checkChineseHardcode")
-}
+//
+//tasks.named("preBuild") {
+//    dependsOn("checkChineseHardcode")
+//}

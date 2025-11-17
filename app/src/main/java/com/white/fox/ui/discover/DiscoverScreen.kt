@@ -38,7 +38,9 @@ fun DiscoverScreen() {
     val key = "getTrendingTagData-illust"
     val viewModel = constructKeyedVM({ key }, {
         HybridRepository(
-            loader = { dependency.client.appApi.trendingTags(ObjectType.ILLUST) },
+            loader = {
+                dependency.client.appApi.trendingTags(ObjectType.ILLUST)
+            },
             keyProducer = { key },
             TrendingTagsResponse::class
         )

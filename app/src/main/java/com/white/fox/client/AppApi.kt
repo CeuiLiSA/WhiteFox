@@ -1,5 +1,7 @@
 package com.white.fox.client
 
+import ceui.lisa.models.HomeAllReq
+import ceui.lisa.models.HomeAllResponse
 import ceui.lisa.models.IllustResponse
 import ceui.lisa.models.NovelResponse
 import ceui.lisa.models.SelfProfile
@@ -7,6 +9,7 @@ import ceui.lisa.models.TrendingTagsResponse
 import ceui.lisa.models.UserPreviewResponse
 import ceui.lisa.models.UserResponse
 import okhttp3.ResponseBody
+import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -91,6 +94,11 @@ interface AppApi {
     suspend fun trendingTags(
         @Path("type") type: String,
     ): TrendingTagsResponse
+
+    @POST("/v1/home/all")
+    suspend fun homeAll(
+        @Body req: HomeAllReq
+    ): HomeAllResponse
 
     @GET("/v1/novel/recommended")
     suspend fun getRecmdNovels(

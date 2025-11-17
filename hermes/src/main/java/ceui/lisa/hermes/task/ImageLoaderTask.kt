@@ -52,7 +52,7 @@ class ImageLoaderTask(
                 Timber.d("sadasdsww2 launchImgLoadTask: ${namedUrl.name}")
                 val targetFileName = namedUrl.name
 
-                val cached = fileCache.getCachedFile(targetFileName)
+                val cached = fileCache.getCachedFile(targetFileName, true)
                 if (cached != null) {
                     _valueFlowImpl.value = cached
                     _loadStateFlow.value = LoadState.Loaded(true)

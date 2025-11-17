@@ -13,18 +13,18 @@ class FileCache(
     private val maxCacheFileSize: Int = 64
 ) {
     private val lock = ReentrantLock()
-    private val parentDir: File = File(PathUtils.getInternalAppCachePath(), cacheDirName).apply {
+    val parentDir: File = File(PathUtils.getInternalAppCachePath(), cacheDirName).apply {
         if (!exists()) mkdirs()
     }
 
     private val prefStore = PrefStore(TAG)
 
-    fun getCachedFile(fileName: String): File? {
+    fun getCachedFile(fileName: String, checkMD5: Boolean = false): File? {
         val safeName = fileName.toSafeFileName()
         val file = File(parentDir, safeName)
         val storedMD5 = prefStore.getString(file.name)
         Timber.d("$TAG: getCachedFile ${file.name}, storedMD5: ${storedMD5}")
-        return if (file.exists() && file.md5() == storedMD5) file else null
+        return if (file.exists() && (!checkMD5 || (file.md5() == storedMD5))) file else null
     }
 
     fun putFile(fileName: String, source: InputStream): File {
@@ -37,6 +37,21 @@ class FileCache(
             }
             val md5 = file.md5()
             Timber.d("$TAG: putFile ${file.name}, md5: ${md5}")
+            prefStore.putString(file.name, md5)
+            cleanupOldFilesIfNeeded()
+        }
+
+        return file
+    }
+
+    fun writeText(fileName: String, text: String): File {
+        val safeName = fileName.toSafeFileName()
+        val file = File(parentDir, safeName)
+
+        lock.withLock {
+            file.writeText(text)
+            val md5 = file.md5()
+            Timber.d("$TAG: writeText ${file.name}, md5: $md5")
             prefStore.putString(file.name, md5)
             cleanupOldFilesIfNeeded()
         }

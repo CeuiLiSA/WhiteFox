@@ -1,6 +1,7 @@
 package com.white.fox.ui.common
 
 import ceui.lisa.models.Tag
+import com.white.fox.ui.prime.PrimeTagResult
 import kotlinx.serialization.Serializable
 
 
@@ -21,6 +22,11 @@ sealed class Route(
     object History : Route("History")
 
     object LoginWithToken : Route("LoginWithToken")
+
+    object PrimeHot : Route("PrimeHot")
+
+    data class PrimeHotDetail(val primeTagResult: PrimeTagResult) :
+        Route("PrimeHotDetail-${primeTagResult.tag}")
 
     data class RankContainer(val objectType: String) : Route("RankContainer-${objectType}")
 

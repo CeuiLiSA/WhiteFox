@@ -12,7 +12,7 @@ import com.white.fox.client.AppApi
 import com.white.fox.client.ListValueContent
 import kotlinx.coroutines.flow.StateFlow
 
-class ListIllustViewModal(
+open class ListIllustViewModal(
     repository: Repository<IllustResponse>,
     private val appApi: AppApi,
 ) : ViewModel(), RefreshOwner<IllustResponse> {
