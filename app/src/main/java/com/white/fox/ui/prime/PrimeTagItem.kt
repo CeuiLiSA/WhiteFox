@@ -48,12 +48,12 @@ fun PrimeTagItem(item: PrimeTagResult) {
                 fontWeight = FontWeight.Bold,
                 color = colorScheme.onSurface,
             )
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(4.dp))
             Text(
                 item.tag.name ?: "", fontSize = 14.sp,
                 color = colorScheme.onSurfaceVariant,
             )
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(4.dp))
 
             ThreePreview(item.resp.illusts.take(3))
         }

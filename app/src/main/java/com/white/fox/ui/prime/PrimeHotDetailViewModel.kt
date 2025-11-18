@@ -7,6 +7,7 @@ import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.hermes.loadstate.RefreshOwner
 import ceui.lisa.models.IllustResponse
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,6 +25,7 @@ class PrimeHotDetailViewModel(val tagResult: PrimeTagResult) : ViewModel(),
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 _loadStateFlow.value = LoadState.Loading(reason)
+                delay(400L)
                 val resp = tagResult.resp
                 _valueFlow.value = resp
                 _loadStateFlow.value = LoadState.Loaded(resp.displayList.isNotEmpty())

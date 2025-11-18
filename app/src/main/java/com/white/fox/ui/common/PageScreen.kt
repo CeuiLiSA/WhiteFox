@@ -2,6 +2,7 @@ package com.white.fox.ui.common
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun PageScreen(
     pageTitle: String,
+    action: (@Composable RowScope.() -> Unit)? = null,
     pageContent: @Composable BoxScope.() -> Unit = {}
 ) {
     val navViewModel = LocalNavViewModel.current
@@ -56,7 +58,7 @@ fun PageScreen(
                         )
                     }
                 },
-                actions = {
+                actions = action ?: {
                     Spacer(modifier = Modifier.width(48.dp))
                 },
             )
