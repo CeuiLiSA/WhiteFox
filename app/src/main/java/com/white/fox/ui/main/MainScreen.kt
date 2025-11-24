@@ -22,6 +22,11 @@ import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import ceui.lisa.models.Tag
+import ceui.lisa.models.stableStringHash
+import com.white.fox.ui.common.LocalDependency
+import com.white.fox.ui.common.PrimeTaskViewModel
+import com.white.fox.ui.common.constructKeyedVM
 import com.white.fox.ui.discover.DiscoverScreen
 import com.white.fox.ui.following.FollowingScreen
 import com.white.fox.ui.recommend.RecommendScreen
@@ -39,6 +44,17 @@ fun MainScreen(viewModel: MainScreenViewModel = viewModel()) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val saveableStateHolder = rememberSaveableStateHolder()
+
+
+    val tag = Tag("かわいい", "可爱")
+    val client = LocalDependency.current.client
+    val primeTaskViewModel = constructKeyedVM(
+        { "prime_task_${stableStringHash(tag.name ?: "")}" },
+        { client.appApi to tag }) { (api, tag) ->
+        PrimeTaskViewModel(api, tag)
+    }
+
+    primeTaskViewModel.startTask()
 
     ModalNavigationDrawer(
         drawerState = drawerState,

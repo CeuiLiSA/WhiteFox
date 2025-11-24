@@ -54,4 +54,5 @@
     <string name="button_search">搜索</string>
     <string name="search_keyword">关键字</string>
     <string name="sorted_by_popular">热度排序</string>
+    <string name="show_more_info">详细信息</string>
 </resources>

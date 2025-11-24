@@ -43,7 +43,7 @@ fun PrimeTagItem(item: PrimeTagResult) {
                 .padding(12.dp)
         ) {
             Text(
-                item.tag.translated_name ?: "No Title",
+                item.tag.translated_name ?: item.tag.name ?: "",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = colorScheme.onSurface,

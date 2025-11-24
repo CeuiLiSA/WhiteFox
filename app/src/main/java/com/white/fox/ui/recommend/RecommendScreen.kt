@@ -11,9 +11,6 @@ import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,7 +20,6 @@ import ceui.lisa.hermes.loader.HybridRepository
 import ceui.lisa.models.IllustResponse
 import ceui.lisa.models.NovelResponse
 import ceui.lisa.models.ObjectType
-import ceui.lisa.models.Tag
 import com.white.fox.R
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.constructKeyedVM
@@ -31,7 +27,6 @@ import com.white.fox.ui.novel.ListNovelContent
 import com.white.fox.ui.novel.ListNovelViewModel
 import com.white.fox.ui.setting.localizedString
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @Composable
 fun RecommendScreen() {
@@ -90,23 +85,6 @@ fun RecommendScreen() {
                         )
                     }) { repository ->
                         ListIllustViewModal(repository, dependency.client.appApi)
-                    }
-                    val aa by viewModel.valueFlow.collectAsState()
-                    val map = hashMapOf<Tag, Int>()
-                    LaunchedEffect(aa) {
-                        map.clear()
-
-                        aa?.displayList.orEmpty().forEach { item ->
-                            item.tags.orEmpty().forEach { tag ->
-                                map[tag] = (map[tag] ?: 0) + 1
-                            }
-                        }
-
-                        map.toList()
-                            .sortedByDescending { (_, count) -> count }
-                            .forEach { (tag, count) ->
-                                Timber.d("sadadsasdws2 Tag统计: $tag = $count")
-                            }
                     }
                     StaggeredIllustContent(viewModel = viewModel)
                 }

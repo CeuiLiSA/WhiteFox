@@ -17,7 +17,7 @@ import com.white.fox.ui.illust.IllustItem
 
 @Composable
 fun PrimeHotDetailScreen(primeTagResult: PrimeTagResult) =
-    PageScreen(primeTagResult.tag.translated_name ?: "") {
+    PageScreen(primeTagResult.tag.translated_name ?: primeTagResult.tag.name ?: "") {
         val key = "getPrimeHotDetailData-tag-${primeTagResult.tag}"
         val viewModel = constructKeyedVM({ key }, { primeTagResult }) { tag ->
             PrimeHotDetailViewModel(tag)

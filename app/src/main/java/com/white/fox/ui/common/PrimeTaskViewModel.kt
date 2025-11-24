@@ -28,9 +28,7 @@ class PrimeTaskViewModel(private val appApi: AppApi, private val tag: Tag) : Lis
         MutableStateFlow<LoadState>(LoadState.Loading(LoadReason.InitialLoad))
     val loadStateFlow = _loadStateFlow.asStateFlow()
 
-    private val fileCache = FileCache(
-        "PrimeTask",
-    )
+    private val fileCache = FileCache("PrimeTask")
 
     private var pageIndex = 1
     private var fileDone = false

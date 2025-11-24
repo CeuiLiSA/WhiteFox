@@ -26,9 +26,7 @@ class ImageLoaderTask(
     private var autoSaveToGallery: Boolean = false,
 ) {
 
-    private val fileCache = FileCache(
-        "FoxImagesCache",
-    )
+    private val fileCache = FileCache("FoxImagesCache")
 
     private val _loadStateFlow =
         MutableStateFlow<LoadState>(LoadState.Loading(LoadReason.InitialLoad))
