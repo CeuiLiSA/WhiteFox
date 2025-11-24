@@ -14,10 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.white.fox.R
+import com.white.fox.ui.common.LocalNavViewModel
+import com.white.fox.ui.common.Route
 import com.white.fox.ui.setting.localizedString
 
 @Composable
-fun CommentButton() {
+fun CommentButton(objectId: Long, objectType: String) {
+    val navViewModel = LocalNavViewModel.current
     Box(
         modifier = Modifier
             .size(44.dp)
@@ -26,7 +29,7 @@ fun CommentButton() {
     ) {
         IconButton(
             onClick = {
-
+                navViewModel.navigate(Route.Comment(objectId, objectType))
             },
             modifier = Modifier.size(44.dp),
             content = {

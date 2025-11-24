@@ -4,6 +4,7 @@ import androidx.room.Entity
 import ceui.lisa.hermes.objectpool.ObjectPool
 import ceui.lisa.models.ModelObject
 import com.google.gson.Gson
+import timber.log.Timber
 
 val gson = Gson()
 
@@ -18,14 +19,15 @@ data class GeneralEntity(
     val recordType: Int, // 记录原因
     val updatedTime: Long = System.currentTimeMillis()
 ) {
-    inline fun <reified T> typedObject(): T {
+    inline fun <reified T : Any> typedObject(): T {
         return typedObject(T::class.java)
     }
 
     fun <T> typedObject(cls: Class<T>): T {
         val obj = gson.fromJson(json, cls)
         if (obj is ModelObject) {
-            ObjectPool.update(obj)
+            Timber.d("sdaadssdasdaw2 ${cls}")
+            ObjectPool.update(obj, cls as Class<out ModelObject>)
         }
         return obj
     }

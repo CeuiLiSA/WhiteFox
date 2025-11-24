@@ -3,7 +3,7 @@ package ceui.lisa.hermes.objectpool
 import ceui.lisa.models.ModelObject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlin.reflect.KClass
+import timber.log.Timber
 
 object ObjectPool {
 
@@ -11,26 +11,27 @@ object ObjectPool {
 
     // 更新对象
     inline fun <reified ObjectT : ModelObject> update(obj: ObjectT) {
-        update(obj, ObjectT::class)
+        update(obj, ObjectT::class.java)
     }
 
     fun <ObjectT : ModelObject> update(
         obj: ObjectT,
-        objCls: KClass<ObjectT>,
+        objCls: Class<out ModelObject>,
     ) {
         val key = ObjectKey(obj.objectUniqueId, objCls)
+        Timber.d("dsaasdsads2 ${objCls}")
         val record = getMutableRecord(key)
         record.value = obj
     }
 
     // 获取 StateFlow
     inline fun <reified ObjectT : ModelObject> get(id: Long): StateFlow<ObjectT?> {
-        return get(id, ObjectT::class)
+        return get(id, ObjectT::class.java)
     }
 
     fun <ObjectT : ModelObject> get(
         objectId: Long,
-        objCls: KClass<ObjectT>,
+        objCls: Class<ObjectT>,
     ): StateFlow<ObjectT?> {
         val key = ObjectKey(objectId, objCls)
         @Suppress("UNCHECKED_CAST")

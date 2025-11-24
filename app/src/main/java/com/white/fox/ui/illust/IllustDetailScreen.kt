@@ -13,7 +13,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -31,6 +30,7 @@ import ceui.lisa.hermes.common.parseIsoToMillis
 import ceui.lisa.hermes.objectpool.ObjectPool
 import ceui.lisa.hermes.task.NamedUrl
 import ceui.lisa.models.Illust
+import ceui.lisa.models.ObjectType
 import com.white.fox.ui.common.LoadingBlock
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.LocalNavViewModel
@@ -44,9 +44,10 @@ fun IllustDetailScreen(
 ) {
     val viewModel = constructKeyedVM(
         { "illust-detail-model-${illustId}" },
-        { LocalDependency.current }) { dep ->
+        { LocalDependency.current to illustId }) { (dep, id) ->
         IllustDetailViewModel(
-            illustId,
+            id,
+            dep.client.appApi,
             dep.database,
             dep.client.downloadApi,
         )
@@ -57,10 +58,6 @@ fun IllustDetailScreen(
     val illust = illustState.value ?: return LoadingBlock()
 
     var showSheet by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        viewModel.insertViewHistory(illust)
-    }
     val context = LocalContext.current
 
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { illust.page_count })
@@ -112,7 +109,7 @@ fun IllustDetailScreen(
                     DownloadButton {
                         viewModel.getLoadTask(namedUrls[pagerState.currentPage]).download()
                     }
-                    CommentButton()
+                    CommentButton(illustId, ObjectType.ILLUST)
                     BookmarkButton(illustId, 44.dp)
                 }
             }

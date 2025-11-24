@@ -1,10 +1,13 @@
 package com.white.fox.client
 
+import ceui.lisa.models.CommentResponse
 import ceui.lisa.models.HomeAllReq
 import ceui.lisa.models.HomeAllResponse
 import ceui.lisa.models.IllustResponse
 import ceui.lisa.models.NovelResponse
+import ceui.lisa.models.PostCommentResponse
 import ceui.lisa.models.SelfProfile
+import ceui.lisa.models.SingleIllustResponse
 import ceui.lisa.models.TrendingTagsResponse
 import ceui.lisa.models.UserPreviewResponse
 import ceui.lisa.models.UserResponse
@@ -46,6 +49,39 @@ interface AppApi {
         @Field("restrict") restrict: String
     )
 
+
+    @GET("/v3/illust/comments")
+    suspend fun getIllustComments(
+        @Query("illust_id") illust_id: Long,
+    ): CommentResponse
+
+    @GET("/v3/novel/comments")
+    suspend fun getNovelComments(
+        @Query("novel_id") novel_id: Long,
+    ): CommentResponse
+
+    @GET("/v2/{type}/comment/replies")
+    suspend fun getIllustReplyComments(
+        @Path("type") type: String,
+        @Query("comment_id") comment_id: Long,
+    ): CommentResponse
+
+    @FormUrlEncoded
+    @POST("/v1/illust/comment/add")
+    suspend fun postIllustComment(
+        @Field("illust_id") illust_id: Long,
+        @Field("comment") comment: String,
+        @Field("parent_comment_id") parent_comment_id: Long? = null,
+    ): PostCommentResponse
+
+    @FormUrlEncoded
+    @POST("/v1/novel/comment/add")
+    suspend fun postNovelComment(
+        @Field("novel_id") novel_id: Long,
+        @Field("comment") comment: String,
+        @Field("parent_comment_id") parent_comment_id: Long? = null,
+    ): PostCommentResponse
+
     @FormUrlEncoded
     @POST("/v1/user/follow/delete")
     suspend fun removeFollowUser(
@@ -67,6 +103,11 @@ interface AppApi {
         @Query("mode") mode: String,
         @Query("date") date: String? = null,
     ): IllustResponse
+
+    @GET("/v1/illust/detail")
+    suspend fun getIllust(
+        @Query("illust_id") illust_id: Long
+    ): SingleIllustResponse
 
     @GET("/v1/user/illusts?filter=for_ios")
     suspend fun getUserCreatedIllusts(

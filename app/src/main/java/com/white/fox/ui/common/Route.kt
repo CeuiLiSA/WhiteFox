@@ -30,6 +30,9 @@ sealed class Route(
 
     data class RankContainer(val objectType: String) : Route("RankContainer-${objectType}")
 
+    data class Comment(val objectId: Long, val objectType: String) :
+        Route("Comment-${objectId}-${objectType}")
+
     data class BookmarkedIllust(val userId: Long) : Route("BookmarkedIllust-userId-${userId}")
 
     data class UserCreatedIllust(val userId: Long, val objectType: String) :

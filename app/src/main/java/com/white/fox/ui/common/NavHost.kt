@@ -12,6 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.ui.NavDisplay
+import com.white.fox.ui.comment.CommentScreen
 import com.white.fox.ui.following.BookmarkedIllustScreen
 import com.white.fox.ui.following.FollowingUsersScreen
 import com.white.fox.ui.following.MyPixivFriendsScreen
@@ -66,6 +67,7 @@ fun NavHost() {
                     is Route.PrimeHot -> PrimeHotScreen()
                     is Route.PrimeHotDetail -> PrimeHotDetailScreen(key.primeTagResult)
                     is Route.RankContainer -> RankContainerScreen(key.objectType)
+                    is Route.Comment -> CommentScreen(key.objectId, key.objectType)
                     is Route.BookmarkedIllust -> BookmarkedIllustScreen(key.userId)
                     is Route.UserCreatedIllust -> UserCreatedIllustScreen(
                         key.userId,

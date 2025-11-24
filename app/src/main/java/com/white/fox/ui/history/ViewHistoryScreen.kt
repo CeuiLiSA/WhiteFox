@@ -84,7 +84,7 @@ fun ViewHistoryScreen() = PageScreen(localizedString(R.string.view_history)) {
                     ) { illust ->
                         IllustItem(
                             illust = illust,
-                            onClick = { navViewModel.navigate(IllustDetail(0L)) },
+                            onClick = { navViewModel.navigate(IllustDetail(illust.id)) },
                         )
                     }
                 }

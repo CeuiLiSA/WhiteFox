@@ -3,6 +3,7 @@ package com.white.fox.ui.recommend
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ceui.lisa.hermes.loader.Repository
+import ceui.lisa.hermes.loadstate.LoadMoreOwner
 import ceui.lisa.hermes.loadstate.LoadReason
 import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.hermes.loadstate.RefreshOwner
@@ -19,7 +20,7 @@ import timber.log.Timber
 open class ListIllustViewModal(
     repository: Repository<IllustResponse>,
     private val appApi: AppApi,
-) : ViewModel(), RefreshOwner<IllustResponse> {
+) : ViewModel(), RefreshOwner<IllustResponse>, LoadMoreOwner {
 
     private val valueContent =
         ListValueContent(
@@ -41,7 +42,7 @@ open class ListIllustViewModal(
 
     override fun refresh(reason: LoadReason) = valueContent.refresh(reason)
 
-    fun loadNextPage() {
+    override fun loadNextPage() {
         valueContent.loadNextPage()
     }
 

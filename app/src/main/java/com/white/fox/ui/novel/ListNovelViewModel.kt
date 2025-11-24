@@ -3,6 +3,7 @@ package com.white.fox.ui.novel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ceui.lisa.hermes.loader.Repository
+import ceui.lisa.hermes.loadstate.LoadMoreOwner
 import ceui.lisa.hermes.loadstate.LoadReason
 import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.hermes.loadstate.RefreshOwner
@@ -15,7 +16,7 @@ import kotlinx.coroutines.flow.StateFlow
 class ListNovelViewModel(
     repository: Repository<NovelResponse>,
     private val appApi: AppApi,
-) : ViewModel(), RefreshOwner<NovelResponse> {
+) : ViewModel(), RefreshOwner<NovelResponse>, LoadMoreOwner {
 
     private val valueContent =
         ListValueContent(
@@ -37,7 +38,7 @@ class ListNovelViewModel(
 
     override fun refresh(reason: LoadReason) = valueContent.refresh(reason)
 
-    fun loadNextPage() {
+    override fun loadNextPage() {
         valueContent.loadNextPage()
     }
 }
