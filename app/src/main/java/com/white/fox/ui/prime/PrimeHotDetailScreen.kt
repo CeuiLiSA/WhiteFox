@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import ceui.lisa.hermes.objectpool.ObjectPool
 import com.white.fox.ui.common.LocalNavViewModel
 import com.white.fox.ui.common.PageScreen
 import com.white.fox.ui.common.RefreshTemplate
@@ -35,7 +36,13 @@ fun PrimeHotDetailScreen(primeTagResult: PrimeTagResult) =
                     key = { "illust-${it.id}" }) { illust ->
                     IllustItem(
                         illust = illust,
-                        onClick = { navViewModel.navigate(IllustDetail(illust.id)) },
+                        onClick = {
+                            ObjectPool.update(illust)
+                            illust.user?.let { user ->
+                                ObjectPool.update(user)
+                            }
+                            navViewModel.navigate(IllustDetail(illust.id))
+                        },
                     )
                 }
             }
