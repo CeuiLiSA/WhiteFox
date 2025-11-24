@@ -1,10 +1,12 @@
 package com.white.fox.ui.comment
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -26,17 +28,22 @@ import ceui.lisa.hermes.common.parseIsoToMillis
 import ceui.lisa.models.Comment
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.request.ImageRequest
+import com.white.fox.ui.common.LocalNavViewModel
+import com.white.fox.ui.common.Route
 import com.white.fox.ui.illust.withHeader
 
 @Composable
 fun CommentItem(comment: Comment) {
     val context = LocalContext.current
+    val navViewModel = LocalNavViewModel.current
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(12.dp)
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable {
+            navViewModel.navigate(Route.UserProfile(comment.user.id))
+        }) {
             AsyncImage(
                 request = ImageRequest.Builder(
                     context,
@@ -66,11 +73,11 @@ fun CommentItem(comment: Comment) {
             )
         }
 
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         Text(
             text = comment.comment ?: "",
-            style = typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
+            style = typography.titleMedium.copy(fontWeight = FontWeight.Medium),
             color = colorScheme.onSurface,
             maxLines = 5,
             overflow = TextOverflow.Ellipsis,

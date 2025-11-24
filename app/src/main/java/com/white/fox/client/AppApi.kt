@@ -109,6 +109,9 @@ interface AppApi {
         @Query("illust_id") illust_id: Long
     ): SingleIllustResponse
 
+    @GET("/v1/user/recommended?filter=for_ios")
+    suspend fun recommendedUsers(): UserPreviewResponse
+
     @GET("/v1/user/illusts?filter=for_ios")
     suspend fun getUserCreatedIllusts(
         @Query("user_id") user_id: Long,

@@ -36,7 +36,7 @@ fun UserTopBar(userId: Long, artworksCreatedTime: Long? = null) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(
-            onClick = { },
+            onClick = { navViewModal.back() },
             modifier = Modifier.size(40.dp)
         ) {
             Icon(
