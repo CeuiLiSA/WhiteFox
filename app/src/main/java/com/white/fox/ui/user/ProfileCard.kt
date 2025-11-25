@@ -24,22 +24,11 @@ import ceui.lisa.models.Profile
 fun ProfileCard(profile: Profile) {
     val items = listOfNotNull(
         "Webpage" to (profile.webpage?.toString()?.takeIf { it.isNotBlank() }),
-        "Gender" to (
-                when (profile.gender) {
-                    "1" -> "Male"
-                    "2" -> "Female"
-                    else -> "Unknown"
-                }
-                ),
         "Birth" to profile.birth,
         "Region" to profile.region,
         "Job" to profile.job,
         "Twitter" to profile.twitter_account?.let { "@$it" },
         "Twitter URL" to profile.twitter_url,
-        "Premium User" to if (profile.is_premium == true) "Yes" else "No",
-        "Custom Profile Image" to if (profile.is_using_custom_profile_image == true) "Yes" else "No",
-        "Total Follows" to profile.total_follow_users?.toString(),
-        "Total MyPixiv Users" to profile.total_mypixiv_users?.toString(),
         "Total Novels" to profile.total_novels?.takeIf { it > 0 }?.toString(),
         "Total Illust Series" to profile.total_illust_series?.takeIf { it > 0 }?.toString(),
         "Total Novel Series" to profile.total_novel_series?.takeIf { it > 0 }?.toString(),
