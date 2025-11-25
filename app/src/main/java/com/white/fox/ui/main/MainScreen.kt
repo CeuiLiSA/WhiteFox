@@ -46,7 +46,7 @@ fun MainScreen(viewModel: MainScreenViewModel = viewModel()) {
     val saveableStateHolder = rememberSaveableStateHolder()
 
 
-    val tag = Tag("かわいい", "可爱")
+    val tag = Tag("金髪", "金发")
     val client = LocalDependency.current.client
     val primeTaskViewModel = constructKeyedVM(
         { "prime_task_${stableStringHash(tag.name ?: "")}" },

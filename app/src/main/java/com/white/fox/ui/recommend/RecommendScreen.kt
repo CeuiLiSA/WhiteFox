@@ -84,7 +84,7 @@ fun RecommendScreen() {
                             IllustResponse::class
                         )
                     }) { repository ->
-                        ListIllustViewModal(repository, dependency.client.appApi)
+                        TagMapIllustViewModel(repository, dependency.client.appApi)
                     }
                     StaggeredIllustContent(viewModel = viewModel)
                 }

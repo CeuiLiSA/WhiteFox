@@ -51,6 +51,8 @@ dependencies {
     api(libs.material)
     implementation(libs.androidx.browser)
 
+    api("androidx.core:core-splashscreen:1.2.0")
+
     api(libs.androidx.compose.material.icons.core)
     api(libs.androidx.compose.material.icons.extended)
 

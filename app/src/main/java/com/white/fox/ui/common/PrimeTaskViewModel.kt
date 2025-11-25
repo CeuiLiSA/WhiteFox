@@ -58,7 +58,7 @@ class PrimeTaskViewModel(private val appApi: AppApi, private val tag: Tag) : Lis
                         fileDone = true
                     }
                 } else {
-                    delay(10_000L)
+                    delay(5_000L)
                     pageIndex++
                     Timber.d("sadadsasdws2 loadNextPage: ${pageIndex}")
                     loadNextPage()
