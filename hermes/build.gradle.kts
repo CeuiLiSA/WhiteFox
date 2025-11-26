@@ -82,7 +82,7 @@ dependencies {
     api(libs.sketch.http)
 
     api(libs.sketch.extensions.compose)
-
+    api("org.jsoup:jsoup:1.21.1")
 
 
 

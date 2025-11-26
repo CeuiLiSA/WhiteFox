@@ -24,23 +24,43 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import ceui.lisa.hermes.objectpool.ObjectPool
 import ceui.lisa.models.Illust
+import ceui.lisa.models.Novel
+import ceui.lisa.models.ObjectType
 import com.white.fox.R
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.setting.localizedString
 
 @Composable
 fun BookmarkButton(
-    illustId: Long,
+    objectId: Long,
+    objectType: String,
     sizeDp: Dp,
 ) {
     val dependency = LocalDependency.current
     val coroutineScope = rememberCoroutineScope()
-    val task = remember { BookmarkTask(coroutineScope, dependency.client.appApi, illustId) }
+    val task: Bookmarkable =
+        remember {
+            if (objectType == ObjectType.NOVEL) {
+                BookmarkNovelTask(coroutineScope, dependency.client.appApi, objectId)
+            } else {
+                BookmarkIllustTask(coroutineScope, dependency.client.appApi, objectId)
+            }
+        }
     val loading by task.bookmarkLoading.collectAsState()
-    val illust = ObjectPool.get<Illust>(illustId).collectAsState().value
-    val isBookmarked by remember(illust) {
-        derivedStateOf { illust?.is_bookmarked ?: false }
+
+    val illust = ObjectPool.get<Illust>(objectId).collectAsState().value
+    val novel = ObjectPool.get<Novel>(objectId).collectAsState().value
+
+    val isBookmarked by remember(illust, novel, objectType) {
+        derivedStateOf {
+            when (objectType) {
+                ObjectType.NOVEL -> novel?.is_bookmarked ?: false
+                ObjectType.ILLUST -> illust?.is_bookmarked ?: false
+                else -> false
+            }
+        }
     }
+
 
     Box(
         modifier = Modifier

@@ -43,6 +43,19 @@ interface AppApi {
     )
 
     @FormUrlEncoded
+    @POST("/v2/novel/bookmark/add")
+    suspend fun addNovelBookmark(
+        @Field("novel_id") novel_id: Long,
+        @Field("restrict") followType: String
+    )
+
+    @FormUrlEncoded
+    @POST("/v1/novel/bookmark/delete")
+    suspend fun removeNovelBookmark(
+        @Field("novel_id") novel_id: Long
+    )
+
+    @FormUrlEncoded
     @POST("/v1/user/follow/add")
     suspend fun postFollowUser(
         @Field("user_id") user_id: Long,
@@ -81,6 +94,9 @@ interface AppApi {
         @Field("comment") comment: String,
         @Field("parent_comment_id") parent_comment_id: Long? = null,
     ): PostCommentResponse
+
+    @GET("/webview/v2/novel")
+    suspend fun getNovelText(@Query("id") id: Long): ResponseBody
 
     @FormUrlEncoded
     @POST("/v1/user/follow/delete")

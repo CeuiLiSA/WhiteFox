@@ -16,6 +16,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import ceui.lisa.models.Illust
+import ceui.lisa.models.ObjectType
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.http.HttpHeaders
 import com.github.panpf.sketch.request.ImageRequest
@@ -57,7 +58,7 @@ fun IllustItem(
                     .align(Alignment.BottomEnd)
                     .padding(4.dp)
             ) {
-                BookmarkButton(illust.id, 36.dp)
+                BookmarkButton(illust.id, ObjectType.ILLUST, 36.dp)
             }
         }
     }

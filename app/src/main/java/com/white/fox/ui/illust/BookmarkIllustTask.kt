@@ -8,19 +8,20 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-class BookmarkTask(
+class BookmarkIllustTask(
     private val coroutineScope: CoroutineScope,
     private val appApi: AppApi,
     private val illustId: Long
-) {
+) : Bookmarkable {
     private val _bookmarkLoading = MutableStateFlow(false)
-    val bookmarkLoading: StateFlow<Boolean> = _bookmarkLoading
+    override val bookmarkLoading: StateFlow<Boolean> = _bookmarkLoading.asStateFlow()
 
-    fun toggleBookmark() {
+    override fun toggleBookmark() {
         if (_bookmarkLoading.value) {
             return
         }

@@ -29,9 +29,9 @@ fun FollowUserButton(userId: Long, userState: State<User?>) {
     val dependency = LocalDependency.current
     val coroutineScope = rememberCoroutineScope()
     val task = remember { FollowUserTask(coroutineScope, dependency.client.appApi, userId) }
-    val loading by task.followTaskRunning.collectAsState()
+    val loading by task.bookmarkLoading.collectAsState()
     Button(
-        onClick = { task.toggleFollow() },
+        onClick = { task.toggleBookmark() },
         modifier = Modifier.height(32.dp),
         shape = RoundedCornerShape(16.dp),
         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),

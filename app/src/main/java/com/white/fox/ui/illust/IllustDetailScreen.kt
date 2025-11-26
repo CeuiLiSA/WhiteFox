@@ -110,7 +110,7 @@ fun IllustDetailScreen(
                         viewModel.getLoadTask(namedUrls[pagerState.currentPage]).download()
                     }
                     CommentButton(illustId, ObjectType.ILLUST)
-                    BookmarkButton(illustId, 44.dp)
+                    BookmarkButton(illustId, ObjectType.ILLUST, 44.dp)
                 }
             }
 

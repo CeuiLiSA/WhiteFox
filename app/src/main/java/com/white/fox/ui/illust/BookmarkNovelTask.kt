@@ -1,10 +1,9 @@
-package com.white.fox.ui.user
+package com.white.fox.ui.illust
 
 import ceui.lisa.hermes.objectpool.ObjectPool
-import ceui.lisa.models.User
+import ceui.lisa.models.Novel
 import com.white.fox.client.AppApi
 import com.white.fox.client.RestrictType
-import com.white.fox.ui.illust.Bookmarkable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,38 +13,37 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-
-class FollowUserTask(
+class BookmarkNovelTask(
     private val coroutineScope: CoroutineScope,
     private val appApi: AppApi,
-    private val userId: Long
+    private val novelId: Long
 ) : Bookmarkable {
-    private val _followTaskRunning = MutableStateFlow(false)
+    private val _bookmarkLoading = MutableStateFlow(false)
+    override val bookmarkLoading: StateFlow<Boolean> = _bookmarkLoading.asStateFlow()
+
     override fun toggleBookmark() {
-        if (_followTaskRunning.value) {
+        if (_bookmarkLoading.value) {
             return
         }
 
         coroutineScope.launch {
-            _followTaskRunning.value = true
+            _bookmarkLoading.value = true
             try {
                 withContext(Dispatchers.IO) {
-                    val user = ObjectPool.get<User>(userId).value ?: return@withContext
-                    if (user.is_followed == true) {
-                        appApi.removeFollowUser(userId)
-                        ObjectPool.update(user.copy(is_followed = false))
+                    val novel = ObjectPool.get<Novel>(novelId).value ?: return@withContext
+                    if (novel.is_bookmarked == true) {
+                        appApi.removeNovelBookmark(novelId)
+                        ObjectPool.update(novel.copy(is_bookmarked = false))
                     } else {
-                        appApi.postFollowUser(userId, RestrictType.PUBLIC)
-                        ObjectPool.update(user.copy(is_followed = true))
+                        appApi.addNovelBookmark(novelId, RestrictType.PUBLIC)
+                        ObjectPool.update(novel.copy(is_bookmarked = true))
                     }
                 }
             } catch (ex: Exception) {
                 Timber.e(ex)
             } finally {
-                _followTaskRunning.value = false
+                _bookmarkLoading.value = false
             }
         }
     }
-
-    override val bookmarkLoading: StateFlow<Boolean> = _followTaskRunning.asStateFlow()
 }
