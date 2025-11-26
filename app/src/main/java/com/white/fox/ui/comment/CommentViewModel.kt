@@ -8,11 +8,16 @@ import ceui.lisa.hermes.loadstate.LoadReason
 import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.hermes.loadstate.RefreshOwner
 import ceui.lisa.hermes.objectpool.ObjectPool
+import ceui.lisa.models.Comment
 import ceui.lisa.models.CommentResponse
 import ceui.lisa.models.ObjectType
 import com.white.fox.client.AppApi
 import com.white.fox.client.ListValueContent
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class CommentViewModel(
     private val objectId: Long,
@@ -50,4 +55,21 @@ class CommentViewModel(
 
     override val loadState: StateFlow<LoadState> = valueContent.loadState
     override val valueFlow: StateFlow<CommentResponse?> = valueContent.totalFlow
+
+    private val _childComments =
+        MutableStateFlow<Map<Long, List<Comment>>>(emptyMap())
+    val childComments: StateFlow<Map<Long, List<Comment>>> = _childComments
+
+    fun showReplies(commentId: Long) {
+        viewModelScope.launch {
+            try {
+                val resp = appApi.getIllustReplyComments(objectType, commentId)
+                _childComments.update { old ->
+                    old + (commentId to resp.comments)
+                }
+            } catch (ex: Exception) {
+                Timber.e(ex)
+            }
+        }
+    }
 }

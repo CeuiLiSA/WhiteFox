@@ -1,6 +1,8 @@
 package com.white.fox.ui.comment
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.PageScreen
 import com.white.fox.ui.common.PagedListScreen
@@ -15,7 +17,11 @@ fun CommentScreen(objectId: Long, objectType: String) = PageScreen("Comments") {
         CommentViewModel(id, type, api)
     }
 
-    PagedListScreen(viewModel) {
-        CommentItem(it)
+    val childReplies by viewModel.childComments.collectAsState()
+
+    PagedListScreen(viewModel) { comment ->
+        CommentItem(comment, childComments = childReplies[comment.id].orEmpty()) {
+            viewModel.showReplies(comment.id)
+        }
     }
 }
