@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme.colorScheme
-import androidx.compose.material3.MaterialTheme.typography
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,12 +45,10 @@ fun ChildCommentItem(comment: Comment) {
             )
             Spacer(modifier = Modifier.width(4.dp))
 
-            Text(
-                text = "${comment.user.name}: ${comment.comment}",
-                color = colorScheme.onSurfaceVariant,
-                style = typography.bodyMedium
+            RichCommentText(
+                text = "${comment.user.name}: ${comment.comment ?: ""}",
+                modifier = Modifier.weight(1f)
             )
         }
-
     }
 }

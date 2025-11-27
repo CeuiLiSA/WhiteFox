@@ -30,6 +30,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import ceui.lisa.hermes.common.formatRelativeTime
 import ceui.lisa.hermes.common.parseIsoToMillis
 import ceui.lisa.models.Comment
@@ -40,6 +41,7 @@ import com.white.fox.ui.common.LocalNavViewModel
 import com.white.fox.ui.common.Route
 import com.white.fox.ui.illust.withHeader
 import com.white.fox.ui.setting.localizedString
+import timber.log.Timber
 
 @Composable
 fun CommentItem(
@@ -47,6 +49,7 @@ fun CommentItem(
     childComments: List<Comment> = listOf(),
     onClickShowReplies: () -> Unit
 ) {
+    Timber.d("sdadsasadadsw2w ${comment.comment}")
     val context = LocalContext.current
     val navViewModel = LocalNavViewModel.current
     Column(
@@ -73,28 +76,23 @@ fun CommentItem(
                     .border(1.dp, colorScheme.outlineVariant, CircleShape)
             )
             Spacer(modifier = Modifier.width(8.dp))
+
             Text(
                 text = comment.user.name ?: "",
-                style = typography.bodyMedium,
-                color = colorScheme.onSurfaceVariant,
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = formatRelativeTime(parseIsoToMillis(comment.date ?: ""), true),
-                style = typography.labelSmall,
-                color = colorScheme.outline,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = colorScheme.onSurface,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        if (comment.comment?.isNotEmpty() == true) {
-            Text(
-                text = comment.comment ?: "",
-                style = typography.titleMedium.copy(fontWeight = FontWeight.Normal),
-                color = colorScheme.onSurface,
-                maxLines = 5,
-                overflow = TextOverflow.Ellipsis,
+        if (!comment.comment.isNullOrEmpty()) {
+            RichCommentText(
+                text = comment.comment!!,
+                modifier = Modifier.fillMaxWidth()
             )
         }
 
@@ -143,5 +141,11 @@ fun CommentItem(
             }
         }
 
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = formatRelativeTime(parseIsoToMillis(comment.date ?: ""), true),
+            style = typography.labelSmall,
+            color = colorScheme.outline,
+        )
     }
 }
