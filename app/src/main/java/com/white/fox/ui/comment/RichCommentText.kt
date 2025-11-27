@@ -33,7 +33,7 @@ fun RichCommentText(
 
     val segments = remember(text) {
         parseComment(text).also {
-            Timber.d("dsaadsadsdasw2 ${gson.toJson(it)}")
+            Timber.d("RichComment parsed: ${gson.toJson(it)}")
         }
     }
 

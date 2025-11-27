@@ -47,7 +47,8 @@ import timber.log.Timber
 fun CommentItem(
     comment: Comment,
     childComments: List<Comment> = listOf(),
-    onClickShowReplies: () -> Unit
+    onClickReply: (commentId: Long) -> Unit,
+    onClickShowReplies: () -> Unit,
 ) {
     Timber.d("sdadsasadadsw2w ${comment.comment}")
     val context = LocalContext.current
@@ -130,22 +131,33 @@ fun CommentItem(
                     .padding(start = 48.dp, top = 4.dp)
             ) {
                 childComments.forEach { child ->
-                    ChildCommentItem(child)
+                    ChildCommentItem(child) {
+                        onClickReply(child.id)
+                    }
                 }
             }
         }
 
-        if (comment.has_replies) {
-            TextButton(onClick = { onClickShowReplies() }) {
-                Text(text = localizedString(R.string.button_see_more_details))
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = formatRelativeTime(parseIsoToMillis(comment.date ?: ""), true),
+                style = typography.labelSmall,
+                color = colorScheme.outline,
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            TextButton(onClick = { onClickReply(comment.id) }) {
+                Text(text = localizedString(R.string.comment_action_reply))
+            }
+
+            if (comment.has_replies) {
+                TextButton(onClick = { onClickShowReplies() }) {
+                    Text(text = localizedString(R.string.show_more_comments))
+                }
             }
         }
-
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = formatRelativeTime(parseIsoToMillis(comment.date ?: ""), true),
-            style = typography.labelSmall,
-            color = colorScheme.outline,
-        )
     }
 }

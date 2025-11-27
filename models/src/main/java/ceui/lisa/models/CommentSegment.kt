@@ -7,32 +7,26 @@ data class CommentSegment(
 
 fun parseComment(comment: String): List<CommentSegment> {
     val result = mutableListOf<CommentSegment>()
-    var remaining = comment
+    val regex = """\([^)]+\)""".toRegex()
+    var lastIndex = 0
 
-    while (true) {
-        val start = remaining.indexOf("(")
-        if (start == -1) {
-            if (remaining.isNotEmpty()) result += CommentSegment(text = remaining)
-            break
+    regex.findAll(comment).forEach { match ->
+        if (match.range.first > lastIndex) {
+            val text = comment.substring(lastIndex, match.range.first)
+            result += CommentSegment(text = text)
         }
-
-        val end = remaining.indexOf(")", start + 1)
-        if (end == -1) {
-            result += CommentSegment(text = remaining)
-            break
-        }
-
-        val textPart = remaining.take(start)
-        val key = remaining.substring(start, end + 1)
-
-        if (textPart.isNotEmpty()) result += CommentSegment(text = textPart)
-        if (emojiMap.containsKey(key)) {
-            result += CommentSegment(emoji = emojiMap[key])
+        val key = match.value
+        val emojiFile = emojiMap[key]
+        result += if (emojiFile != null) {
+            CommentSegment(emoji = emojiFile)
         } else {
-            result += CommentSegment(text = key)
+            CommentSegment(text = key)
         }
+        lastIndex = match.range.last + 1
+    }
 
-        remaining = remaining.substring(end + 1)
+    if (lastIndex < comment.length) {
+        result += CommentSegment(text = comment.substring(lastIndex))
     }
 
     return result

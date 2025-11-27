@@ -56,4 +56,6 @@
     <string name="sorted_by_popular">热度排序</string>
     <string name="show_more_info">详细信息</string>
     <string name="recommend_users">推荐用户</string>
+    <string name="show_more_comments">查看评论</string>
+    <string name="comment_action_reply">回复</string>
 </resources>

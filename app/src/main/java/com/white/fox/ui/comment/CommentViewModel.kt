@@ -72,4 +72,14 @@ class CommentViewModel(
             }
         }
     }
+
+    fun reply(commentId: Long) {
+        viewModelScope.launch {
+            try {
+
+            } catch (ex: Exception) {
+                Timber.e(ex)
+            }
+        }
+    }
 }

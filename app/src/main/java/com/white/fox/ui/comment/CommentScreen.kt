@@ -20,7 +20,12 @@ fun CommentScreen(objectId: Long, objectType: String) = PageScreen("Comments") {
     val childReplies by viewModel.childComments.collectAsState()
 
     PagedListScreen(viewModel) { comment ->
-        CommentItem(comment, childComments = childReplies[comment.id].orEmpty()) {
+        CommentItem(
+            comment,
+            childComments = childReplies[comment.id].orEmpty(),
+            onClickReply = { commentId ->
+                viewModel.reply(commentId)
+            }) {
             viewModel.showReplies(comment.id)
         }
     }
