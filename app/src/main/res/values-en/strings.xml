@@ -58,4 +58,5 @@
     <string name="recommend_users">推荐用户</string>
     <string name="show_more_comments">查看评论</string>
     <string name="comment_action_reply">回复</string>
+    <string name="app_playground">Playground</string>
 </resources>

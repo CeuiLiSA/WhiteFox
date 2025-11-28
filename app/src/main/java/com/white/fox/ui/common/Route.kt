@@ -25,6 +25,8 @@ sealed class Route(
 
     object PrimeHot : Route("PrimeHot")
 
+    object Playground : Route("Playground")
+
     data class PrimeHotDetail(val primeTagResult: PrimeTagResult) :
         Route("PrimeHotDetail-${primeTagResult.tag}")
 

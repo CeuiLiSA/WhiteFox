@@ -9,6 +9,9 @@ class NavViewModel(private val sessionManager: SessionManager) : ViewModel() {
     private val _backStack = mutableStateListOf(defaultRoute())
     val backStack: List<Route> get() = _backStack
 
+    val currentRoute: Route
+        get() = _backStack.last()
+
     fun navigate(route: Route) {
         _backStack.add(route)
     }
