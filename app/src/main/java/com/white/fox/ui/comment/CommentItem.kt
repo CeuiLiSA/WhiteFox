@@ -20,7 +20,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +37,7 @@ import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.request.ImageRequest
 import com.white.fox.R
 import com.white.fox.ui.common.LocalNavViewModel
+import com.white.fox.ui.common.ProgressTextButton
 import com.white.fox.ui.common.Route
 import com.white.fox.ui.illust.withHeader
 import com.white.fox.ui.setting.localizedString
@@ -47,10 +47,10 @@ import timber.log.Timber
 fun CommentItem(
     comment: Comment,
     childComments: List<Comment> = listOf(),
-    onClickReply: (commentId: Long) -> Unit,
-    onClickShowReplies: () -> Unit,
+    onClickReply: suspend (commentId: Long) -> Unit,
+    onClickShowReplies: suspend () -> Unit,
 ) {
-    Timber.d("sdadsasadadsw2w ${comment.comment}")
+    Timber.d("CommentItem comment: ${comment.comment}")
     val context = LocalContext.current
     val navViewModel = LocalNavViewModel.current
     Column(
@@ -149,13 +149,13 @@ fun CommentItem(
 
             Spacer(modifier = Modifier.width(8.dp))
 
-            TextButton(onClick = { onClickReply(comment.id) }) {
-                Text(text = localizedString(R.string.comment_action_reply))
+            ProgressTextButton(text = localizedString(R.string.comment_action_reply)) {
+                onClickReply(comment.id)
             }
 
-            if (comment.has_replies) {
-                TextButton(onClick = { onClickShowReplies() }) {
-                    Text(text = localizedString(R.string.show_more_comments))
+            if (comment.has_replies && childComments.isEmpty()) {
+                ProgressTextButton(text = localizedString(R.string.show_more_comments)) {
+                    onClickShowReplies()
                 }
             }
         }

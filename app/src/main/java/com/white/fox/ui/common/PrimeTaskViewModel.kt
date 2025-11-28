@@ -24,6 +24,10 @@ class PrimeTaskViewModel(private val appApi: AppApi, private val tag: Tag) : Lis
     appApi,
 ) {
 
+    companion object {
+        private const val TAG = "PrimeTaskViewModel"
+    }
+
     private val _loadStateFlow =
         MutableStateFlow<LoadState>(LoadState.Loading(LoadReason.InitialLoad))
     val loadStateFlow = _loadStateFlow.asStateFlow()
@@ -54,13 +58,13 @@ class PrimeTaskViewModel(private val appApi: AppApi, private val tag: Tag) : Lis
                             fileName,
                             gson.toJson(primeTagResult)
                         )
-                        Timber.d("sadadsasdws2 final file: ${resultFile.path}")
+                        Timber.d("$TAG final file: ${resultFile.path}")
                         fileDone = true
                     }
                 } else {
                     delay(5_000L)
                     pageIndex++
-                    Timber.d("sadadsasdws2 loadNextPage: ${pageIndex}")
+                    Timber.d("$TAG loadNextPage: ${pageIndex}")
                     loadNextPage()
                 }
             }
@@ -71,7 +75,7 @@ class PrimeTaskViewModel(private val appApi: AppApi, private val tag: Tag) : Lis
         val fileName = "prime_tag_for_${stableStringHash(tag.name!!)}.txt"
         val cache = fileCache.getCachedFile(fileName)
         if (cache != null) {
-            Timber.d("sadadsasdws2 cache file: ${cache.path}")
+            Timber.d("$TAG cache file: ${cache.path}")
             _loadStateFlow.value = LoadState.Loaded(true)
             return true
         }

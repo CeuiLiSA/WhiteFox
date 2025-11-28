@@ -237,7 +237,7 @@ fun UserProfileScreen(userId: Long) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Workspace Info",
+                            text = localizedString(R.string.profile_title_workspace_info),
                             fontSize = 20.sp,
                             style = MaterialTheme.typography.titleMedium
                         )

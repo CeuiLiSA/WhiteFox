@@ -2,6 +2,7 @@ package ceui.lisa.hermes.common
 
 import android.annotation.SuppressLint
 import android.os.Build
+import timber.log.Timber
 import java.text.DateFormat
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -24,8 +25,8 @@ fun parseIsoToMillis(isoString: String): Long {
             val sdf = java.text.SimpleDateFormat(pattern)
             sdf.timeZone = java.util.TimeZone.getTimeZone("UTC")
             sdf.parse(isoString)?.time ?: 0L
-        } catch (e: Exception) {
-            e.printStackTrace()
+        } catch (ex: Exception) {
+            Timber.e(ex)
             0L
         }
     }

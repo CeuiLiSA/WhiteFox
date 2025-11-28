@@ -16,6 +16,10 @@ class TagMapIllustViewModel(
 
     private val _tagsMap = hashMapOf<Tag, Int>()
 
+    companion object {
+        private const val TAG = "TagMapIllustViewModel"
+    }
+
     init {
         viewModelScope.launch(Dispatchers.IO) {
             valueFlow.collect { response ->
@@ -30,7 +34,7 @@ class TagMapIllustViewModel(
                 _tagsMap.toList()
                     .sortedByDescending { (_, count) -> count }
                     .forEach { (tag, count) ->
-                        Timber.d("sadadsasdws2 Tag统计: $tag = $count")
+                        Timber.d("$TAG Tag统计: $tag = $count")
                     }
             }
         }

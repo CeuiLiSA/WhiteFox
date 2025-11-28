@@ -16,13 +16,11 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.em
-import ceui.lisa.hermes.db.gson
 import ceui.lisa.models.emojiUrl
 import ceui.lisa.models.parseComment
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.request.ImageRequest
 import com.white.fox.ui.illust.withHeader
-import timber.log.Timber
 
 @Composable
 fun RichCommentText(
@@ -32,9 +30,7 @@ fun RichCommentText(
     val context = LocalContext.current
 
     val segments = remember(text) {
-        parseComment(text).also {
-            Timber.d("RichComment parsed: ${gson.toJson(it)}")
-        }
+        parseComment(text)
     }
 
     val annotated = buildAnnotatedString {

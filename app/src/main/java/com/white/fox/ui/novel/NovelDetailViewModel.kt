@@ -84,6 +84,7 @@ class NovelDetailViewModel(private val novelId: Long, private val dep: Dependenc
                 _valueFlow.value = wNovel
                 _loadStateFlow.value = LoadState.Loaded(wNovel != null)
             } catch (ex: Exception) {
+                Timber.e(ex)
                 _loadStateFlow.value = LoadState.Error(ex)
             }
 

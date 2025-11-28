@@ -16,10 +16,7 @@ class WhiteFox : Application(), ServiceProvider {
         super.onCreate()
 
         Timber.plant(Timber.DebugTree())
-
-        val mmkvDir = MMKV.initialize(this)
-        Timber.d("WhiteFox mmkvDir: ${mmkvDir}")
-
+        MMKV.initialize(this)
     }
 
     override val database: AppDatabase by lazy {

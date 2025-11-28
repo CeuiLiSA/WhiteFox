@@ -12,9 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.white.fox.R
+import com.white.fox.ui.setting.localizedString
 
 @Composable
 fun InfoButton(onClick: () -> Unit) {
@@ -30,7 +30,7 @@ fun InfoButton(onClick: () -> Unit) {
         ) {
             Icon(
                 imageVector = Icons.Default.Info,
-                contentDescription = stringResource(R.string.show_more_info),
+                contentDescription = localizedString(R.string.show_more_info),
                 tint = Color.White
             )
         }

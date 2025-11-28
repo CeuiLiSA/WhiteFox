@@ -2,7 +2,6 @@ package com.white.fox.client
 
 import android.net.Uri
 import ceui.lisa.hermes.common.PKCEItem
-import ceui.lisa.hermes.db.gson
 import ceui.lisa.hermes.loader.ProgressInterceptor
 import ceui.lisa.hermes.loadstate.LoadReason
 import ceui.lisa.hermes.loadstate.LoadState
@@ -146,7 +145,6 @@ class Client(
                         CALL_BACK,
                         true
                     )
-                    Timber.d("dsdsadasdsaw2 ${gson.toJson(accountResponse)}")
                     sessionManager.updateSession(accountResponse)
                     _appLoginFlow.value = LoadState.Loaded(true)
                 } catch (ex: Exception) {

@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 class HistoryViewModel<ValueT>(
     private val db: AppDatabase,
@@ -34,6 +35,7 @@ class HistoryViewModel<ValueT>(
                     _valueFlow.value = entities.map { it.typedObject(cls) }
                     _loadStateFlow.value = LoadState.Loaded(entities.isNotEmpty())
                 } catch (ex: Exception) {
+                    Timber.e(ex)
                     _loadStateFlow.value = LoadState.Error(ex)
                 }
             }

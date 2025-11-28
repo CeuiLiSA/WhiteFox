@@ -19,6 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ceui.lisa.models.Profile
+import com.white.fox.R
+import com.white.fox.ui.setting.localizedString
 
 @Composable
 fun ProfileCard(profile: Profile) {
@@ -42,7 +44,7 @@ fun ProfileCard(profile: Profile) {
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "No profile info available",
+                text = localizedString(R.string.no_profile_info_available),
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }

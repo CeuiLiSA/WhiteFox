@@ -59,4 +59,8 @@
     <string name="show_more_comments">查看评论</string>
     <string name="comment_action_reply">回复</string>
     <string name="app_playground">Playground</string>
+    <string name="no_profile_info_available">No profile info available</string>
+    <string name="profile_title_workspace_info">Workspace Info</string>
+    <string name="profile_no_workspace_info_available">No workspace info available</string>
+    <string name="artwork_origin_link">作品原始链接</string>
 </resources>

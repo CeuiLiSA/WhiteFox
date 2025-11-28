@@ -132,8 +132,8 @@ fun saveToDownloadsScopedStorage(context: Context, fileName: String, content: St
         }
 
         return true
-    } catch (e: Exception) {
-        e.printStackTrace()
+    } catch (ex: Exception) {
+        Timber.e(ex)
         return false
     }
 }

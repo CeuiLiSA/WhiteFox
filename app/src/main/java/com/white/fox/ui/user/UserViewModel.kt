@@ -48,6 +48,7 @@ class UserViewModel(
                 _profileFlow.value = profile
                 _loadStateFlow.value = LoadState.Loaded(true)
             } catch (ex: Exception) {
+                Timber.e(ex)
                 _loadStateFlow.value = LoadState.Error(ex)
             }
         }

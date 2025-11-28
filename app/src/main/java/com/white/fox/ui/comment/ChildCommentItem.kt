@@ -11,7 +11,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,13 +24,14 @@ import ceui.lisa.models.Comment
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.request.ImageRequest
 import com.white.fox.R
+import com.white.fox.ui.common.ProgressTextButton
 import com.white.fox.ui.illust.withHeader
 import com.white.fox.ui.setting.localizedString
 
 @Composable
 fun ChildCommentItem(
     comment: Comment,
-    onClickReply: () -> Unit,
+    onClickReply: suspend () -> Unit,
 ) {
     val context = LocalContext.current
     Column(modifier = Modifier.padding(vertical = 4.dp)) {
@@ -72,8 +72,8 @@ fun ChildCommentItem(
 
             Spacer(modifier = Modifier.width(8.dp))
 
-            TextButton(onClick = { onClickReply() }) {
-                Text(text = localizedString(R.string.comment_action_reply))
+            ProgressTextButton(text = localizedString(R.string.comment_action_reply)) {
+                onClickReply()
             }
         }
     }

@@ -1,6 +1,7 @@
 package ceui.lisa.hermes.task
 
 import ceui.lisa.hermes.cache.FileCache
+import ceui.lisa.hermes.common.getImageDimensions
 import ceui.lisa.hermes.common.saveImageToGallery
 import ceui.lisa.hermes.loader.KProgressListener
 import ceui.lisa.hermes.loadstate.LoadReason
@@ -47,7 +48,6 @@ class ImageLoaderTask(
             try {
                 _loadStateFlow.value = LoadState.Loading(reason)
 
-                Timber.d("sadasdsww2 launchImgLoadTask: ${namedUrl.name}")
                 val targetFileName = namedUrl.name
 
                 val cached = fileCache.getCachedFile(targetFileName, true)
@@ -81,6 +81,9 @@ class ImageLoaderTask(
                         val cachedFile = fileCache.putFile(targetFileName, input)
                         _valueFlowImpl.value = cachedFile
                         _loadStateFlow.value = LoadState.Loaded(true)
+
+
+                        val imageDimensions = getImageDimensions(cachedFile)
 
                         if (autoSaveToGallery) {
                             saveImageToGallery(

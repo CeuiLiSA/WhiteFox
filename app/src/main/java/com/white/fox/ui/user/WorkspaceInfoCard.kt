@@ -19,6 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ceui.lisa.models.Workspace
+import com.white.fox.R
+import com.white.fox.ui.setting.localizedString
 
 @Composable
 fun WorkspaceInfoCard(workspace: Workspace) {
@@ -46,7 +48,7 @@ fun WorkspaceInfoCard(workspace: Workspace) {
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "No workspace info available",
+                text = localizedString(R.string.profile_no_workspace_info_available),
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }

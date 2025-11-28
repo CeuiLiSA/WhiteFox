@@ -13,11 +13,10 @@ import ceui.lisa.models.CommentResponse
 import ceui.lisa.models.ObjectType
 import com.white.fox.client.AppApi
 import com.white.fox.client.ListValueContent
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class CommentViewModel(
     private val objectId: Long,
@@ -60,26 +59,15 @@ class CommentViewModel(
         MutableStateFlow<Map<Long, List<Comment>>>(emptyMap())
     val childComments: StateFlow<Map<Long, List<Comment>>> = _childComments
 
-    fun showReplies(commentId: Long) {
-        viewModelScope.launch {
-            try {
-                val resp = appApi.getIllustReplyComments(objectType, commentId)
-                _childComments.update { old ->
-                    old + (commentId to resp.comments)
-                }
-            } catch (ex: Exception) {
-                Timber.e(ex)
-            }
+    suspend fun showReplies(commentId: Long) {
+        delay(300L)
+        val resp = appApi.getIllustReplyComments(objectType, commentId)
+        _childComments.update { old ->
+            old + (commentId to resp.comments)
         }
     }
 
-    fun reply(commentId: Long) {
-        viewModelScope.launch {
-            try {
-
-            } catch (ex: Exception) {
-                Timber.e(ex)
-            }
-        }
+    suspend fun reply(commentId: Long) {
+        delay(300L)
     }
 }

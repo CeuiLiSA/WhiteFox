@@ -3,7 +3,6 @@ package ceui.lisa.hermes.objectpool
 import ceui.lisa.models.ModelObject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import timber.log.Timber
 
 object ObjectPool {
 
@@ -19,7 +18,6 @@ object ObjectPool {
         objCls: Class<out ModelObject>,
     ) {
         val key = ObjectKey(obj.objectUniqueId, objCls)
-        Timber.d("dsaasdsads2 ${objCls}")
         val record = getMutableRecord(key)
         record.value = obj
     }

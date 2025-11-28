@@ -1,5 +1,6 @@
 package com.white.fox.client
 
+import timber.log.Timber
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.text.SimpleDateFormat
@@ -40,8 +41,8 @@ fun md5(plainText: String): String {
             buf.append(Integer.toHexString(i))
         }
         return buf.toString()
-    } catch (e: NoSuchAlgorithmException) {
-        e.printStackTrace()
+    } catch (ex: NoSuchAlgorithmException) {
+        Timber.e(ex)
         return ""
     }
 }
