@@ -1,5 +1,6 @@
 package com.white.fox.ui.main
 
+import android.content.Intent
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -41,6 +42,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.blankj.utilcode.util.ActivityUtils.startActivityForResult
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.request.ImageRequest
 import com.white.fox.R
@@ -188,8 +190,8 @@ fun MainDrawer(scope: CoroutineScope, drawerState: DrawerState) {
             }
             DrawerItem(localizedString(R.string.app_playground), Icons.Default.Airplay) {
                 scope.launch {
-                    drawerState.close()
-                    navViewModel.navigate(Route.Playground)
+//                    drawerState.close()
+//                    navViewModel.navigate(Route.Playground)
                 }
             }
         }

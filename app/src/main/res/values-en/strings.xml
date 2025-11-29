@@ -65,4 +65,5 @@
     <string name="artwork_origin_link">Original Artwork Link</string>
     <string name="artwork_title">Title</string>
     <string name="artwork_tags">Tags</string>
+    <string name="log_in_this_account">登录此账号</string>
 </resources>

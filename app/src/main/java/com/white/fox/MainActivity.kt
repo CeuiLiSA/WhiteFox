@@ -2,6 +2,7 @@ package com.white.fox
 
 import android.content.Intent
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,6 +10,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
+import androidx.lifecycle.lifecycleScope
+import ceui.lisa.hermes.common.saveJsonToDownloads
+import ceui.lisa.hermes.db.gson
 import ceui.lisa.hermes.viewmodel.constructVM
 import com.white.fox.ui.common.Dependency
 import com.white.fox.ui.common.LinkHandler
@@ -18,6 +22,7 @@ import com.white.fox.ui.common.NavHost
 import com.white.fox.ui.common.NavViewModel
 import com.white.fox.ui.setting.LocalAppLocaleContext
 import com.white.fox.ui.theme.WhiteFoxTheme
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.Locale
 
@@ -42,6 +47,21 @@ class MainActivity : ComponentActivity() {
             settingsManager = serviceProvider.settingsManager,
             prefStore = serviceProvider.prefStore,
         )
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            lifecycleScope.launch {
+                serviceProvider.sessionManager.stateFlow.collect { session ->
+                    if (serviceProvider.sessionManager.loggedInUid() > 0L) {
+                        val json = gson.toJson(session)
+                        Timber.d("sdaasddasdassw22 start ${json} ")
+                        saveJsonToDownloads(this@MainActivity, jsonContent = json)
+                        Timber.d("sdaasddasdassw22 end ${json} ")
+                    }
+
+                }
+            }
+        }
+
         setContent {
 
             val settingsState = dependency.settingsManager.stateFlow.collectAsState()

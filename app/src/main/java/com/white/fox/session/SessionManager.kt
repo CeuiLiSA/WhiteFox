@@ -13,7 +13,7 @@ class SessionManager : PersistState<AccountResponse>("Session", AccountResponse(
         if (json.isNotEmpty()) {
             try {
                 val accountResponse = gson.fromJson(json, AccountResponse::class.java)
-                update(accountResponse)
+                updateSession(accountResponse)
             } catch (ex: Exception) {
                 Timber.e(ex)
             }

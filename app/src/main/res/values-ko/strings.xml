@@ -65,4 +65,5 @@
     <string name="artwork_origin_link">원문 링크</string>
     <string name="artwork_title">제목</string>
     <string name="artwork_tags">태그</string>
+    <string name="log_in_this_account">登录此账号</string>
 </resources>

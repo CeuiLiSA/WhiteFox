@@ -65,4 +65,5 @@
     <string name="artwork_origin_link">作品の原文リンク</string>
     <string name="artwork_title">タイトル</string>
     <string name="artwork_tags">タグ</string>
+    <string name="log_in_this_account">登录此账号</string>
 </resources>
