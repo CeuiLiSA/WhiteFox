@@ -14,7 +14,6 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -22,6 +21,7 @@ import ceui.lisa.hermes.common.openCustomTab
 import ceui.lisa.models.Illust
 import ceui.lisa.models.Tag
 import com.white.fox.R
+import com.white.fox.ui.setting.localizedString
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,7 +46,7 @@ fun IllustBottomSheet(
                     .padding(16.dp)
             ) {
                 Text(
-                    text = "Title",
+                    text = localizedString(R.string.artwork_title),
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
@@ -60,7 +60,7 @@ fun IllustBottomSheet(
                 )
 
                 Text(
-                    text = "Tags",
+                    text = localizedString(R.string.artwork_tags),
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )
@@ -73,7 +73,7 @@ fun IllustBottomSheet(
                 )
 
                 Text(
-                    text = stringResource(R.string.artwork_origin_link),
+                    text = localizedString(R.string.artwork_origin_link),
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier.padding(bottom = 12.dp)
                 )

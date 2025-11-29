@@ -29,10 +29,17 @@ class SessionManager : PersistState<AccountResponse>("Session", AccountResponse(
     override fun getRefreshToken(): String? = stateFlow.value?.refresh_token
     override fun updateSession(data: AccountResponse?) {
         update(data)
+        if (data != null) {
+            updateUserToObjectPool(data)
+        }
     }
 
     override fun onDataRetrieved(data: AccountResponse) {
         super.onDataRetrieved(data)
+        updateUserToObjectPool(data)
+    }
+
+    private fun updateUserToObjectPool(data: AccountResponse) {
         data.user?.let { user ->
             ObjectPool.update(user)
         }
