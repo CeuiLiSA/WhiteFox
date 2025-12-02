@@ -189,7 +189,6 @@ fun MainDrawer(scope: CoroutineScope, drawerState: DrawerState) {
             DrawerItem(localizedString(R.string.app_playground), Icons.Default.Airplay) {
                 scope.launch {
                     drawerState.close()
-                    navViewModel.navigate(Route.SlideShow)
                 }
             }
         }

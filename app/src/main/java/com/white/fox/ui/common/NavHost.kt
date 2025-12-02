@@ -81,7 +81,7 @@ fun NavHost() {
                     is Route.NovelDetail -> NovelDetailScreen(key.novelId)
                     is Route.UserProfile -> UserProfileScreen(key.userId)
                     is Route.FollowingUsers -> FollowingUsersScreen(key.userId)
-                    is Route.SlideShow -> FullScreenSlideShow()
+                    is Route.SlideShow -> FullScreenSlideShow(key.illustResponse)
                     is Route.MyPixivUsers -> MyPixivFriendsScreen(key.userId)
                     is Route.TagDetail -> TagDetailScreen(listOf(key.tag))
                 }

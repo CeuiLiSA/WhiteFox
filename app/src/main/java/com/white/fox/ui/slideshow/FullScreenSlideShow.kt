@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
+import ceui.lisa.models.IllustResponse
 import com.github.panpf.sketch.Sketch
 import com.github.panpf.sketch.request.ImageRequest
 import com.github.panpf.zoomimage.SketchZoomAsyncImage
@@ -31,54 +32,47 @@ import java.io.File
 
 @Composable
 fun FullScreenSlideShow(
-    modifier: Modifier = Modifier
+    illustResponse: IllustResponse,
 ) {
     val context = LocalContext.current
     val sketch = remember { Sketch.Builder(context).build() }
 
     val currentFileState = remember { mutableStateOf<File?>(null) }
     var previousFile by remember { mutableStateOf<File?>(null) }
-    var nextFile by remember { mutableStateOf<File?>(null) }
 
     val previousAlpha = remember { Animatable(1f) }
-    val nextAlpha = remember { Animatable(0f) }
+    val currentAlpha = remember { Animatable(1f) }
 
     val currentZoomState = rememberSketchZoomState()
     val previousZoomState = rememberSketchZoomState()
-    val nextZoomState = rememberSketchZoomState()
 
     val dep = LocalDependency.current
 
     val viewModel = constructVM({ dep.client }) { client ->
-        SlideshowViewModel(client)
+        SlideshowViewModel(client, illustResponse)
     }
     val slideShowQueue = viewModel.slideShowQueue
 
 
     val currentQueueImage by slideShowQueue.currentImage.collectAsState()
 
-    // 当 slideShowQueue.currentImage 改变时，触发过渡
     LaunchedEffect(currentQueueImage) {
         val newFile = currentQueueImage ?: return@LaunchedEffect
         previousFile = currentFileState.value
-        nextFile = newFile
-
-        // 初始化 alpha
-        previousAlpha.snapTo(1f)
-        nextAlpha.snapTo(0f)
-
-        // 并发动画
-        launch { previousAlpha.animateTo(0f, tween(2000)) }
-        launch { nextAlpha.animateTo(1f, tween(2000)) }
-
-        delay(2000) // 等待动画完成
         currentFileState.value = newFile
+
+        previousAlpha.snapTo(1f)
+        currentAlpha.snapTo(0f)
+
+        launch { previousAlpha.animateTo(0f, tween(2000)) }
+        launch { currentAlpha.animateTo(1f, tween(2000)) }
+
+        delay(2000)
         previousFile = null
-        nextFile = null
     }
 
     Box(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
     ) {
@@ -94,32 +88,18 @@ fun FullScreenSlideShow(
                     .graphicsLayer { alpha = previousAlpha.value }
             )
         }
-        nextFile?.let { nf ->
+
+        currentFileState.value?.let { cf ->
             SketchZoomAsyncImage(
-                request = ImageRequest.Builder(context, nf.toUri().toString()).withHeader().build(),
-                contentDescription = nf.toString(),
+                request = ImageRequest.Builder(context, cf.toUri().toString()).withHeader().build(),
+                contentDescription = cf.toString(),
                 contentScale = ContentScale.Fit,
                 sketch = sketch,
-                zoomState = nextZoomState,
+                zoomState = currentZoomState,
                 modifier = Modifier
                     .fillMaxSize()
-                    .graphicsLayer { alpha = nextAlpha.value }
+                    .graphicsLayer { alpha = currentAlpha.value }
             )
-        }
-
-        // 如果没有动画过渡，显示当前图
-        if (previousFile == null && nextFile == null) {
-            currentFileState.value?.let { cf ->
-                SketchZoomAsyncImage(
-                    request = ImageRequest.Builder(context, cf.toUri().toString()).withHeader()
-                        .build(),
-                    contentDescription = cf.toString(),
-                    contentScale = ContentScale.Fit,
-                    sketch = sketch,
-                    zoomState = currentZoomState,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
         }
     }
 }

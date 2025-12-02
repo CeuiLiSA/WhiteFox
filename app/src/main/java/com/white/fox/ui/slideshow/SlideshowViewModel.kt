@@ -1,47 +1,52 @@
 package com.white.fox.ui.slideshow
 
 import androidx.lifecycle.ViewModel
-import ceui.lisa.hermes.cache.FileCache
-import ceui.lisa.hermes.db.gson
+import androidx.lifecycle.viewModelScope
+import ceui.lisa.hermes.loadstate.LoadMoreOwner
 import ceui.lisa.hermes.task.ImageLoaderTask
 import ceui.lisa.hermes.task.NamedUrl
 import ceui.lisa.hermes.task.SlideShowQueue
-import ceui.lisa.models.Tag
-import ceui.lisa.models.stableStringHash
+import ceui.lisa.models.IllustResponse
 import com.white.fox.client.Client
 import com.white.fox.client.buildReferer
-import com.white.fox.ui.prime.PrimeTagResult
 import kotlinx.coroutines.MainScope
-import java.io.File
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class SlideshowViewModel(
     private val client: Client,
-) : ViewModel() {
+    private val illustResponse: IllustResponse,
+) : ViewModel(), LoadMoreOwner {
 
     val slideShowQueue: SlideShowQueue = SlideShowQueue().also {
-        val fileCache = FileCache("PrimeTask")
-        val tag = Tag("金髪", "金发")
-        val fileName = "prime_tag_for_${stableStringHash(tag.name!!)}.txt"
-        val cache = fileCache.getCachedFile(fileName)
-        if (cache != null) {
-            it.submitTasks(
-                gson.fromJson(
-                    File(cache.path).readText(),
-                    PrimeTagResult::class.java
-                ).resp.displayList.map { illust ->
-                    ImageLoaderTask(
-                        MainScope(),
-                        NamedUrl(
-                            illust.image_urls?.large ?: "",
-                            "FullScreenSlideShow-${illust.id}-large"
-                        ),
-                        client.downloadApi,
-                        illust.id.buildReferer(),
-                        false,
-                    )
-                })
-        }
-
+        it.submitTasks(
+            illustResponse.displayList.map { illust ->
+                ImageLoaderTask(
+                    MainScope(),
+                    NamedUrl(
+                        illust.image_urls?.large ?: "",
+                        "FullScreenSlideShow-${illust.id}-large"
+                    ),
+                    client.downloadApi,
+                    illust.id.buildReferer(),
+                    false,
+                )
+            })
         it.start()
+    }
+
+    override fun loadNextPage() {
+
+    }
+
+
+    init {
+        viewModelScope.launch {
+            try {
+
+            } catch (ex: Exception) {
+                Timber.e(ex)
+            }
+        }
     }
 }

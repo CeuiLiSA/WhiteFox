@@ -1,5 +1,6 @@
 package com.white.fox.ui.common
 
+import ceui.lisa.models.IllustResponse
 import ceui.lisa.models.Tag
 import com.white.fox.ui.prime.PrimeTagResult
 import kotlinx.serialization.Serializable
@@ -41,7 +42,9 @@ sealed class Route(
         Route("UserCreatedIllust-userId-${userId}-objectType-${objectType}")
 
     data class UserProfile(val userId: Long) : Route("UserProfileScreen-userId-${userId}")
-    object SlideShow : Route("SlideShow")
+    data class SlideShow(val illustResponse: IllustResponse) :
+        Route("SlideShow-${illustResponse.displayList.joinToString(",") { it.id.toString() }}")
+
     data class FollowingUsers(val userId: Long) : Route("FollowingUsersScreen-userId-${userId}")
     data class MyPixivUsers(val userId: Long) : Route("MyPixivFriendsScreen-userId-${userId}")
 
