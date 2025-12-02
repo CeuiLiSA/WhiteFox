@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -17,7 +18,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.app.ComponentActivity
 import androidx.core.net.toUri
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import ceui.lisa.models.IllustResponse
 import com.github.panpf.sketch.Sketch
 import com.github.panpf.sketch.request.ImageRequest
@@ -35,6 +39,27 @@ fun FullScreenSlideShow(
     illustResponse: IllustResponse,
 ) {
     val context = LocalContext.current
+    val window = (context as? ComponentActivity)?.window
+
+    DisposableEffect(window) {
+        window?.let {
+            WindowCompat.setDecorFitsSystemWindows(it, false)
+
+            val controller = WindowInsetsControllerCompat(it, it.decorView)
+            controller.hide(androidx.core.view.WindowInsetsCompat.Type.systemBars())
+            controller.systemBarsBehavior =
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
+
+        onDispose {
+            window?.let {
+                WindowCompat.setDecorFitsSystemWindows(it, true)
+                val controller = WindowInsetsControllerCompat(it, it.decorView)
+                controller.show(androidx.core.view.WindowInsetsCompat.Type.systemBars())
+            }
+        }
+    }
+
     val sketch = remember { Sketch.Builder(context).build() }
 
     val currentFileState = remember { mutableStateOf<File?>(null) }
