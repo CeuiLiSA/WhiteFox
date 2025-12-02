@@ -20,11 +20,21 @@ class SlideShowQueue(
     private val _currentImage = MutableStateFlow<File?>(null)
     val currentImage: StateFlow<File?> = _currentImage
 
+    // 新增可观察的索引和总数
+    private val _currentIndex = MutableStateFlow(0)
+    val currentIndex: StateFlow<Int> = _currentIndex
+
+    private val _totalSize = MutableStateFlow(0)
+    val totalSize: StateFlow<Int> = _totalSize
+
     private var index = 0
 
     fun submitTasks(taskList: List<ImageLoaderTask>) {
         tasks.clear()
         tasks.addAll(taskList)
+        _totalSize.value = tasks.size
+        index = 0
+        _currentIndex.value = index
     }
 
     fun start() {
@@ -40,9 +50,9 @@ class SlideShowQueue(
 
     private suspend fun displayCurrent() {
         val task = tasks[index]
-        // 当前图片按需下载
         task.runTask(LoadReason.InitialLoad)
         _currentImage.value = task.valueFlow.value
+        _currentIndex.value = index
     }
 
     private suspend fun preloadNext() {
@@ -55,9 +65,11 @@ class SlideShowQueue(
 
     fun next() {
         index = (index + 1) % tasks.size
+        _currentIndex.value = index
     }
 
     fun previous() {
         index = if (index - 1 < 0) tasks.size - 1 else index - 1
+        _currentIndex.value = index
     }
 }
