@@ -9,6 +9,7 @@ import ceui.lisa.hermes.loadstate.LoadState
 import com.blankj.utilcode.util.Utils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,11 +22,11 @@ import java.io.File
 
 class ImageLoaderTask(
     private val coroutineScope: CoroutineScope,
-    private val namedUrl: NamedUrl,
+    val namedUrl: NamedUrl,
     private val client: OkHttpClient,
     private val referer: String,
     private var autoSaveToGallery: Boolean = false,
-) {
+) : LongTimeTask() {
 
     private val fileCache = FileCache("FoxImagesCache")
 
@@ -37,14 +38,26 @@ class ImageLoaderTask(
     private val _valueFlowImpl = MutableStateFlow<File?>(null)
     val valueFlow: StateFlow<File?> = _valueFlowImpl.asStateFlow()
 
-    fun launchImgLoadTask(reason: LoadReason) {
+    fun download() {
+        coroutineScope.launch(Dispatchers.IO) {
+            val file = _valueFlowImpl.value
+            if (file != null) {
+                saveImageToGallery(Utils.getApp().applicationContext, file, namedUrl.name)
+            } else {
+                autoSaveToGallery = true
+            }
+        }
+    }
+
+    override suspend fun runTask(reason: LoadReason) {
         if (_valueFlowImpl.value != null) {
+            Timber.d("ImageLoaderTask runTask ${namedUrl.name} _valueFlowImpl存在了，不用再下载")
             return
         }
 
         if (!_taskMutex.tryLock()) return
 
-        coroutineScope.launch(Dispatchers.IO) {
+        coroutineScope.async(Dispatchers.IO) {
             try {
                 _loadStateFlow.value = LoadState.Loading(reason)
 
@@ -54,7 +67,8 @@ class ImageLoaderTask(
                 if (cached != null) {
                     _valueFlowImpl.value = cached
                     _loadStateFlow.value = LoadState.Loaded(true)
-                    return@launch
+                    Timber.d("ImageLoaderTask runTask ${namedUrl.name} getCachedFile 存在了，不用再下载")
+                    return@async
                 }
 
                 val listener = object : KProgressListener {
@@ -70,9 +84,11 @@ class ImageLoaderTask(
                     .tag(KProgressListener::class.java, listener)
                     .addHeader("Referer", referer).build()
 
+                Timber.d("ImageLoaderTask runTask ${namedUrl.name} 真的开始下载")
                 client.newCall(request).execute().use { response ->
                     if (!response.isSuccessful) {
-                        val ex = Exception("Failed to download image: ${response.code}")
+                        val ex =
+                            Exception("ImageLoaderTask Failed to download image: ${response.code}")
                         _loadStateFlow.value = LoadState.Error(ex)
                         throw ex
                     }
@@ -84,6 +100,7 @@ class ImageLoaderTask(
 
 
                         val imageDimensions = getImageDimensions(cachedFile)
+                        Timber.d("ImageLoaderTask imageDimensions: ${imageDimensions}")
 
                         if (autoSaveToGallery) {
                             saveImageToGallery(
@@ -100,17 +117,6 @@ class ImageLoaderTask(
             } finally {
                 _taskMutex.unlock()
             }
-        }
-    }
-
-    fun download() {
-        coroutineScope.launch(Dispatchers.IO) {
-            val file = _valueFlowImpl.value
-            if (file != null) {
-                saveImageToGallery(Utils.getApp().applicationContext, file, namedUrl.name)
-            } else {
-                autoSaveToGallery = true
-            }
-        }
+        }.await()
     }
 }

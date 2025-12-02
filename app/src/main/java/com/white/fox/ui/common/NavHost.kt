@@ -30,6 +30,7 @@ import com.white.fox.ui.prime.PrimeHotScreen
 import com.white.fox.ui.rank.RankContainerScreen
 import com.white.fox.ui.search.SearchScreen
 import com.white.fox.ui.setting.SettingScreen
+import com.white.fox.ui.slideshow.FullScreenSlideShow
 import com.white.fox.ui.tags.TagDetailScreen
 import com.white.fox.ui.user.UserCreatedIllustScreen
 import com.white.fox.ui.user.UserProfileScreen
@@ -80,6 +81,7 @@ fun NavHost() {
                     is Route.NovelDetail -> NovelDetailScreen(key.novelId)
                     is Route.UserProfile -> UserProfileScreen(key.userId)
                     is Route.FollowingUsers -> FollowingUsersScreen(key.userId)
+                    is Route.SlideShow -> FullScreenSlideShow()
                     is Route.MyPixivUsers -> MyPixivFriendsScreen(key.userId)
                     is Route.TagDetail -> TagDetailScreen(listOf(key.tag))
                 }

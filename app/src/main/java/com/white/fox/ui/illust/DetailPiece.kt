@@ -39,7 +39,7 @@ fun BoxScope.DetailPiece(
     val valueState by loadTask.valueFlow.collectAsState()
 
     LaunchedEffect(Unit) {
-        loadTask.launchImgLoadTask(LoadReason.InitialLoad)
+        loadTask.runTask(LoadReason.InitialLoad)
     }
 
     val value = valueState
