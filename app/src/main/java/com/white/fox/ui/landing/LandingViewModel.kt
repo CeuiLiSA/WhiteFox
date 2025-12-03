@@ -65,7 +65,6 @@ class LandingViewModel(
             try {
                 val files = assets.list(DIR) ?: arrayOf()
                 files.randomOrNull()?.let { fileName ->
-                    Timber.d("Found file: $fileName")
                     val inputStream = assets.open("${DIR}/$fileName")
                     val jsonString = inputStream.bufferedReader().use { it.readText() }
                     val illustResponse = gson.fromJson(jsonString, PrimeTagResult::class.java).resp

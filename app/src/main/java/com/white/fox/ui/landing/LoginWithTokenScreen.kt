@@ -20,13 +20,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.white.fox.BuildConfig
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.PageScreen
 
 @Composable
 fun LoginWithTokenScreen() = PageScreen("Login via Token") {
     val dependency = LocalDependency.current
-    val tokenState = remember { mutableStateOf(TOKEN) }
+    val tokenState = remember { mutableStateOf(if (BuildConfig.DEBUG) TOKEN else "") }
 
     Column(
         modifier = Modifier

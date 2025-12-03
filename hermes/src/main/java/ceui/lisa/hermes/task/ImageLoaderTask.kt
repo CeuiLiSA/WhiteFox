@@ -1,7 +1,6 @@
 package ceui.lisa.hermes.task
 
 import ceui.lisa.hermes.cache.FileCache
-import ceui.lisa.hermes.common.getImageDimensions
 import ceui.lisa.hermes.common.saveImageToGallery
 import ceui.lisa.hermes.loader.KProgressListener
 import ceui.lisa.hermes.loadstate.LoadReason
@@ -51,7 +50,6 @@ class ImageLoaderTask(
 
     override suspend fun runTask(reason: LoadReason) {
         if (_valueFlowImpl.value != null) {
-            Timber.d("ImageLoaderTask runTask ${namedUrl.name} _valueFlowImpl存在了，不用再下载")
             return
         }
 
@@ -67,7 +65,6 @@ class ImageLoaderTask(
                 if (cached != null) {
                     _valueFlowImpl.value = cached
                     _loadStateFlow.value = LoadState.Loaded(true)
-                    Timber.d("ImageLoaderTask runTask ${namedUrl.name} getCachedFile 存在了，不用再下载")
                     return@async
                 }
 
@@ -84,7 +81,6 @@ class ImageLoaderTask(
                     .tag(KProgressListener::class.java, listener)
                     .addHeader("Referer", referer).build()
 
-                Timber.d("ImageLoaderTask runTask ${namedUrl.name} 真的开始下载")
                 client.newCall(request).execute().use { response ->
                     if (!response.isSuccessful) {
                         val ex =
@@ -97,10 +93,6 @@ class ImageLoaderTask(
                         val cachedFile = fileCache.putFile(targetFileName, input)
                         _valueFlowImpl.value = cachedFile
                         _loadStateFlow.value = LoadState.Loaded(true)
-
-
-                        val imageDimensions = getImageDimensions(cachedFile)
-                        Timber.d("ImageLoaderTask imageDimensions: ${imageDimensions}")
 
                         if (autoSaveToGallery) {
                             saveImageToGallery(

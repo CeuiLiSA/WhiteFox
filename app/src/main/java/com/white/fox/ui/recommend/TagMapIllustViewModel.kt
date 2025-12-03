@@ -6,6 +6,7 @@ import ceui.lisa.models.IllustResponse
 import ceui.lisa.models.Tag
 import com.white.fox.client.AppApi
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -15,6 +16,9 @@ class TagMapIllustViewModel(
 ) : ListIllustViewModal(repository, appApi) {
 
     private val _tagsMap = hashMapOf<Tag, Int>()
+
+    private val aa = useState<String>()
+
 
     companion object {
         private const val TAG = "TagMapIllustViewModel"
@@ -40,3 +44,6 @@ class TagMapIllustViewModel(
         }
     }
 }
+
+
+fun <T> useState() = MutableStateFlow<T?>(null)

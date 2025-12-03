@@ -53,9 +53,7 @@ class MainActivity : ComponentActivity() {
                 serviceProvider.sessionManager.stateFlow.collect { session ->
                     if (serviceProvider.sessionManager.loggedInUid() > 0L) {
                         val json = gson.toJson(session)
-                        Timber.d("sdaasddasdassw22 start ${json} ")
                         saveJsonToDownloads(this@MainActivity, jsonContent = json)
-                        Timber.d("sdaasddasdassw22 end ${json} ")
                     }
 
                 }
