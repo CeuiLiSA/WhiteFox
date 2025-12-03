@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -40,6 +41,7 @@ import java.io.File
 @Composable
 fun FullScreenSlideShow(
     illustResponse: IllustResponse,
+    showIndicator: Boolean = false,
 ) {
     setUpFullscreenPage()
     val context = LocalContext.current
@@ -76,12 +78,12 @@ fun FullScreenSlideShow(
         previousAlpha.snapTo(1f)
         currentAlpha.snapTo(0f)
         previousScale.snapTo(1f)
-        currentScale.snapTo(1.2f)
+        currentScale.snapTo(1.1f)
 
         coroutineScope {
             // 淡入淡出动画保持线性
             val fadeDuration = 2000
-            val scaleDuration = 3000
+            val scaleDuration = 4000
 
             val fadeTween = tween<Float>(fadeDuration)
             val scaleTween = tween<Float>(
@@ -110,7 +112,7 @@ fun FullScreenSlideShow(
                     request = ImageRequest.Builder(context, pf.toUri().toString()).withHeader()
                         .build(),
                     contentDescription = pf.toString(),
-                    contentScale = ContentScale.Fit,
+                    contentScale = ContentScale.Crop,
                     sketch = sketch,
                     zoomState = previousZoomState,
                     modifier = Modifier
@@ -130,7 +132,7 @@ fun FullScreenSlideShow(
                     request = ImageRequest.Builder(context, cf.toUri().toString()).withHeader()
                         .build(),
                     contentDescription = cf.toString(),
-                    contentScale = ContentScale.Fit,
+                    contentScale = ContentScale.Crop,
                     sketch = sketch,
                     zoomState = currentZoomState,
                     modifier = Modifier
@@ -144,15 +146,25 @@ fun FullScreenSlideShow(
             }
         }
 
-
-        val currentPage by slideShowQueue.currentIndex.collectAsState()
-        val totalPages by slideShowQueue.totalSize.collectAsState()
-        PageIndicator(
-            currentPage = currentPage + 1,
-            totalPages = totalPages,
+        Box(
             modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(16.dp)
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.4f))
+                .pointerInput(Unit) { /* empty */ }
         )
+
+        if (showIndicator) {
+            val currentPage by slideShowQueue.currentIndex.collectAsState()
+            val totalPages by slideShowQueue.totalSize.collectAsState()
+            PageIndicator(
+                currentPage = currentPage + 1,
+                totalPages = totalPages,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(16.dp)
+            )
+        }
+
+
     }
 }

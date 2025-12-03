@@ -7,11 +7,12 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.io.File
 
 class SlideShowQueue(
-    private val intervalMillis: Long = 6000L,
+    private val intervalMillis: Long = 8000L,
     private val preloadCount: Int = 2
 ) {
 
@@ -22,10 +23,10 @@ class SlideShowQueue(
 
     // 新增可观察的索引和总数
     private val _currentIndex = MutableStateFlow(0)
-    val currentIndex: StateFlow<Int> = _currentIndex
+    val currentIndex: StateFlow<Int> = _currentIndex.asStateFlow()
 
     private val _totalSize = MutableStateFlow(0)
-    val totalSize: StateFlow<Int> = _totalSize
+    val totalSize: StateFlow<Int> = _totalSize.asStateFlow()
 
     private var index = 0
 
@@ -35,6 +36,13 @@ class SlideShowQueue(
         _totalSize.value = tasks.size
         index = 0
         _currentIndex.value = index
+    }
+
+    fun appendTasks(newTasks: List<ImageLoaderTask>) {
+        if (newTasks.isEmpty()) return
+
+        tasks.addAll(newTasks)
+        _totalSize.value = tasks.size
     }
 
     fun start() {

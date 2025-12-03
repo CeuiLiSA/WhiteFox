@@ -35,6 +35,15 @@ class BookmarkIllustTask(
                         appApi.removeBookmark(illustId)
                         ObjectPool.update(illust.copy(is_bookmarked = false))
                     } else {
+//                        val body = FormBody.Builder()
+//                            .add("illust_id", illustId.toString())
+//                            .add("restrict", "public")
+//                            .add("tags[]", "笑顔")
+//                            .add("tags[]", "FGO")
+//                            .build()
+//
+//                        // illust_id=137927487&restrict=public&tags[]=笑顔&tags[]=FGO
+//                        appApi.postBookmarkWithTag(body)
                         appApi.postBookmark(illustId, RestrictType.PUBLIC)
                         ObjectPool.update(illust.copy(is_bookmarked = true))
                     }

@@ -1,5 +1,6 @@
 package com.white.fox.ui.landing
 
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -39,8 +40,10 @@ import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.LocalNavViewModel
 import com.white.fox.ui.common.ProgressTextButton
 import com.white.fox.ui.common.Route
+import com.white.fox.ui.common.constructVM
 import com.white.fox.ui.illust.withHeader
 import com.white.fox.ui.setting.localizedString
+import com.white.fox.ui.slideshow.FullScreenSlideShow
 
 @Preview
 @Composable
@@ -50,14 +53,28 @@ fun LandingScreen() {
     val pkceItem = LocalDependency.current.client.pkceItem
     val sessionManager = LocalDependency.current.sessionManager
     val loginState by LocalDependency.current.client.appLoginFlow.collectAsState()
-    val viewModel = viewModel<LandingViewModel>()
+    val viewModel = constructVM({ (context as ComponentActivity).assets }) { assets ->
+        LandingViewModel(assets)
+    }
     val found = viewModel.foundFromPixivSessionDir.collectAsState().value
+
+
+    val illustResponse by viewModel.landingIllustResponse.collectAsState()
+
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .imePadding()
     ) {
+        // ✅ 最底层：全屏幻灯片背景
+        illustResponse?.let { response ->
+            FullScreenSlideShow(
+                illustResponse = response
+            )
+        }
+
+        // 中间层：你的内容
         Column(
             modifier = Modifier
                 .fillMaxSize(),
@@ -107,9 +124,7 @@ fun LandingScreen() {
                         .size(100.dp)
                         .clip(CircleShape)
                         .border(2.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape)
-                        .clickable {
-
-                        },
+                        .clickable {},
                     contentScale = ContentScale.Crop,
                 )
 

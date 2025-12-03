@@ -11,6 +11,7 @@ import ceui.lisa.models.SingleIllustResponse
 import ceui.lisa.models.TrendingTagsResponse
 import ceui.lisa.models.UserPreviewResponse
 import ceui.lisa.models.UserResponse
+import okhttp3.FormBody
 import okhttp3.ResponseBody
 import retrofit2.http.Body
 import retrofit2.http.Field
@@ -34,6 +35,11 @@ interface AppApi {
     suspend fun postBookmark(
         @Field("illust_id") illust_id: Long,
         @Field("restrict") restrict: String
+    )
+
+    @POST("/v2/illust/bookmark/add")
+    suspend fun postBookmarkWithTag(
+        @Body body: FormBody
     )
 
     @FormUrlEncoded
