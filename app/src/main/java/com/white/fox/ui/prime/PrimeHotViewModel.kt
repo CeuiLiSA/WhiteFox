@@ -1,8 +1,8 @@
 package com.white.fox.ui.prime
 
+import android.content.res.AssetManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import ceui.lisa.hermes.cache.FileCache
 import ceui.lisa.hermes.db.gson
 import ceui.lisa.hermes.loadstate.LoadReason
 import ceui.lisa.hermes.loadstate.LoadState
@@ -14,9 +14,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-class PrimeHotViewModel : ViewModel(), RefreshOwner<List<PrimeTagResult>> {
+class PrimeHotViewModel(
+    private val assetManager: AssetManager,
+) : ViewModel(), RefreshOwner<List<PrimeTagResult>> {
 
-    private val fileCache = FileCache("PrimeTask")
     private val _valueFlow = MutableStateFlow<List<PrimeTagResult>>(listOf())
     private val _loadStateFlow =
         MutableStateFlow<LoadState>(LoadState.Loading(LoadReason.InitialLoad))
@@ -26,10 +27,14 @@ class PrimeHotViewModel : ViewModel(), RefreshOwner<List<PrimeTagResult>> {
             try {
                 _loadStateFlow.value = LoadState.Loading(reason)
                 val list = mutableListOf<PrimeTagResult>()
-                fileCache.parentDir.listFiles()?.forEach { file ->
+                val files = (assetManager.list(DIR) ?: arrayOf())
+
+                files.forEach { fileName ->
+                    val inputStream = assetManager.open("${DIR}/$fileName")
+                    val jsonString = inputStream.bufferedReader().use { it.readText() }
                     list.add(
                         gson.fromJson(
-                            file.readText(),
+                            jsonString,
                             PrimeTagResult::class.java
                         )
                     )
@@ -45,6 +50,11 @@ class PrimeHotViewModel : ViewModel(), RefreshOwner<List<PrimeTagResult>> {
 
     override val loadState: StateFlow<LoadState> = _loadStateFlow.asStateFlow()
     override val valueFlow: StateFlow<List<PrimeTagResult>?> = _valueFlow.asStateFlow()
+
+    companion object {
+        private const val DIR = "pixiv_prime"
+    }
+
 
     init {
         refresh(LoadReason.InitialLoad)

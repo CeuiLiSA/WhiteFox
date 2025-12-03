@@ -149,7 +149,7 @@ fun FullScreenSlideShow(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.4f))
+                .background(Color.Black.copy(alpha = 0.2f))
                 .pointerInput(Unit) { /* empty */ }
         )
 

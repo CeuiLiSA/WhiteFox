@@ -9,6 +9,7 @@ import ceui.lisa.hermes.db.gson
 import ceui.lisa.models.AccountResponse
 import ceui.lisa.models.IllustResponse
 import com.blankj.utilcode.util.Utils
+import com.white.fox.ui.prime.PrimeTagResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -59,8 +60,40 @@ class LandingViewModel(
         }
     }
 
+    private fun loadHot() {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val files = assets.list(DIR) ?: arrayOf()
+                files.randomOrNull()?.let { fileName ->
+                    Timber.d("Found file: $fileName")
+                    val inputStream = assets.open("${DIR}/$fileName")
+                    val jsonString = inputStream.bufferedReader().use { it.readText() }
+                    val illustResponse = gson.fromJson(jsonString, PrimeTagResult::class.java).resp
+
+                    val targetRatio = 9 / 16f
+
+                    val sortedDisplayList = illustResponse.displayList.sortedBy {
+                        val ratio = it.width / it.height.toFloat()
+                        kotlin.math.abs(ratio - targetRatio)
+                    }
+
+                    landingIllustResponse.value = illustResponse.copy(illusts = sortedDisplayList)
+                }
+
+            } catch (ex: Exception) {
+                Timber.e(ex)
+            }
+        }
+    }
+
+    companion object {
+        private const val DIR = "pixiv_prime"
+    }
+
     init {
         loadLastUsedAccount()
-        loadIllust()
+//        loadIllust()
+        loadHot()
     }
+
 }
