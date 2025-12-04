@@ -22,6 +22,7 @@ import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import ceui.lisa.models.ObjectType
 import ceui.lisa.models.Tag
 import ceui.lisa.models.stableStringHash
 import com.white.fox.ui.common.LocalDependency
@@ -95,7 +96,7 @@ fun MainScreen(viewModel: MainScreenViewModel = viewModel()) {
                 saveableStateHolder.SaveableStateProvider(key = targetTab) {
                     when (targetTab) {
                         0 -> RecommendScreen()
-                        1 -> DiscoverScreen()
+                        1 -> DiscoverScreen(ObjectType.ILLUST, true)
                         2 -> FollowingScreen()
                     }
                 }

@@ -1,6 +1,7 @@
 package com.white.fox.ui.common
 
 import ceui.lisa.models.IllustResponse
+import ceui.lisa.models.ObjectType
 import ceui.lisa.models.Tag
 import com.white.fox.ui.prime.PrimeTagResult
 import kotlinx.serialization.Serializable
@@ -23,6 +24,7 @@ sealed class Route(
     object History : Route("History")
 
     object LoginWithToken : Route("LoginWithToken")
+    object TrendingTags : Route("TrendingTags")
 
     object PrimeHot : Route("PrimeHot")
 
@@ -48,7 +50,8 @@ sealed class Route(
     data class FollowingUsers(val userId: Long) : Route("FollowingUsersScreen-userId-${userId}")
     data class MyPixivUsers(val userId: Long) : Route("MyPixivFriendsScreen-userId-${userId}")
 
-    data class TagDetail(val tag: Tag) : Route("TagDetailScreen-${tag}")
+    data class TagDetail(val tag: Tag, val objectType: String = ObjectType.ILLUST) :
+        Route("TagDetailScreen-${tag}-${objectType}")
 
     data class IllustDetail(val illustId: Long) : Route("IllustDetailScreen-illustId-${illustId}")
 

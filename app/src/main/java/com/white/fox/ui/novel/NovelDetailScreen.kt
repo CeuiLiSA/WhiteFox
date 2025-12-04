@@ -18,6 +18,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -29,10 +32,13 @@ import ceui.lisa.models.Novel
 import ceui.lisa.models.ObjectType
 import com.white.fox.ui.common.LoadingBlock
 import com.white.fox.ui.common.LocalDependency
+import com.white.fox.ui.common.LocalNavViewModel
 import com.white.fox.ui.common.PageScreen
+import com.white.fox.ui.common.Route
 import com.white.fox.ui.common.constructKeyedVM
 import com.white.fox.ui.illust.BookmarkButton
 import com.white.fox.ui.illust.CommentButton
+import com.white.fox.ui.illust.InfoButton
 
 @Composable
 fun NovelDetailScreen(novelId: Long) {
@@ -45,7 +51,11 @@ fun NovelDetailScreen(novelId: Long) {
     val novelState = ObjectPool.get<Novel>(novelId).collectAsState()
     val novel = novelState.value ?: return
 
-    PageScreen(pageTitle = "") {
+
+    var showSheet by remember { mutableStateOf(false) }
+    val navViewModel = LocalNavViewModel.current
+
+    PageScreen(pageTitle = novel.title ?: "") {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -53,15 +63,6 @@ fun NovelDetailScreen(novelId: Long) {
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(
-                text = novel.title ?: "",
-                style = typography.titleMedium.copy(
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 20.sp
-                ),
-                color = colorScheme.onSurface,
-            )
-
             AnimatedVisibility(
                 valueFlow != null,
                 enter = fadeIn(),
@@ -101,11 +102,21 @@ fun NovelDetailScreen(novelId: Long) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-//                InfoButton(onClick = { showSheet = true })
+                InfoButton(onClick = { showSheet = true })
                 CommentButton(novelId, ObjectType.NOVEL)
                 BookmarkButton(novelId, ObjectType.NOVEL, 44.dp)
             }
         }
 
     }
+
+    NovelBottomSheet(
+        novel = novel,
+        showSheet = showSheet,
+        onDismiss = { showSheet = false },
+        onTagClick = { tag ->
+            showSheet = false
+            navViewModel.navigate(Route.TagDetail(tag, ObjectType.NOVEL))
+        }
+    )
 }

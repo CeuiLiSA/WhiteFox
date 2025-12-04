@@ -66,4 +66,6 @@
     <string name="artwork_title">Title</string>
     <string name="artwork_tags">Tags</string>
     <string name="log_in_this_account">登录此账号</string>
+    <string name="title_comments">评论</string>
+    <string name="now_following">关注中</string>
 </resources>

@@ -29,7 +29,7 @@ import com.white.fox.ui.illust.withHeader
 
 @SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
-fun SquareTagItem(trendingTag: TrendingTag) {
+fun SquareTagItem(trendingTag: TrendingTag, objectType: String) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val itemSize = (screenWidth - 4.dp) / 3
 
@@ -42,7 +42,7 @@ fun SquareTagItem(trendingTag: TrendingTag) {
             .size(itemSize)
             .background(MaterialTheme.colorScheme.surfaceVariant)
             .combinedClickable(onClick = {
-                navViewModel.navigate(Route.TagDetail(trendingTag.buildTag()))
+                navViewModel.navigate(Route.TagDetail(trendingTag.buildTag(), objectType))
             }, onLongClick = {
                 trendingTag.illust?.let { illust ->
                     navViewModel.navigate(Route.IllustDetail(illust.id))

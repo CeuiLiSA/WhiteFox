@@ -22,24 +22,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ceui.lisa.hermes.loader.HybridRepository
 import ceui.lisa.hermes.loadstate.LoadState
-import ceui.lisa.models.ObjectType
 import ceui.lisa.models.TrendingTagsResponse
 import com.white.fox.R
 import com.white.fox.ui.common.LoadingBlock
 import com.white.fox.ui.common.LocalDependency
+import com.white.fox.ui.common.LocalNavViewModel
+import com.white.fox.ui.common.Route
 import com.white.fox.ui.common.constructKeyedVM
 import com.white.fox.ui.setting.localizedString
 import com.white.fox.ui.tags.ListTagViewModal
 import com.white.fox.ui.tags.SquareTagItem
 
 @Composable
-fun DiscoverScreen() {
+fun DiscoverScreen(objectType: String, withTopItems: Boolean) {
     val dependency = LocalDependency.current
-    val key = "getTrendingTagData-illust"
+    val key = "getTrendingTagData-${objectType}"
     val viewModel = constructKeyedVM({ key }, {
         HybridRepository(
             loader = {
-                dependency.client.appApi.trendingTags(ObjectType.ILLUST)
+                dependency.client.appApi.trendingTags(objectType)
             },
             keyProducer = { key },
             TrendingTagsResponse::class
@@ -47,6 +48,8 @@ fun DiscoverScreen() {
     }) { repository ->
         ListTagViewModal(repository)
     }
+
+    val navViewModel = LocalNavViewModel.current
 
 
     val valueState by viewModel.valueFlow.collectAsState()
@@ -60,37 +63,38 @@ fun DiscoverScreen() {
         horizontalArrangement = Arrangement.spacedBy(2.dp)
     ) {
 
-        item(span = { GridItemSpan(3) }) { IllustRankSection() }
-        item(span = { GridItemSpan(3) }) { MangaRankSection() }
-        item(span = { GridItemSpan(3) }) { LatestIllustSection() }
-
-
-        item(span = { GridItemSpan(3) }) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(0.dp, 8.dp, 0.dp, 0.dp)
-            ) {
-                Row(
+        if (withTopItems) {
+            item(span = { GridItemSpan(3) }) { IllustRankSection() }
+            item(span = { GridItemSpan(3) }) { MangaRankSection() }
+            item(span = { GridItemSpan(3) }) { LatestIllustSection() }
+            item(span = { GridItemSpan(3) }) {
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                        .padding(0.dp, 8.dp, 0.dp, 0.dp)
                 ) {
-                    Text(
-                        text = localizedString(R.string.treding_tags),
-                        fontSize = 20.sp,
-                        style = MaterialTheme.typography.titleMedium
-                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = localizedString(R.string.treding_tags),
+                            fontSize = 20.sp,
+                            style = MaterialTheme.typography.titleMedium
+                        )
 
-                    TextButton(onClick = { }) {
-                        Text(text = localizedString(R.string.button_see_more_details))
+                        TextButton(onClick = {
+                            navViewModel.navigate(Route.TrendingTags)
+                        }) {
+                            Text(text = localizedString(R.string.button_see_more_details))
+                        }
                     }
+
                 }
-
             }
-
         }
 
         val state = loadState
@@ -101,7 +105,7 @@ fun DiscoverScreen() {
         val value = valueState
         if (value != null) {
             items(value.displayList) { item ->
-                SquareTagItem(item)
+                SquareTagItem(item, objectType)
             }
         }
     }

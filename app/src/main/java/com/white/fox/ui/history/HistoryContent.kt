@@ -29,7 +29,7 @@ fun <T : ModelObject> HistoryContent(
         HistoryViewModel(dep.database, recordType, cls)
     }
 
-    RefreshTemplate(viewModel) { value, loadState ->
+    RefreshTemplate(viewModel) { value, _ ->
         if (recordType == RecordType.VIEW_ILLUST_MANGA_HISTORY) {
             LazyVerticalStaggeredGrid(
                 columns = Fixed(2),

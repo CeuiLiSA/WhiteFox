@@ -32,6 +32,7 @@ import com.white.fox.ui.search.SearchScreen
 import com.white.fox.ui.setting.SettingScreen
 import com.white.fox.ui.slideshow.FullScreenSlideShow
 import com.white.fox.ui.tags.TagDetailScreen
+import com.white.fox.ui.tags.TrendingTagsScreen
 import com.white.fox.ui.user.UserCreatedIllustScreen
 import com.white.fox.ui.user.UserProfileScreen
 import timber.log.Timber
@@ -67,6 +68,7 @@ fun NavHost() {
                     is Route.Playground -> PlaygroundScreen()
                     is Route.History -> ViewHistoryScreen()
                     is Route.LoginWithToken -> LoginWithTokenScreen()
+                    is Route.TrendingTags -> TrendingTagsScreen()
                     is Route.PrimeHot -> PrimeHotScreen()
                     is Route.PrimeHotDetail -> PrimeHotDetailScreen(key.primeTagResult)
                     is Route.RankContainer -> RankContainerScreen(key.objectType)
@@ -83,7 +85,7 @@ fun NavHost() {
                     is Route.FollowingUsers -> FollowingUsersScreen(key.userId)
                     is Route.SlideShow -> FullScreenSlideShow(key.illustResponse)
                     is Route.MyPixivUsers -> MyPixivFriendsScreen(key.userId)
-                    is Route.TagDetail -> TagDetailScreen(listOf(key.tag))
+                    is Route.TagDetail -> TagDetailScreen(listOf(key.tag), key.objectType)
                 }
             }
         },

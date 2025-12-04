@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ceui.lisa.hermes.loadstate.LoadState
+import ceui.lisa.models.ObjectType
 import ceui.lisa.models.Tag
 import ceui.lisa.models.stableStringHash
 import com.white.fox.R
@@ -35,9 +36,11 @@ import com.white.fox.ui.setting.localizedString
 import kotlinx.coroutines.launch
 
 @Composable
-fun TagDetailScreen(tagList: List<Tag>) {
+fun TagDetailScreen(tagList: List<Tag>, objectType: String) {
 
-    val pagerState = rememberPagerState(initialPage = 0, pageCount = { 3 })
+    val pagerState = rememberPagerState(
+        initialPage = if (objectType == ObjectType.NOVEL) 1 else 0,
+        pageCount = { 3 })
     val coroutineScope = rememberCoroutineScope()
 
     val tabTitles = listOf(
