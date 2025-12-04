@@ -16,6 +16,7 @@ import com.white.fox.client.ListValueContent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 class CommentViewModel(
@@ -57,7 +58,7 @@ class CommentViewModel(
 
     private val _childComments =
         MutableStateFlow<Map<Long, List<Comment>>>(emptyMap())
-    val childComments: StateFlow<Map<Long, List<Comment>>> = _childComments
+    val childComments = _childComments.asStateFlow()
 
     suspend fun showReplies(commentId: Long) {
         delay(300L)

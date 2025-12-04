@@ -19,7 +19,7 @@ class SlideShowQueue(
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private val tasks = mutableListOf<ImageLoaderTask>()
     private val _currentImage = MutableStateFlow<File?>(null)
-    val currentImage: StateFlow<File?> = _currentImage
+    val currentImage = _currentImage.asStateFlow()
 
     // 新增可观察的索引和总数
     private val _currentIndex = MutableStateFlow(0)

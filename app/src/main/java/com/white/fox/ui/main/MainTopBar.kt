@@ -18,13 +18,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import ceui.lisa.hermes.cache.PrefStore
-import com.blankj.utilcode.util.AppUtils
 import com.white.fox.R
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.LocalNavViewModel
 import com.white.fox.ui.common.Route
-import com.white.fox.ui.setting.LogoutConfirmDialog
 import com.white.fox.ui.setting.localizedString
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -33,7 +30,6 @@ fun MainTopBar(onMenuClick: () -> Unit) {
     val navViewModel = LocalNavViewModel.current
     var expanded by remember { mutableStateOf(false) }
     val dependency = LocalDependency.current
-    var showConfirmDialog by remember { mutableStateOf(false) }
 
     TopAppBar(
         title = {
@@ -79,27 +75,8 @@ fun MainTopBar(onMenuClick: () -> Unit) {
                         navViewModel.navigate(Route.Help)
                     }
                 )
-                DropdownMenuItem(
-                    text = { Text(localizedString(R.string.button_log_out)) },
-                    onClick = {
-                        expanded = false
-                        showConfirmDialog = true
-                    }
-                )
             }
         },
     )
 
-    if (showConfirmDialog) {
-        LogoutConfirmDialog(
-            onConfirm = {
-                dependency.sessionManager.updateSession(null)
-                PrefStore("HybridRepository").clearAll()
-                dependency.prefStore.clearAll()
-                AppUtils.relaunchApp()
-                showConfirmDialog = false
-            },
-            onDismiss = { showConfirmDialog = false }
-        )
-    }
 }

@@ -8,7 +8,6 @@ import ceui.lisa.hermes.valuecontent.ValueContent
 import ceui.lisa.models.KListShow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -44,7 +43,6 @@ class ListValueContent<ValueT : KListShow<*>>(
                         loadStateFlow.value = LoadState.Loading(LoadReason.LoadMore)
                         withContext(Dispatchers.IO) {
                             val responseBody = appApi.generalGet(nextUrl)
-                            delay(1500L)
                             val responseJson = responseBody.string()
                             val response = gson.fromJson(responseJson, cls?.java)
 

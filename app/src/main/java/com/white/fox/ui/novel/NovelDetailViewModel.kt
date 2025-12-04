@@ -17,6 +17,7 @@ import com.white.fox.ui.common.Dependency
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
@@ -91,8 +92,8 @@ class NovelDetailViewModel(private val novelId: Long, private val dep: Dependenc
         }
     }
 
-    override val loadState: StateFlow<LoadState> = _loadStateFlow
-    override val valueFlow: StateFlow<WebNovel?> = _valueFlow
+    override val loadState: StateFlow<LoadState> = _loadStateFlow.asStateFlow()
+    override val valueFlow: StateFlow<WebNovel?> = _valueFlow.asStateFlow()
 
 
     init {

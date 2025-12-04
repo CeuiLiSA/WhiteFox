@@ -18,11 +18,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Airplay
 import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Whatshot
 import androidx.compose.material3.DrawerState
@@ -124,14 +122,10 @@ fun MainDrawer(scope: CoroutineScope, drawerState: DrawerState) {
                 modifier = Modifier.padding(start = 16.dp, top = 12.dp, bottom = 8.dp)
             )
             DrawerItem(localizedString(R.string.home_tab_home), Icons.Default.Home) { /* ... */ }
-            DrawerItem(
-                localizedString(R.string.home_tab_discover),
-                Icons.Default.Search
-            ) { /* ... */ }
-            DrawerItem(
-                localizedString(R.string.home_tab_following),
-                Icons.Default.Favorite
-            ) { /* ... */ }
+            DrawerItem(localizedString(R.string.home_tab_home), Icons.Default.Home) { /* ... */ }
+            DrawerItem(localizedString(R.string.home_tab_home), Icons.Default.Home) { /* ... */ }
+            DrawerItem(localizedString(R.string.home_tab_home), Icons.Default.Home) { /* ... */ }
+            DrawerItem(localizedString(R.string.home_tab_home), Icons.Default.Home) { /* ... */ }
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 

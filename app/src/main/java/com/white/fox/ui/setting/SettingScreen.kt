@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
@@ -27,6 +29,7 @@ import com.white.fox.ui.common.PageScreen
 fun SettingScreen() = PageScreen(pageTitle = localizedString(R.string.settings)) {
     val settingsManager = LocalDependency.current.settingsManager
     val settingsState = settingsManager.stateFlow.collectAsState()
+    val logoutState = rememberLogoutConfirmState()
 
     Column(modifier = Modifier.padding(16.dp)) {
         Text(
@@ -69,5 +72,24 @@ fun SettingScreen() = PageScreen(pageTitle = localizedString(R.string.settings))
                 )
             }
         }
+
+        Spacer(modifier = Modifier.height(18.dp))
+
+        Button(
+            onClick = {
+                logoutState.show()
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 0.dp)
+                .height(52.dp),
+            shape = RoundedCornerShape(6.dp)
+        ) {
+            Text(localizedString(R.string.button_log_out))
+        }
+
     }
+
+    LogoutConfirm(state = logoutState)
+
 }

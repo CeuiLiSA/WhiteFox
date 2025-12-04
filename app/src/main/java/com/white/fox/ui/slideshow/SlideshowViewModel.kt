@@ -12,7 +12,6 @@ import com.white.fox.client.Client
 import com.white.fox.client.buildReferer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -33,11 +32,10 @@ class SlideshowViewModel(
         it.start()
     }
 
-    suspend fun loadNextPage(nextUrl: String) {
+    private suspend fun loadNextPage(nextUrl: String) {
         try {
             withContext(Dispatchers.IO) {
                 val responseBody = client.appApi.generalGet(nextUrl)
-                delay(1500L)
                 val responseJson = responseBody.string()
                 val response = gson.fromJson(responseJson, IllustResponse::class.java)
 
