@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,10 +21,10 @@ import androidx.core.net.toUri
 import ceui.lisa.hermes.loadstate.LoadReason
 import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.hermes.task.ImageLoaderTask
-import com.github.panpf.sketch.Sketch
 import com.github.panpf.sketch.request.ImageRequest
 import com.github.panpf.zoomimage.SketchZoomAsyncImage
 import com.github.panpf.zoomimage.rememberSketchZoomState
+import com.white.fox.ui.common.LocalDependency
 
 @Composable
 fun BoxScope.DetailPiece(
@@ -33,7 +32,7 @@ fun BoxScope.DetailPiece(
     largeImageUrl: String? = null
 ) {
     val context = LocalContext.current
-    val sketch = remember { Sketch.Builder(context).build() }
+    val sketch = LocalDependency.current.sketch
     val zoomState = rememberSketchZoomState()
     val loadState = loadTask.loadState.collectAsState()
     val valueState by loadTask.valueFlow.collectAsState()

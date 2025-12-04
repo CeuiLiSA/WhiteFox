@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.room.Room
 import ceui.lisa.hermes.cache.PrefStore
 import ceui.lisa.hermes.db.AppDatabase
+import com.github.panpf.sketch.Sketch
 import com.tencent.mmkv.MMKV
 import com.white.fox.client.Client
 import com.white.fox.session.SessionManager
@@ -37,4 +38,5 @@ class WhiteFox : Application(), ServiceProvider {
     }
 
     override val client: Client by lazy { Client(sessionManager) }
+    override val sketch: Sketch by lazy { Sketch.Builder(this).build() }
 }

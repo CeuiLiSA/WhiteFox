@@ -46,16 +46,20 @@ class MainActivity : ComponentActivity() {
             sessionManager = serviceProvider.sessionManager,
             settingsManager = serviceProvider.settingsManager,
             prefStore = serviceProvider.prefStore,
+            sketch = serviceProvider.sketch
         )
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             lifecycleScope.launch {
                 serviceProvider.sessionManager.stateFlow.collect { session ->
                     if (serviceProvider.sessionManager.loggedInUid() > 0L) {
-                        val json = gson.toJson(session)
-                        saveJsonToDownloads(this@MainActivity, jsonContent = json)
+                        try {
+                            val json = gson.toJson(session)
+                            saveJsonToDownloads(this@MainActivity, jsonContent = json)
+                        } catch (ex: Exception) {
+                            Timber.e(ex)
+                        }
                     }
-
                 }
             }
         }

@@ -25,7 +25,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import ceui.lisa.models.IllustResponse
-import com.github.panpf.sketch.Sketch
 import com.github.panpf.sketch.request.ImageRequest
 import com.github.panpf.zoomimage.SketchZoomAsyncImage
 import com.github.panpf.zoomimage.rememberSketchZoomState
@@ -46,8 +45,6 @@ fun FullScreenSlideShow(
     setUpFullscreenPage()
     val context = LocalContext.current
 
-    val sketch = remember { Sketch.Builder(context).build() }
-
     val currentFileState = remember { mutableStateOf<File?>(null) }
     var previousFile by remember { mutableStateOf<File?>(null) }
 
@@ -58,6 +55,7 @@ fun FullScreenSlideShow(
     val previousZoomState = rememberSketchZoomState()
 
     val dep = LocalDependency.current
+    val sketch = dep.sketch
 
     val viewModel = constructVM({ dep.client }) { client ->
         SlideshowViewModel(client, illustResponse)
