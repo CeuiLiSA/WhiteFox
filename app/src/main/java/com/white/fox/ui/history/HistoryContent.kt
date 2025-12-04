@@ -12,7 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ceui.lisa.hermes.db.RecordType
+import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.models.ModelObject
+import com.white.fox.ui.common.EmptyBlock
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.RefreshTemplate
 import com.white.fox.ui.common.constructKeyedVM
@@ -29,29 +31,33 @@ fun <T : ModelObject> HistoryContent(
         HistoryViewModel(dep.database, recordType, cls)
     }
 
-    RefreshTemplate(viewModel) { value, _ ->
-        if (recordType == RecordType.VIEW_ILLUST_MANGA_HISTORY) {
-            LazyVerticalStaggeredGrid(
-                columns = Fixed(2),
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(4.dp),
-                verticalItemSpacing = 4.dp,
-                horizontalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                items(
-                    value,
-                    key = { it.objectUniqueId },
-                ) {
-                    itemProducer(it)
-                }
-            }
+    RefreshTemplate(viewModel) { value, loadState ->
+        if (loadState is LoadState.Loaded && value.isEmpty()) {
+            EmptyBlock(viewModel)
         } else {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                items(value, key = { it.objectUniqueId }) {
-                    itemProducer(it)
+            if (recordType == RecordType.VIEW_ILLUST_MANGA_HISTORY) {
+                LazyVerticalStaggeredGrid(
+                    columns = Fixed(2),
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(4.dp),
+                    verticalItemSpacing = 4.dp,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    items(
+                        value,
+                        key = { it.objectUniqueId },
+                    ) {
+                        itemProducer(it)
+                    }
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    items(value, key = { it.objectUniqueId }) {
+                        itemProducer(it)
+                    }
                 }
             }
         }
