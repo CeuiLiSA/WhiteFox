@@ -59,7 +59,7 @@ fun <T> RefreshTemplate(
 
                     is LoadState.Error -> {
                         if (value == null) {
-                            ErrorBlock(viewModel)
+                            ErrorBlock(viewModel, state.ex)
                         }
                     }
 

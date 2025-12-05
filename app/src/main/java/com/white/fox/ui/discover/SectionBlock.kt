@@ -83,7 +83,7 @@ fun SectionBlock(
                 }
             }
 
-            is LoadState.Error -> ErrorBlock(viewModel)
+            is LoadState.Error -> ErrorBlock(viewModel, state.ex)
 
             is LoadState.Processing -> {
 

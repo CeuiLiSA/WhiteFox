@@ -1,5 +1,10 @@
 package com.white.fox.ui.discover
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,6 +20,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ceui.lisa.hermes.db.gson
 import ceui.lisa.hermes.loader.HybridRepository
+import ceui.lisa.hermes.loadstate.LoadReason
+import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.models.HomeAdaptedResponse
 import ceui.lisa.models.HomeAllReq
 import ceui.lisa.models.HomeAllResponse
@@ -23,6 +30,8 @@ import ceui.lisa.models.Illust
 import ceui.lisa.models.Novel
 import ceui.lisa.models.ObjectType
 import com.white.fox.R
+import com.white.fox.ui.common.ErrorBlock
+import com.white.fox.ui.common.LoadingBlock
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.LocalNavViewModel
 import com.white.fox.ui.common.RefreshTemplate
@@ -69,7 +78,7 @@ fun HomeFeedsScreen() {
         if (shouldLoadMore) viewModel.loadNextPage()
     }
 
-    RefreshTemplate(viewModel) { value, _ ->
+    RefreshTemplate(viewModel) { value, loadState ->
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             state = listState,
@@ -104,6 +113,31 @@ fun HomeFeedsScreen() {
                     Spacer(Modifier.height(20.dp))
                 } else {
                 }
+
+                val pickup = homeContent.pickup
+                if (pickup != null) {
+                    PickupCommentItem(pickup)
+                }
+            }
+
+            item {
+                AnimatedVisibility(
+                    visible = loadState is LoadState.Loading && loadState.reason == LoadReason.LoadMore,
+                    enter = fadeIn() + expandVertically(),
+                    exit = fadeOut() + shrinkVertically()
+                ) {
+                    LoadingBlock(160.dp)
+                }
+            }
+
+            item {
+                AnimatedVisibility(
+                    visible = loadState is LoadState.Error && loadState.isLoadMore,
+                    enter = fadeIn() + expandVertically(),
+                    exit = fadeOut() + shrinkVertically()
+                ) {
+                    ErrorBlock(viewModel, (loadState as LoadState.Error).ex)
+                }
             }
         }
     }
@@ -118,7 +152,8 @@ fun adapt(rawResponse: HomeAllResponse): HomeAdaptedResponse {
                 items.add(
                     HomeItem(
                         content.kind,
-                        novel = gson.fromJson(json, Novel::class.java)
+                        novel = gson.fromJson(json, Novel::class.java),
+                        pickup = content.pickup,
                     )
                 )
             }
@@ -129,6 +164,7 @@ fun adapt(rawResponse: HomeAllResponse): HomeAdaptedResponse {
                     HomeItem(
                         content.kind,
                         illust = gson.fromJson(json, Illust::class.java),
+                        pickup = content.pickup,
                     )
                 )
             }
@@ -141,6 +177,7 @@ fun adapt(rawResponse: HomeAllResponse): HomeAdaptedResponse {
                             val json = gson.toJson(it.app_model)
                             gson.fromJson(json, Illust::class.java)
                         },
+                        pickup = content.pickup,
                     )
                 )
             }

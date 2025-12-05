@@ -17,13 +17,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import ceui.lisa.hermes.common.getHumanReadableMessage
 import ceui.lisa.hermes.loadstate.LoadReason
 import ceui.lisa.hermes.loadstate.RefreshOwner
 import com.white.fox.R
 import com.white.fox.ui.setting.localizedString
 
 @Composable
-fun ErrorBlock(refreshOwner: RefreshOwner<*>) {
+fun ErrorBlock(refreshOwner: RefreshOwner<*>, exception: Exception) {
     val blockHeight = 160.dp
     Box(
         modifier = Modifier
@@ -36,7 +37,7 @@ fun ErrorBlock(refreshOwner: RefreshOwner<*>) {
         ) {
 
             Text(
-                text = localizedString(R.string.content_load_failed),
+                text = exception.getHumanReadableMessage(),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 style = MaterialTheme.typography.bodyMedium
             )

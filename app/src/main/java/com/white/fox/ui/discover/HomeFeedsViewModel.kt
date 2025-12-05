@@ -14,9 +14,8 @@ import ceui.lisa.models.HomeAllReq
 import ceui.lisa.models.NextPageSpec
 import com.white.fox.client.AppApi
 import com.white.fox.client.ListValueContent
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class HomeFeedsViewModel(
     repository: HybridRepository<HomeAdaptedResponse>,
@@ -64,17 +63,11 @@ class HomeFeedsViewModel(
     override fun loadNextPage() {
         val nextParams = _nextParams
         if (nextParams != null) {
-            viewModelScope.launch {
-                valueContent.withLockSuspend {
-                    try {
-                        val rawResponse = appApi.homeAll(HomeAllReq(next_params = nextParams))
-                        _nextParams = rawResponse.next_params
-                        val response = adapt(rawResponse)
-                        valueContent.appendTotalFlow(response)
-                    } catch (ex: Exception) {
-                        Timber.e(ex)
-                    }
-                }
+            valueContent.loadNextPageWithState {
+                delay(2000L)
+                val rawResponse = appApi.homeAll(HomeAllReq(next_params = nextParams))
+                _nextParams = rawResponse.next_params
+                adapt(rawResponse)
             }
         }
     }

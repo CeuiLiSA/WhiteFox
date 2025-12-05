@@ -106,7 +106,7 @@ fun <ItemT : ModelObject, ResponseT : KListShow<ItemT>, VM> PagedListScreen(
 
                     is LoadState.Error -> {
                         if (value == null) {
-                            ErrorBlock(viewModel)
+                            ErrorBlock(viewModel, state.ex)
                         }
                     }
 

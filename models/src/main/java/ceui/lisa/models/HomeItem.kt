@@ -6,6 +6,7 @@ data class HomeItem(
     val illust: Illust? = null,
     val novel: Novel? = null,
     val taggedIllusts: List<Illust>? = null,
+    val pickup: Pickup? = null,
 )
 
 

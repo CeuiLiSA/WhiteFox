@@ -4,5 +4,5 @@ sealed class LoadState {
     data class Loading(val reason: LoadReason) : LoadState()
     data class Processing(val progress: Float) : LoadState()
     data class Loaded(val hasContent: Boolean) : LoadState()
-    data class Error(val ex: Exception) : LoadState()
+    data class Error(val ex: Exception, val isLoadMore: Boolean = false) : LoadState()
 }

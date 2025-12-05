@@ -37,24 +37,34 @@ class ListValueContent<ValueT : KListShow<*>>(
     fun loadNextPage() {
         val nextUrl = _nextUrl
         if (nextUrl != null) {
-            coroutineScope.launch {
-                withLockSuspend {
-                    try {
-                        loadStateFlow.value = LoadState.Loading(LoadReason.LoadMore)
-                        withContext(Dispatchers.IO) {
-                            val responseBody = appApi.generalGet(nextUrl)
-                            val responseJson = responseBody.string()
-                            val response = gson.fromJson(responseJson, cls?.java)
+            loadNextPageWithState {
+                val responseBody = appApi.generalGet(nextUrl)
+                val responseJson = responseBody.string()
+                gson.fromJson(responseJson, cls?.java)
+            }
+        }
+    }
 
-                            appendTotalFlow(response)
-                        }
-                        loadStateFlow.value = LoadState.Loaded(true)
-                    } catch (ex: Exception) {
-                        Timber.e(ex)
-                        if (repository.valueFlow.value == null) {
-                            loadStateFlow.value = LoadState.Error(ex)
+    fun loadNextPageWithState(block: suspend () -> ValueT) {
+        coroutineScope.launch {
+            withLockSuspend {
+                try {
+                    loadStateFlow.value = LoadState.Loading(LoadReason.LoadMore)
+                    withContext(Dispatchers.IO) {
+                        val response = block()
+
+                        _nextUrl = response.nextPageUrl
+                        onDataPrepared(response)
+
+                        val lastValue = _totalFlow.value
+                        if (lastValue != null) {
+                            _totalFlow.value = sum(lastValue, response)
                         }
                     }
+                    loadStateFlow.value = LoadState.Loaded(true)
+                } catch (ex: Exception) {
+                    Timber.e(ex)
+                    loadStateFlow.value = LoadState.Error(ex, true)
                 }
             }
         }
@@ -73,16 +83,6 @@ class ListValueContent<ValueT : KListShow<*>>(
                     _totalFlow.value = value
                 }
             }
-        }
-    }
-
-    fun appendTotalFlow(response: ValueT) {
-        _nextUrl = response.nextPageUrl
-        onDataPrepared(response)
-
-        val lastValue = _totalFlow.value
-        if (lastValue != null) {
-            _totalFlow.value = sum(lastValue, response)
         }
     }
 }
