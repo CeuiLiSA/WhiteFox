@@ -6,6 +6,9 @@ import ceui.lisa.hermes.loader.ProgressInterceptor
 import ceui.lisa.hermes.loadstate.LoadReason
 import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.models.AccountResponse
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonPrimitive
+import com.google.gson.JsonSerializer
 import com.white.fox.session.ISessionManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -25,6 +28,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
+import java.math.BigDecimal
 import java.util.concurrent.TimeUnit
 
 class Client(
@@ -63,9 +67,20 @@ class Client(
             setLevel(HttpLoggingInterceptor.Level.BODY)
         })
 
+        val gson = GsonBuilder()
+            .setPrettyPrinting()
+            .serializeSpecialFloatingPointValues() // 可序列化 NaN/Infinity
+            .registerTypeAdapter(Double::class.java, JsonSerializer<Double> { src, _, _ ->
+                JsonPrimitive(BigDecimal(src))
+            })
+            .registerTypeAdapter(Float::class.java, JsonSerializer<Float> { src, _, _ ->
+                JsonPrimitive(BigDecimal(src.toDouble()))
+            })
+            .create()
+
         return Retrofit.Builder()
             .baseUrl(APP_API_HOST)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .client(okhttpClientBuilder.build())
             .build()
             .create(service)

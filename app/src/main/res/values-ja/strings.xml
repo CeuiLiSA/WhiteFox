@@ -68,4 +68,6 @@
     <string name="log_in_this_account">登录此账号</string>
     <string name="title_comments">评论</string>
     <string name="now_following">关注中</string>
+    <string name="home_hot_recommend">热门推荐</string>
+    <string name="home_ranking_title">榜单</string>
 </resources>
