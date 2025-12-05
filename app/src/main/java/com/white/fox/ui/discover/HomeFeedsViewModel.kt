@@ -2,6 +2,7 @@ package com.white.fox.ui.discover
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ceui.lisa.hermes.db.gson
 import ceui.lisa.hermes.loader.HybridRepository
 import ceui.lisa.hermes.loadstate.LoadMoreOwner
 import ceui.lisa.hermes.loadstate.LoadReason
@@ -9,15 +10,17 @@ import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.hermes.loadstate.RefreshOwner
 import ceui.lisa.hermes.objectpool.ObjectPool
 import ceui.lisa.models.HomeAdaptedResponse
+import ceui.lisa.models.HomeAllReq
 import ceui.lisa.models.NextPageSpec
 import com.white.fox.client.AppApi
 import com.white.fox.client.ListValueContent
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class HomeFeedsViewModel(
     repository: HybridRepository<HomeAdaptedResponse>,
-    appApi: AppApi,
+    private val appApi: AppApi,
 ) : ViewModel(), RefreshOwner<HomeAdaptedResponse>, LoadMoreOwner {
 
     private var _nextParams: NextPageSpec? = null
@@ -45,6 +48,12 @@ class HomeFeedsViewModel(
                     }
                 }
             }
+
+            _nextParams = if (response.nextPageUrl != null) {
+                gson.fromJson(response.nextPageUrl, NextPageSpec::class.java)
+            } else {
+                null
+            }
         }
 
     override val loadState: StateFlow<LoadState> = valueContent.loadState
@@ -56,7 +65,16 @@ class HomeFeedsViewModel(
         val nextParams = _nextParams
         if (nextParams != null) {
             viewModelScope.launch {
-
+                valueContent.withLockSuspend {
+                    try {
+                        val rawResponse = appApi.homeAll(HomeAllReq(next_params = nextParams))
+                        _nextParams = rawResponse.next_params
+                        val response = adapt(rawResponse)
+                        valueContent.appendTotalFlow(response)
+                    } catch (ex: Exception) {
+                        Timber.e(ex)
+                    }
+                }
             }
         }
     }

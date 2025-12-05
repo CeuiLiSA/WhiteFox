@@ -46,13 +46,7 @@ class ListValueContent<ValueT : KListShow<*>>(
                             val responseJson = responseBody.string()
                             val response = gson.fromJson(responseJson, cls?.java)
 
-                            _nextUrl = response.nextPageUrl
-                            onDataPrepared(response)
-
-                            val lastValue = _totalFlow.value
-                            if (lastValue != null) {
-                                _totalFlow.value = sum(lastValue, response)
-                            }
+                            appendTotalFlow(response)
                         }
                         loadStateFlow.value = LoadState.Loaded(true)
                     } catch (ex: Exception) {
@@ -79,6 +73,16 @@ class ListValueContent<ValueT : KListShow<*>>(
                     _totalFlow.value = value
                 }
             }
+        }
+    }
+
+    fun appendTotalFlow(response: ValueT) {
+        _nextUrl = response.nextPageUrl
+        onDataPrepared(response)
+
+        val lastValue = _totalFlow.value
+        if (lastValue != null) {
+            _totalFlow.value = sum(lastValue, response)
         }
     }
 }

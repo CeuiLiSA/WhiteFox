@@ -5,18 +5,21 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ceui.lisa.hermes.db.gson
-import ceui.lisa.hermes.loader.APIRepository
 import ceui.lisa.hermes.loader.HybridRepository
 import ceui.lisa.models.HomeAdaptedResponse
 import ceui.lisa.models.HomeAllReq
 import ceui.lisa.models.HomeAllResponse
 import ceui.lisa.models.HomeItem
 import ceui.lisa.models.Illust
-import ceui.lisa.models.IllustResponse
 import ceui.lisa.models.Novel
 import ceui.lisa.models.ObjectType
 import com.white.fox.R
@@ -27,7 +30,6 @@ import com.white.fox.ui.common.Route
 import com.white.fox.ui.common.constructKeyedVM
 import com.white.fox.ui.illust.IllustItem
 import com.white.fox.ui.novel.NovelCard
-import com.white.fox.ui.recommend.ListIllustViewModal
 import com.white.fox.ui.setting.localizedString
 import java.util.UUID
 
@@ -52,10 +54,25 @@ fun HomeFeedsScreen() {
         HomeFeedsViewModel(repository, dependency.client.appApi)
     }
 
+    val listState = rememberLazyListState()
+
+    val shouldLoadMore by remember {
+        derivedStateOf {
+            val info = listState.layoutInfo
+            val total = info.totalItemsCount
+            val last = info.visibleItemsInfo.lastOrNull()?.index ?: 0
+            total > 0 && last >= total - 4
+        }
+    }
+
+    LaunchedEffect(shouldLoadMore) {
+        if (shouldLoadMore) viewModel.loadNextPage()
+    }
 
     RefreshTemplate(viewModel) { value, _ ->
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
+            state = listState,
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(
@@ -77,15 +94,9 @@ fun HomeFeedsScreen() {
                         }
                     }
                 } else if (homeContent.kind == "tags_carousel") {
-                    val viewModel = constructKeyedVM({ "tags_carousel_1" }, {
-                        APIRepository { IllustResponse(homeContent.taggedIllusts ?: emptyList()) }
-                    }) { repository ->
-                        ListIllustViewModal(repository, dependency.client.appApi)
-                    }
-
-                    SectionBlock(
+                    TagsCarouselBlock(
                         DiscoverSection(localizedString(R.string.treding_tags)),
-                        viewModel,
+                        homeContent.taggedIllusts ?: emptyList(),
                         { illust -> navViewModel.navigate(Route.IllustDetail(illust.id)) },
                         { navViewModel.navigate(Route.RankContainer(ObjectType.ILLUST)) },
                     )
@@ -98,7 +109,7 @@ fun HomeFeedsScreen() {
     }
 }
 
-private fun adapt(rawResponse: HomeAllResponse): HomeAdaptedResponse {
+fun adapt(rawResponse: HomeAllResponse): HomeAdaptedResponse {
     val items = mutableListOf<HomeItem>()
     rawResponse.displayList.forEach { content ->
         when (content.kind) {

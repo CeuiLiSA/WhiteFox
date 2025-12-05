@@ -7,5 +7,5 @@ data class HomeAdaptedResponse(
     override val displayList: List<HomeItem>
         get() = contents
     override val nextPageUrl: String?
-        get() = null
+        get() = next_url
 }
