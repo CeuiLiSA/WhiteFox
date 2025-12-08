@@ -1,7 +1,7 @@
 package com.white.fox.ui.illust
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -26,6 +26,7 @@ import com.github.panpf.sketch.request.httpHeaders
 fun IllustItem(
     illust: Illust,
     onClick: () -> Unit,
+    onLongClick: () -> Unit = { },
 ) {
     val url = illust.image_urls?.large
     val aspectRatio = remember(illust.width, illust.height) {
@@ -35,7 +36,7 @@ fun IllustItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
+            .combinedClickable(onClick = onClick, onLongClick = onLongClick)
     ) {
         Box(
             modifier = Modifier

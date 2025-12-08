@@ -98,9 +98,9 @@ fun HomeFeedsScreen() {
                 } else if (homeContent.kind == ObjectType.ILLUST || homeContent.kind == ObjectType.MANGA) {
                     val illust = homeContent.illust
                     if (illust != null) {
-                        IllustItem(illust) {
+                        IllustItem(illust, onClick = {
 
-                        }
+                        })
                     }
                 } else if (homeContent.kind == "tags_carousel") {
                     TagsCarouselBlock(
