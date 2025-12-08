@@ -29,8 +29,11 @@ import com.white.fox.ui.common.MenuItem
 import com.white.fox.ui.common.RefreshTemplate
 import com.white.fox.ui.common.Route
 import com.white.fox.ui.common.Route.IllustDetail
+import com.white.fox.ui.common.ShowSpinner
 import com.white.fox.ui.common.rememberActionMenuState
+import com.white.fox.ui.common.rememberSpinnerState
 import com.white.fox.ui.illust.IllustItem
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -38,6 +41,7 @@ fun StaggeredIllustContent(viewModel: ListIllustViewModal) {
     val navViewModel = LocalNavViewModel.current
 
     val actionMenuState = rememberActionMenuState()
+    val spinnerState = rememberSpinnerState()
 
     val listState = rememberLazyStaggeredGridState()
     val shouldLoadMore by remember {
@@ -88,7 +92,11 @@ fun StaggeredIllustContent(viewModel: ListIllustViewModal) {
         listOf(
             MenuItem("下载") {},
             MenuItem("分享") {},
-            MenuItem("收藏") {},
+            MenuItem("收藏") {
+                spinnerState.show()
+                delay(1500L)
+                spinnerState.hide()
+            },
             MenuItem("Slideshow") {
                 viewModel.valueFlow.value?.let {
                     navViewModel.navigate(Route.SlideShow(it))
@@ -97,5 +105,7 @@ fun StaggeredIllustContent(viewModel: ListIllustViewModal) {
         ),
         actionMenuState
     )
+
+    ShowSpinner(spinnerState)
 }
 
