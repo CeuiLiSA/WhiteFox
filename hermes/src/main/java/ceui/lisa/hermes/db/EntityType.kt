@@ -4,4 +4,6 @@ object EntityType {
     const val ILLUST_MANGA = 1001
     const val NOVEL = 1002
     const val USER = 1003
+
+    const val APP_SESSION = 100
 }

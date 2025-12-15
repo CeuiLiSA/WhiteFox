@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.lifecycle.lifecycleScope
 import ceui.lisa.hermes.common.LocalAppLocaleContext
 import ceui.lisa.hermes.common.saveJsonToDownloads
+import ceui.lisa.hermes.db.EntityType
 import ceui.lisa.hermes.db.gson
 import ceui.lisa.hermes.viewmodel.constructVM
 import com.white.fox.ui.common.Dependency
@@ -22,6 +23,8 @@ import com.white.fox.ui.common.LocalNavViewModel
 import com.white.fox.ui.common.NavHost
 import com.white.fox.ui.common.NavViewModel
 import com.white.fox.ui.theme.WhiteFoxTheme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.Locale
@@ -87,6 +90,14 @@ class MainActivity : ComponentActivity() {
         }
 
         handleIntent(intent)
+
+
+        MainScope().launch(Dispatchers.IO) {
+            val aa = dependency.database.generalDao().getAllByEntityType(EntityType.APP_SESSION)
+            aa.forEach { it ->
+                Timber.d("ssaddasw2  ${it}")
+            }
+        }
     }
 
     override fun onNewIntent(intent: Intent) {

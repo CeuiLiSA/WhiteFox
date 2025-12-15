@@ -53,7 +53,6 @@ fun NavHost() {
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
-        onBack = { count -> repeat(count) { navViewModel.back() } },
         entryProvider = { key ->
             Timber.d("NavHost entryProvider key: ${key.name}")
             NavEntry(key) {

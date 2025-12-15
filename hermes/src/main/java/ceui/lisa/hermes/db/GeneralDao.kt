@@ -28,10 +28,22 @@ interface GeneralDao {
         limit: Int = 30
     ): List<GeneralEntity> // 根据 entityType 返回数据，按 updatedTime 降序排列，支持分页
 
+    @Query("SELECT * FROM general_table WHERE entityType = :entityType ORDER BY updatedTime DESC LIMIT :limit OFFSET :offset")
+    suspend fun getByEntityType(
+        entityType: Int,
+        offset: Int,
+        limit: Int = 30
+    ): List<GeneralEntity> // 根据 entityType 返回数据，按 updatedTime 降序排列，支持分页
+
     // ✅ 查询指定 recordType 的所有数据，按 updatedTime 降序排列（不分页）
     @Query("SELECT * FROM general_table WHERE recordType = :recordType ORDER BY updatedTime DESC")
     suspend fun getAllByRecordType(
         recordType: Int
+    ): List<GeneralEntity>
+
+    @Query("SELECT * FROM general_table WHERE entityType = :entityType ORDER BY updatedTime DESC")
+    suspend fun getAllByEntityType(
+        entityType: Int
     ): List<GeneralEntity>
 
 

@@ -51,7 +51,8 @@ dependencies {
     api(libs.androidx.compose.material3)
     api(libs.androidx.appcompat)
     api(libs.material)
-    implementation(libs.androidx.browser)
+    api(libs.androidx.browser)
+    api(libs.androidx.lifecycle.process)
 
     api("androidx.core:core-splashscreen:1.2.0")
 

@@ -37,6 +37,7 @@ runtimeLivedata = "1.9.2"
 utilcodex = "1.31.1"
 zoomimageComposeSketch4Core = "1.4.0"
 firebaseCrashlyticsBuildtools = "3.0.6"
+lifecycleProcess = "2.10.0"
 
 [libraries]
 androidx-browser = { module = "androidx.browser:browser", version.ref = "browser" }
@@ -87,6 +88,7 @@ androidx-compose-runtime-livedata = { group = "androidx.compose.runtime", name =
 utilcodex = { module = "com.blankj:utilcodex", version.ref = "utilcodex" }
 zoomimage-compose-sketch4-core = { module = "io.github.panpf.zoomimage:zoomimage-compose-sketch4-core", version.ref = "zoomimageComposeSketch4Core" }
 firebase-crashlytics-buildtools = { group = "com.google.firebase", name = "firebase-crashlytics-buildtools", version.ref = "firebaseCrashlyticsBuildtools" }
+androidx-lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "lifecycleProcess" }
 
 
 [plugins]
