@@ -19,14 +19,14 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import ceui.lisa.hermes.common.formatRelativeTime
+import ceui.lisa.hermes.common.localizedString
 import ceui.lisa.hermes.common.parseIsoToMillis
+import ceui.lisa.hermes.ui.ProgressTextButton
 import ceui.lisa.models.Comment
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.request.ImageRequest
 import com.white.fox.R
-import com.white.fox.ui.common.ProgressTextButton
 import com.white.fox.ui.illust.withHeader
-import com.white.fox.ui.setting.localizedString
 
 @Composable
 fun ChildCommentItem(

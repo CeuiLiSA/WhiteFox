@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ceui.lisa.hermes.common.localizedString
 import ceui.lisa.hermes.loader.HybridRepository
 import ceui.lisa.models.IllustResponse
 import ceui.lisa.models.NovelResponse
@@ -25,7 +26,6 @@ import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.constructKeyedVM
 import com.white.fox.ui.novel.ListNovelContent
 import com.white.fox.ui.novel.ListNovelViewModel
-import com.white.fox.ui.setting.localizedString
 import kotlinx.coroutines.launch
 
 @Composable

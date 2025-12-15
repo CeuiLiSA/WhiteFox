@@ -18,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import ceui.lisa.hermes.common.localizedString
 import ceui.lisa.hermes.db.gson
 import ceui.lisa.hermes.loader.HybridRepository
 import ceui.lisa.hermes.loadstate.LoadReason
@@ -39,7 +40,6 @@ import com.white.fox.ui.common.Route
 import com.white.fox.ui.common.constructKeyedVM
 import com.white.fox.ui.illust.IllustItem
 import com.white.fox.ui.novel.NovelCard
-import com.white.fox.ui.setting.localizedString
 import java.util.UUID
 
 @Composable

@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ceui.lisa.hermes.common.formatRelativeTime
+import ceui.lisa.hermes.common.localizedString
 import ceui.lisa.hermes.objectpool.ObjectPool
 import ceui.lisa.models.User
 import com.github.panpf.sketch.AsyncImage
@@ -29,7 +30,6 @@ import com.github.panpf.sketch.request.ImageRequest
 import com.white.fox.R
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.illust.withHeader
-import com.white.fox.ui.setting.localizedString
 import com.white.fox.ui.user.FollowUserButton
 
 @Composable

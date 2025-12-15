@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ceui.lisa.hermes.common.localizedString
 import ceui.lisa.hermes.loader.HybridRepository
 import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.models.TrendingTagsResponse
@@ -29,7 +30,6 @@ import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.LocalNavViewModel
 import com.white.fox.ui.common.Route
 import com.white.fox.ui.common.constructKeyedVM
-import com.white.fox.ui.setting.localizedString
 import com.white.fox.ui.tags.ListTagViewModal
 import com.white.fox.ui.tags.SquareTagItem
 

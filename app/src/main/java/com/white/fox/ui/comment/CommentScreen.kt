@@ -3,12 +3,12 @@ package com.white.fox.ui.comment
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import ceui.lisa.hermes.common.localizedString
 import com.white.fox.R
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.PageScreen
 import com.white.fox.ui.common.PagedListScreen
 import com.white.fox.ui.common.constructKeyedVM
-import com.white.fox.ui.setting.localizedString
 
 @Composable
 fun CommentScreen(objectId: Long, objectType: String) =

@@ -1,4 +1,4 @@
-package com.white.fox.ui.common
+package ceui.lisa.hermes.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

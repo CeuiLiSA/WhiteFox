@@ -12,8 +12,8 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
+import ceui.lisa.hermes.common.localizedString
 import com.white.fox.R
-import com.white.fox.ui.setting.localizedString
 
 @Composable
 fun MainBottomBar(selectedTab: Int, onTabSelected: (Int) -> Unit) {

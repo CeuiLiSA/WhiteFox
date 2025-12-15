@@ -16,10 +16,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ceui.lisa.hermes.common.localizedString
 import ceui.lisa.models.Illust
 import com.white.fox.R
 import com.white.fox.ui.illust.SquareIllustItem
-import com.white.fox.ui.setting.localizedString
 
 @Composable
 fun TagsCarouselBlock(

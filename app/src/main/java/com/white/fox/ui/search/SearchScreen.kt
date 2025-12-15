@@ -21,12 +21,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import ceui.lisa.hermes.common.localizedString
 import ceui.lisa.models.Tag
 import com.white.fox.R
 import com.white.fox.ui.common.LocalNavViewModel
 import com.white.fox.ui.common.PageScreen
 import com.white.fox.ui.common.Route
-import com.white.fox.ui.setting.localizedString
 
 @Composable
 fun SearchScreen() = PageScreen(localizedString(R.string.button_search)) {

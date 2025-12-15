@@ -1,4 +1,4 @@
-package com.white.fox.ui.setting
+package ceui.lisa.hermes.common
 
 import android.content.Context
 import androidx.compose.runtime.compositionLocalOf

@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ceui.lisa.hermes.common.localizedString
 import ceui.lisa.hermes.db.RecordType
 import ceui.lisa.models.Illust
 import ceui.lisa.models.Novel
@@ -26,7 +27,6 @@ import com.white.fox.ui.common.PageScreen
 import com.white.fox.ui.common.Route.IllustDetail
 import com.white.fox.ui.illust.IllustItem
 import com.white.fox.ui.novel.NovelCard
-import com.white.fox.ui.setting.localizedString
 import com.white.fox.ui.user.UserCard
 import kotlinx.coroutines.launch
 

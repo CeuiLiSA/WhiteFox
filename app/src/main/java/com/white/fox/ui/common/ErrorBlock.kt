@@ -18,10 +18,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ceui.lisa.hermes.common.getHumanReadableMessage
+import ceui.lisa.hermes.common.localizedString
 import ceui.lisa.hermes.loadstate.LoadReason
 import ceui.lisa.hermes.loadstate.RefreshOwner
 import com.white.fox.R
-import com.white.fox.ui.setting.localizedString
 
 @Composable
 fun ErrorBlock(refreshOwner: RefreshOwner<*>, exception: Exception) {

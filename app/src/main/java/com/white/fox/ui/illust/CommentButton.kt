@@ -13,10 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import ceui.lisa.hermes.common.localizedString
 import com.white.fox.R
 import com.white.fox.ui.common.LocalNavViewModel
 import com.white.fox.ui.common.Route
-import com.white.fox.ui.setting.localizedString
 
 @Composable
 fun CommentButton(objectId: Long, objectType: String) {

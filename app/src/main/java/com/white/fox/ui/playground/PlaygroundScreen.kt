@@ -28,10 +28,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ceui.lisa.hermes.common.localizedString
 import com.white.fox.R
 import com.white.fox.ui.common.LocalSharedTransitionScope
 import com.white.fox.ui.common.PageScreen
-import com.white.fox.ui.setting.localizedString
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable

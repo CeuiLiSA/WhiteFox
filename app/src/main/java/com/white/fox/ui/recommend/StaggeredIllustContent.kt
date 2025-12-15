@@ -22,16 +22,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ceui.lisa.hermes.loadstate.LoadReason
 import ceui.lisa.hermes.loadstate.LoadState
-import com.white.fox.ui.common.ActionMenu
+import ceui.lisa.hermes.ui.ActionMenu
+import ceui.lisa.hermes.ui.MenuItem
+import ceui.lisa.hermes.ui.ShowSpinner
+import ceui.lisa.hermes.ui.rememberActionMenuState
+import ceui.lisa.hermes.ui.rememberSpinnerState
 import com.white.fox.ui.common.LoadingBlock
 import com.white.fox.ui.common.LocalNavViewModel
-import com.white.fox.ui.common.MenuItem
 import com.white.fox.ui.common.RefreshTemplate
 import com.white.fox.ui.common.Route
 import com.white.fox.ui.common.Route.IllustDetail
-import com.white.fox.ui.common.ShowSpinner
-import com.white.fox.ui.common.rememberActionMenuState
-import com.white.fox.ui.common.rememberSpinnerState
 import com.white.fox.ui.illust.IllustItem
 import kotlinx.coroutines.delay
 
@@ -90,7 +90,8 @@ fun StaggeredIllustContent(viewModel: ListIllustViewModal) {
 
     ActionMenu(
         listOf(
-            MenuItem("下载") {},
+            MenuItem("下载首图") {},
+            MenuItem("下载单作品全部图片") {},
             MenuItem("分享") {},
             MenuItem("收藏") {
                 spinnerState.show()

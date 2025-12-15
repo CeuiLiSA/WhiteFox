@@ -1,6 +1,7 @@
 package com.white.fox.ui.following
 
 import androidx.compose.runtime.Composable
+import ceui.lisa.hermes.common.localizedString
 import ceui.lisa.hermes.loader.APIRepository
 import com.white.fox.R
 import com.white.fox.client.RestrictType
@@ -11,7 +12,6 @@ import com.white.fox.ui.common.constructKeyedVM
 import com.white.fox.ui.discover.DiscoverSection
 import com.white.fox.ui.discover.SectionBlock
 import com.white.fox.ui.recommend.ListIllustViewModal
-import com.white.fox.ui.setting.localizedString
 
 @Composable
 fun BookmarkedIllustSection(userId: Long) {

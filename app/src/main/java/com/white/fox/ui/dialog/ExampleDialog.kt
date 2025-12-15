@@ -6,8 +6,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
+import ceui.lisa.hermes.common.localizedString
 import com.white.fox.R
-import com.white.fox.ui.setting.localizedString
 
 
 @Composable

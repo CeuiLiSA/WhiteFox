@@ -19,10 +19,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ceui.lisa.hermes.common.localizedString
 import ceui.lisa.models.User
 import com.white.fox.R
 import com.white.fox.ui.common.LocalDependency
-import com.white.fox.ui.setting.localizedString
 
 @Composable
 fun FollowUserButton(userId: Long, userState: State<User?>) {

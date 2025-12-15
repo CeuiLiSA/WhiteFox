@@ -39,6 +39,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ceui.lisa.hermes.common.localizedString
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.request.ImageRequest
 import com.white.fox.R
@@ -46,7 +47,6 @@ import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.LocalNavViewModel
 import com.white.fox.ui.common.Route
 import com.white.fox.ui.illust.withHeader
-import com.white.fox.ui.setting.localizedString
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 

@@ -11,6 +11,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.lifecycle.lifecycleScope
+import ceui.lisa.hermes.common.LocalAppLocaleContext
 import ceui.lisa.hermes.common.saveJsonToDownloads
 import ceui.lisa.hermes.db.gson
 import ceui.lisa.hermes.viewmodel.constructVM
@@ -20,7 +21,6 @@ import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.LocalNavViewModel
 import com.white.fox.ui.common.NavHost
 import com.white.fox.ui.common.NavViewModel
-import com.white.fox.ui.setting.LocalAppLocaleContext
 import com.white.fox.ui.theme.WhiteFoxTheme
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -46,7 +46,8 @@ class MainActivity : ComponentActivity() {
             sessionManager = serviceProvider.sessionManager,
             settingsManager = serviceProvider.settingsManager,
             prefStore = serviceProvider.prefStore,
-            sketch = serviceProvider.sketch
+            sketch = serviceProvider.sketch,
+            applicationSession = serviceProvider.applicationSession,
         )
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {

@@ -1,4 +1,4 @@
-package com.white.fox.ui.setting
+package ceui.lisa.hermes.common
 
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable

@@ -18,9 +18,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import ceui.lisa.hermes.common.localizedString
 import ceui.lisa.models.Workspace
 import com.white.fox.R
-import com.white.fox.ui.setting.localizedString
 
 @Composable
 fun WorkspaceInfoCard(workspace: Workspace) {

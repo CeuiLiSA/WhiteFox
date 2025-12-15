@@ -40,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ceui.lisa.hermes.common.localizedString
 import ceui.lisa.models.ObjectType
 import com.github.panpf.sketch.AsyncImage
 import com.github.panpf.sketch.request.ImageRequest
@@ -52,7 +53,6 @@ import com.white.fox.ui.common.constructKeyedVM
 import com.white.fox.ui.discover.UserCreatedIllustSection
 import com.white.fox.ui.following.BookmarkedIllustSection
 import com.white.fox.ui.illust.withHeader
-import com.white.fox.ui.setting.localizedString
 import kotlinx.coroutines.flow.map
 
 

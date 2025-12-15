@@ -1,4 +1,4 @@
-package com.white.fox.ui.common
+package ceui.lisa.hermes.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.defaultMinSize
@@ -10,19 +10,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @Composable
 fun ProgressTextButton(text: String, longTask: suspend () -> Unit) {
     var isProgressing by remember { mutableStateOf(false) }
-    val scope = LocalNavViewModel.current.viewModelScope
+    val scope = rememberCoroutineScope()
 
     Box(
         contentAlignment = Alignment.Center,

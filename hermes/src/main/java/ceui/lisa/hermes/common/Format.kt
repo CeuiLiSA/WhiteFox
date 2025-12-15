@@ -2,6 +2,9 @@ package ceui.lisa.hermes.common
 
 import android.annotation.SuppressLint
 import android.os.Build
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import ceui.lisa.hermes.R
 import timber.log.Timber
 import java.text.DateFormat
 import java.time.ZonedDateTime
@@ -18,9 +21,9 @@ fun parseIsoToMillis(isoString: String): Long {
     } else {
         try {
             val pattern = if (isoString.endsWith("Z")) {
-                "yyyy-MM-dd'T'HH:mm:ss'Z'"
+                PTV1
             } else {
-                "yyyy-MM-dd'T'HH:mm:ssXXX"
+                PTV2
             }
             val sdf = java.text.SimpleDateFormat(pattern)
             sdf.timeZone = java.util.TimeZone.getTimeZone("UTC")
@@ -32,27 +35,28 @@ fun parseIsoToMillis(isoString: String): Long {
     }
 }
 
+@Composable
 fun formatRelativeTime(timestamp: Long, fullTime: Boolean): String {
     val now = System.currentTimeMillis()
     val diff = now - timestamp
 
-    if (diff < 0) return "来自未来" // 处理未来时间情况
+    if (diff < 0) return stringResource(R.string.hermes_time_from_future)
 
     val minutes = TimeUnit.MILLISECONDS.toMinutes(diff)
     val hours = TimeUnit.MILLISECONDS.toHours(diff)
     val days = TimeUnit.MILLISECONDS.toDays(diff)
 
     return when {
-        minutes < 1 -> "刚刚"
-        hours < 1 -> "${minutes} 分钟前"
-        days < 1 -> "${hours} 小时前"
-        days < 30 -> "${days} 天前"
+        minutes < 1 -> localizedString(R.string.hermes_time_just_now)
+        hours < 1 -> localizedString(R.string.hermes_time_minutes_ago, minutes)
+        days < 1 -> localizedString(R.string.hermes_time_hours_ago, hours)
+        days < 30 -> localizedString(R.string.hermes_time_days_ago, days)
         else -> {
             val date = Date(timestamp)
             if (fullTime) {
                 val dateFormat = DateFormat.getDateTimeInstance(
-                    DateFormat.MEDIUM, // 日期风格
-                    DateFormat.SHORT,  // 时间风格
+                    DateFormat.MEDIUM,
+                    DateFormat.SHORT,
                     Locale.getDefault()
                 )
                 dateFormat.format(date)
@@ -63,3 +67,6 @@ fun formatRelativeTime(timestamp: Long, fullTime: Boolean): String {
         }
     }
 }
+
+private const val PTV1 = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+private const val PTV2 = "yyyy-MM-dd'T'HH:mm:ssXXX"

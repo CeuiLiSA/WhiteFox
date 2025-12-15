@@ -19,9 +19,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ceui.lisa.hermes.common.localizedString
 import com.white.fox.R
 import com.white.fox.ui.common.PageScreen
-import com.white.fox.ui.setting.localizedString
 
 @Composable
 fun HelpScreen() = PageScreen(localizedString(R.string.help)) {

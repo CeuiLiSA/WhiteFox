@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ceui.lisa.hermes.common.localizedString
 import ceui.lisa.hermes.loadstate.LoadReason
 import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.models.Illust
@@ -27,7 +28,6 @@ import com.white.fox.ui.common.ErrorBlock
 import com.white.fox.ui.common.LoadingBlock
 import com.white.fox.ui.illust.SquareIllustItem
 import com.white.fox.ui.recommend.ListIllustViewModal
-import com.white.fox.ui.setting.localizedString
 
 @Composable
 fun SectionBlock(

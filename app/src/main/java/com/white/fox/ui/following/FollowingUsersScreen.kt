@@ -1,12 +1,12 @@
 package com.white.fox.ui.following
 
 import androidx.compose.runtime.Composable
+import ceui.lisa.hermes.common.localizedString
 import ceui.lisa.hermes.loader.APIRepository
 import com.white.fox.R
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.PageScreen
 import com.white.fox.ui.common.constructKeyedVM
-import com.white.fox.ui.setting.localizedString
 import com.white.fox.ui.user.ListUserContent
 import com.white.fox.ui.user.ListUserViewModel
 

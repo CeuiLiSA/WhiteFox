@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ceui.lisa.hermes.common.localizedString
 import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.models.ObjectType
 import ceui.lisa.models.Tag
@@ -32,7 +33,6 @@ import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.PageScreen
 import com.white.fox.ui.common.PrimeTaskViewModel
 import com.white.fox.ui.common.constructKeyedVM
-import com.white.fox.ui.setting.localizedString
 import kotlinx.coroutines.launch
 
 @Composable

@@ -18,11 +18,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import ceui.lisa.hermes.common.localizedString
 import com.white.fox.R
 import com.white.fox.ui.common.LocalDependency
 import com.white.fox.ui.common.LocalNavViewModel
 import com.white.fox.ui.common.Route
-import com.white.fox.ui.setting.localizedString
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

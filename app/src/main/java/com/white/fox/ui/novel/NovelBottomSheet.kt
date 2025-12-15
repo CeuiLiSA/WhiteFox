@@ -17,12 +17,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import ceui.lisa.hermes.common.localizedString
 import ceui.lisa.hermes.common.openCustomTab
 import ceui.lisa.models.Novel
 import ceui.lisa.models.Tag
 import com.white.fox.R
 import com.white.fox.ui.illust.TagBottomSheetContent
-import com.white.fox.ui.setting.localizedString
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

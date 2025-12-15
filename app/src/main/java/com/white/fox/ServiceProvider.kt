@@ -2,6 +2,7 @@ package com.white.fox
 
 import androidx.activity.ComponentActivity
 import ceui.lisa.hermes.cache.PrefStore
+import ceui.lisa.hermes.common.ApplicationSession
 import ceui.lisa.hermes.db.AppDatabase
 import com.github.panpf.sketch.Sketch
 import com.white.fox.client.Client
@@ -15,6 +16,7 @@ interface ServiceProvider {
     val settingsManager: SettingsManager
     val prefStore: PrefStore
     val sketch: Sketch
+    val applicationSession: ApplicationSession
 }
 
 class ServiceProviderException : RuntimeException()

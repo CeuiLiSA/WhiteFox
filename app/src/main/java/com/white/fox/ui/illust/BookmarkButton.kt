@@ -22,13 +22,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import ceui.lisa.hermes.common.localizedString
 import ceui.lisa.hermes.objectpool.ObjectPool
 import ceui.lisa.models.Illust
 import ceui.lisa.models.Novel
 import ceui.lisa.models.ObjectType
 import com.white.fox.R
 import com.white.fox.ui.common.LocalDependency
-import com.white.fox.ui.setting.localizedString
 
 @Composable
 fun BookmarkButton(

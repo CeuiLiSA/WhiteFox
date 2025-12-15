@@ -8,11 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import ceui.lisa.hermes.common.localizedString
 import com.white.fox.R
 import com.white.fox.ui.common.PageScreen
 import com.white.fox.ui.common.RefreshTemplate
 import com.white.fox.ui.common.constructVM
-import com.white.fox.ui.setting.localizedString
 
 @Composable
 fun PrimeHotScreen() = PageScreen(localizedString(R.string.sorted_by_popular)) {
