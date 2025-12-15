@@ -1,0 +1,8 @@
+<resources>
+    <string name="hermes_debug">Debug Version</string>
+    <string name="hermes_time_just_now">Just now</string>
+    <string name="hermes_time_minutes_ago">%1$d 分钟前</string>
+    <string name="hermes_time_hours_ago">%1$d 小时前</string>
+    <string name="hermes_time_days_ago">%1$d 天前</string>
+    <string name="hermes_time_from_future">来自未来</string>
+</resources>
