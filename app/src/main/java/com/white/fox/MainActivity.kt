@@ -14,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import ceui.lisa.hermes.common.LocalAppLocaleContext
 import ceui.lisa.hermes.common.saveJsonToDownloads
 import ceui.lisa.hermes.db.EntityType
+import ceui.lisa.hermes.db.RecordType
 import ceui.lisa.hermes.db.gson
 import ceui.lisa.hermes.viewmodel.constructVM
 import com.white.fox.ui.common.Dependency
@@ -93,11 +94,52 @@ class MainActivity : ComponentActivity() {
 
 
         MainScope().launch(Dispatchers.IO) {
-            val aa = dependency.database.generalDao().getAllByEntityType(EntityType.APP_SESSION)
-            aa.forEach { it ->
-                Timber.d("ssaddasw2  ${it}")
+            val list = dependency.database.generalDao()
+                .getAllByEntityType(EntityType.APP_SESSION)
+
+            val groups = list
+                .groupBy { it.id }
+                .mapValues { (_, records) ->
+                    records.sortedBy { it.updatedTime }
+                }
+
+            Timber.d("[APP_SESSION] totalRecords=${list.size}, sessions=${groups.size}")
+
+            groups.forEach { (id, records) ->
+                val firstStart = records.firstOrNull {
+                    it.recordType == RecordType.START_APP_SESSION
+                }
+
+                val lastStop = records.lastOrNull {
+                    it.recordType == RecordType.STOP_APP_SESSION
+                }
+
+                val durationMs = when {
+                    firstStart == null -> {
+                        Timber.w("   [APP_SESSION][id=$id] no START record")
+                        null
+                    }
+
+                    lastStop != null -> {
+                        lastStop.updatedTime - firstStart.updatedTime
+                    }
+
+                    else -> {
+                        // 没有 STOP，兜底用最后一条时间
+                        records.last().updatedTime - firstStart.updatedTime
+                    }
+                }
+
+                durationMs?.takeIf { it > 0L }?.let {
+                    val minutes = it / 1000 / 60F
+                    Timber.d(
+                        "   [APP_SESSION][id=$id] duration=${minutes} minutes"
+                    )
+                }
             }
         }
+
+
     }
 
     override fun onNewIntent(intent: Intent) {
