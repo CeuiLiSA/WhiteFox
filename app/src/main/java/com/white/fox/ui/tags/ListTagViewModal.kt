@@ -7,19 +7,25 @@ import ceui.lisa.hermes.loadstate.LoadReason
 import ceui.lisa.hermes.loadstate.LoadState
 import ceui.lisa.hermes.loadstate.RefreshOwner
 import ceui.lisa.hermes.objectpool.ObjectPool
-import ceui.lisa.hermes.valuecontent.ValueContent
 import ceui.lisa.models.TrendingTagsResponse
+import com.white.fox.client.AppApi
+import com.white.fox.client.ListValueContent
 import kotlinx.coroutines.flow.StateFlow
 
 
 class ListTagViewModal(
     repository: Repository<TrendingTagsResponse>,
+    appApi: AppApi,
 ) : ViewModel(), RefreshOwner<TrendingTagsResponse> {
 
     private val valueContent =
-        ValueContent(
+        ListValueContent(
             viewModelScope,
-            repository
+            repository,
+            appApi,
+            sum = { old, new ->
+                new.copy(trend_tags = old.trend_tags + new.trend_tags)
+            }
         ) { response ->
             response.displayList.forEach { tredingTag ->
                 tredingTag.illust?.let { illust ->

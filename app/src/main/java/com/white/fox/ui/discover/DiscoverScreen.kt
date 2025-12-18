@@ -46,7 +46,7 @@ fun DiscoverScreen(objectType: String, withTopItems: Boolean) {
             TrendingTagsResponse::class
         )
     }) { repository ->
-        ListTagViewModal(repository)
+        ListTagViewModal(repository, dependency.client.appApi)
     }
 
     val navViewModel = LocalNavViewModel.current
