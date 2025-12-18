@@ -42,7 +42,6 @@ fun FullScreenSlideShow(
     illustResponse: IllustResponse,
     showIndicator: Boolean = false,
 ) {
-    setUpFullscreenPage()
     val context = LocalContext.current
 
     val currentFileState = remember { mutableStateOf<File?>(null) }
@@ -68,6 +67,7 @@ fun FullScreenSlideShow(
     val previousScale = remember { Animatable(1f) }
     val currentScale = remember { Animatable(1.2f) }
 
+    SetUpFullscreenPage()
     LaunchedEffect(currentQueueImage) {
         val newFile = currentQueueImage ?: return@LaunchedEffect
         previousFile = currentFileState.value

@@ -10,7 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 
 @Composable
-fun setUpFullscreenPage() {
+fun SetUpFullscreenPage() {
     val context = LocalContext.current
     val window = (context as? ComponentActivity)?.window
 
