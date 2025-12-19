@@ -19,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,10 +50,6 @@ import com.white.fox.ui.slideshow.FullScreenSlideShow
 fun LandingScreen() {
     val navViewModel = LocalNavViewModel.current
     val context = LocalContext.current
-    val dependency = LocalDependency.current
-    val pkceItem = remember {
-        PKCEUtil.get(dependency.applicationSession.token)
-    }
     val sessionManager = LocalDependency.current.sessionManager
     val loginState by LocalDependency.current.client.appLoginFlow.collectAsState()
     val viewModel = constructVM({ (context as ComponentActivity).assets }) { assets ->
@@ -88,7 +83,7 @@ fun LandingScreen() {
             Button(
                 onClick = {
                     openCustomTab(
-                        context, LOGIN_HEAD + pkceItem.challenge + LOGIN_END
+                        context, LOGIN_HEAD + PKCEUtil.pkceItem.challenge + LOGIN_END
                     )
                 },
                 modifier = Modifier.fillMaxWidth(0.5f)
@@ -99,7 +94,7 @@ fun LandingScreen() {
             Button(
                 onClick = {
                     openCustomTab(
-                        context, SIGN_HEAD + pkceItem.challenge + SIGN_END
+                        context, SIGN_HEAD + PKCEUtil.pkceItem.challenge + SIGN_END
                     )
                 },
                 modifier = Modifier.fillMaxWidth(0.5f)

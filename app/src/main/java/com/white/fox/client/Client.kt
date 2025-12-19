@@ -1,7 +1,6 @@
 package com.white.fox.client
 
 import android.net.Uri
-import ceui.lisa.hermes.common.ApplicationSession
 import ceui.lisa.hermes.common.PKCEUtil
 import ceui.lisa.hermes.loader.ProgressInterceptor
 import ceui.lisa.hermes.loadstate.LoadReason
@@ -34,7 +33,6 @@ import java.util.concurrent.TimeUnit
 
 class Client(
     private val sessionManager: ISessionManager<AccountResponse>,
-    private val applicationSession: ApplicationSession,
 ) {
 
     val appApi: AppApi by lazy {
@@ -157,7 +155,7 @@ class Client(
                         CLIENT_SECRET,
                         AUTH_CODE,
                         uri.getQueryParameter("code"),
-                        PKCEUtil.get(applicationSession.token).verify,
+                        PKCEUtil.pkceItem.verify,
                         CALL_BACK,
                         true
                     )

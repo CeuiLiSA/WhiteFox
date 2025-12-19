@@ -30,14 +30,7 @@ object PKCEUtil {
         )
     }
 
-    private val _map = hashMapOf<String, PKCEItem>()
-
-
-    fun get(token: String): PKCEItem {
-        return _map.getOrPut(token) {
-            build()
-        }
-    }
+    val pkceItem by lazy { build() }
 
     private fun build(): PKCEItem {
         try {

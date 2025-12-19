@@ -67,7 +67,7 @@ class WhiteFox : Application(), ServiceProvider {
     }
 
     override val client: Client by lazy {
-        Client(sessionManager, applicationSession)
+        Client(sessionManager)
     }
 
     override val applicationSession: ApplicationSession by lazy {

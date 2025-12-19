@@ -13,6 +13,12 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Downloading
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Slideshow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -90,15 +96,21 @@ fun StaggeredIllustContent(viewModel: ListIllustViewModal) {
 
     ActionMenu(
         listOf(
-            MenuItem("下载首图") {},
-            MenuItem("下载单作品全部图片") {},
-            MenuItem("分享") {},
-            MenuItem("收藏") {
+            MenuItem("下载此作品首图", Icons.Filled.Download) {
+
+            },
+            MenuItem("下载此作品全部图片", Icons.Filled.Downloading) {
+
+            },
+            MenuItem("分享此作品", Icons.Filled.Share) {
+
+            },
+            MenuItem("收藏", Icons.Filled.Bookmark) {
                 spinnerState.show()
                 delay(1500L)
                 spinnerState.hide()
             },
-            MenuItem("Slideshow") {
+            MenuItem("Slideshow", Icons.Filled.Slideshow) {
                 viewModel.valueFlow.value?.let {
                     navViewModel.navigate(Route.SlideShow(it))
                 }
