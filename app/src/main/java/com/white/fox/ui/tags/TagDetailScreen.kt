@@ -52,9 +52,9 @@ fun TagDetailScreen(tagList: List<Tag>, objectType: String) {
     val keyWord = tagList.joinToString(" ") { it.name ?: "" }
     val client = LocalDependency.current.client
     val primeTaskViewModel = constructKeyedVM(
-        { "prime_task_${stableStringHash(tagList[0].name ?: "")}" },
-        { client.appApi to tagList[0] }) { (api, tag) ->
-        PrimeTaskViewModel(api, tag)
+        { "prime_task_${stableStringHash(tagList.joinToString { it.name ?: "" })}" },
+        { client.appApi to tagList }) { (api, tags) ->
+        PrimeTaskViewModel(api, tags)
     }
 
     val loadState by primeTaskViewModel.loadStateFlow.collectAsState()
